@@ -80,9 +80,9 @@ function KetQuaTim() {
                     <div className="font-bold text-[17px] text-den mt-1">{a.hoTen}</div>
                     <div className="text-[13.5px] text-ink2 mt-1">{[a.chucDanh, ...danhHieuCongKhai(a), `${namKinhNghiem(a)} năm kinh nghiệm`].join(" · ")}</div>
                   </div>
-                  <div className="flex flex-col gap-2 shrink-0">
-                    <Button size="sm" onClick={() => setXemNhanh(a.ma)}>Xem nhanh</Button>
-                    <Button size="sm" kind="secondary" href={R.E03(a.ma)}>Xem đầy đủ</Button>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <Button size="sm" kind="secondary" className="w-[150px]" onClick={() => setXemNhanh(a.ma)}>Xem nhanh</Button>
+                    <Button size="sm" className="w-[150px]" href={R.E03(a.ma)}>Xem đầy đủ</Button>
                   </div>
                 </Card>
               ))}
