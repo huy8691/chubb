@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/set-state-in-effect -- đọc sessionStorage / tham số URL sau mount là chủ ý (tránh lệch hydration) */
 /** D02 · Studio (cần đăng nhập TVV) — 3 bước: chọn Mẫu Studio → tải ảnh chân dung → thông tin hiển thị; xem trước; Tải ảnh / Lưu vào Ảnh Studio của tôi (không duyệt) / Hiển thị công khai trên Bộ sưu tập Studio (Chubb duyệt, gửi một lần); khối Bộ sưu tập Studio + Ảnh Studio của tôi. */
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { R } from "@/lib/routes";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
@@ -29,7 +29,6 @@ function docAnhThuNho(file: File): Promise<string> {
 
 function Studio() {
   const sp = useSearchParams();
-  const router = useRouter();
   const { data, actions } = useStore();
   const tvv = useCurrentAdvisor()!;
   const { flash, node } = useFlash();
@@ -133,7 +132,6 @@ function Studio() {
             <Button className="mt-3" kind="secondary" disabled={!dongY} onClick={gui}>Lưu và hiển thị công khai trên Bộ sưu tập Studio</Button>
             <Muted className="mt-2 text-[12px]">Ảnh được lưu vào Ảnh Studio của tôi và gửi Chubb duyệt. Chỉ hiện sau khi duyệt, mỗi ảnh gửi một lần.</Muted>
           </div>
-          <button type="button" className="mt-5 text-[14px] font-bold text-blue hover:underline" onClick={() => router.push(R.D01)}>Huỷ</button>
         </Card>
       </section>
 
