@@ -121,7 +121,6 @@ function Studio() {
           <Muted className="mt-3 text-[12px] text-center">Phiên bản mẫu v{m.phienBan ?? 1} · cập nhật {fmtDate(m.capNhat)}</Muted>
           <div className="mt-5 flex flex-wrap items-center gap-2">
             <Button size="sm" onClick={() => flash("Đã tải ảnh PNG về máy")}>Tải ảnh PNG</Button>
-            <Button size="sm" kind="secondary" onClick={() => flash("Đã mở cửa sổ chia sẻ ảnh")}>Chia sẻ</Button>
             <Button size="sm" kind="secondary" onClick={luu}>Lưu vào Ảnh của tôi</Button>
             <Button size="sm" kind="ghost" className="ml-auto" onClick={() => router.push(R.D01)}>Huỷ</Button>
           </div>

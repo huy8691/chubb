@@ -8,12 +8,12 @@
 import { XemNhanhButton } from "@/components/danh-thiep/XemNhanh";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Suspense, use, useState } from "react";
+import { Suspense, use } from "react";
 import { R } from "@/lib/routes";
 import { fmtNum, thangLabel } from "@/lib/seed";
 import type { NguoiDat } from "@/lib/types";
 import { Avatar, Button, Card, Chip, EmptyState, H1, H2, Muted, useFlash } from "@/components/ui";
-import { ShareModal, TheTVV, useHonor } from "@/components/vinh-danh/honor";
+import { ShareButtons, TheTVV, useHonor } from "@/components/vinh-danh/honor";
 
 /** 2.450.000.000 → "2,45 tỷ ₫"; 850.000.000 → "850 triệu ₫" */
 export const fmtTien = (n?: number) => n === undefined ? "—" : n >= 1e9 ? `${(n / 1e9).toFixed(2).replace(".", ",").replace(/,?0+$/, "")} tỷ ₫` : `${Math.round(n / 1e6)} triệu ₫`;
@@ -33,7 +33,6 @@ function ChiTiet({ ma }: { ma: string }) {
   const sp = useSearchParams();
   const { flash, node } = useFlash();
   const { published, hangMucById, congKhai, hangMucCoNguoi } = useHonor();
-  const [share, setShare] = useState(false);
 
   // mọi lần người này được vinh danh (tháng đã công bố, đã đồng ý công khai), mới → cũ
   const hits = published.flatMap((m) => hangMucCoNguoi(m).flatMap((h) => congKhai(m, h.id).filter((v) => v.ma === ma).map((v) => ({ m, h, v }))));
@@ -68,10 +67,11 @@ function ChiTiet({ ma }: { ma: string }) {
               <H1>{v.hoTen}</H1>
               <Muted className="mt-2 text-[15px]">{[v.chucDanh, v.vanPhong.replace(/ — .*$/, "")].filter(Boolean).join(" · ")}</Muted>
               {nd.trichDan && <p className="mt-3 text-[15px] text-ink2">{nd.trichDan}</p>}
-              <div className="mt-5 flex flex-wrap gap-3">
-                <Button onClick={() => setShare(true)}>Chia sẻ thành tựu</Button>
-                {v.coTaiKhoan && <XemNhanhButton ma={v.ma} size="md" />}
-                <Button kind="secondary" href={R.D02}>Tạo thiệp chúc mừng</Button>
+              {v.coTaiKhoan && <div className="mt-5 flex flex-wrap gap-3"><XemNhanhButton ma={v.ma} size="md" /></div>}
+              {/* Hàng chia sẻ nội tuyến (09/09: thay nút + popup; bỏ "Tạo thiệp chúc mừng") */}
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <span className="font-bold text-[13px] text-den mr-2">Chia sẻ thành tựu:</span>
+                <ShareButtons onDone={flash} />
               </div>
             </div>
           </div>
@@ -98,7 +98,6 @@ function ChiTiet({ ma }: { ma: string }) {
           <Button kind="secondary" href={R.C04(m.id)}>Xem cả tháng</Button>
         </Card>
       </div>
-      <ShareModal open={share} onClose={() => setShare(false)} title={`Chia sẻ thành tựu của ${v.hoTen}`} onDone={flash} />
       {node}
     </>
   );

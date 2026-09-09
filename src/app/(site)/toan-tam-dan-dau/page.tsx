@@ -9,7 +9,7 @@ import { useState } from "react";
 import { R } from "@/lib/routes";
 import { thangLabel } from "@/lib/seed";
 import { Button, Card, EmptyState, H2, Hero, ImageBox, MoreLink, Muted, Table, cx, useFlash } from "@/components/ui";
-import { ChonThang, ShareModal, TheTVV, anhTVV, linkC02, useHonor, type NguoiDatView } from "@/components/vinh-danh/honor";
+import { ChonThang, ShareButtons, TheTVV, anhTVV, linkC02, useHonor, type NguoiDatView } from "@/components/vinh-danh/honor";
 
 const SO_CHU = ["Không", "Một", "Hai", "Ba", "Bốn", "Năm", "Sáu"];
 
@@ -18,7 +18,6 @@ export default function Page() {
   const { flash, node } = useFlash();
   const { hangMucSorted, published, latest, congKhai, hangMucCoNguoi } = useHonor();
   const [hmId, setHmId] = useState<string | null>(null);
-  const [share, setShare] = useState<NguoiDatView | null>(null);
 
   const hero = (
     <Hero eyebrow="Toàn Tâm Dẫn Đầu" title="Tự Hào Vinh Danh" desc="Mỗi thành tựu được ghi nhận đều trở thành một dấu ấn đáng nhớ, tiếp thêm động lực chinh phục những cột mốc phía trước." image="/img/vd-hero.jpg">
@@ -72,9 +71,10 @@ export default function Page() {
                   <div key={t} className="bg-xam rounded-sm px-6 py-4 font-bold text-[16px] text-den">{t}</div>
                 ))}
               </div>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Button onClick={() => setShare(leader)}>Chia sẻ thành tựu</Button>
-                                <Button kind="secondary" href={R.D02}>Tạo thiệp chúc mừng</Button>
+              {/* Hàng chia sẻ nội tuyến (09/09: thay nút + popup; bỏ "Tạo thiệp chúc mừng") */}
+              <div className="mt-8 flex flex-wrap items-center gap-2">
+                <span className="font-bold text-[13px] text-den mr-2">Chia sẻ thành tựu:</span>
+                <ShareButtons onDone={flash} />
               </div>
               <div className="mt-5"><MoreLink href={linkC02(leader.ma, latest.id, active.id)}>Xem chi tiết thành tích</MoreLink></div>
             </div>
@@ -147,7 +147,6 @@ export default function Page() {
           <div className="mt-5"><Button kind="secondary" href={R.C03}>Xem thêm</Button></div>
         </section>
       </div>
-      <ShareModal open={!!share} onClose={() => setShare(null)} title={share ? `Chia sẻ thành tựu của ${share.hoTen}` : ""} onDone={flash} />
       {node}
     </>
   );
