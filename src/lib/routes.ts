@@ -33,7 +33,7 @@ export const R = {
   G04: "/toan-tam-phat-trien/tai-lieu",
   // Danh thiếp
   E01: "/toan-tam-ket-noi",
-  E06: (q: string) => `/toan-tam-ket-noi/tim?q=${encodeURIComponent(q)}`,
+  E06: (q?: string) => q ? `/toan-tam-ket-noi/tim?q=${encodeURIComponent(q)}` : "/toan-tam-ket-noi/tim",
   E03: (ma: string) => `/${ma}`,
   // Thư viện
   F01: "/toan-tam-chia-se",

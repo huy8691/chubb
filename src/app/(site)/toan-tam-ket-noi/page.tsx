@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Avatar, Button, Chip, H2, Hero, Input, Muted, Table } from "@/components/ui";
+import { Avatar, Button, Chip, H2, Hero, Input, Muted, Table, MoreLink } from "@/components/ui";
 import { R } from "@/lib/routes";
 import { fmtNum } from "@/lib/seed";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
@@ -38,7 +38,7 @@ export default function Page() {
       <div className="wrap py-14 space-y-16">
         {/* Tìm danh thiếp */}
         <section>
-          <H2 className="text-[22px]">Tìm danh thiếp Tư vấn viên</H2>
+          <div className="flex items-end justify-between gap-6"><H2 className="text-[22px]">Tìm danh thiếp Tư vấn viên</H2><MoreLink href={R.E06()}>Xem tất cả Tư vấn viên</MoreLink></div>
           <form onSubmit={tim} className="mt-5 flex gap-3 max-w-[820px]">
             <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Nhập mã Tư vấn viên (7 chữ số) hoặc họ tên" aria-label="Tìm danh thiếp Tư vấn viên" className="h-11" />
             <Button type="submit">Tìm</Button>
