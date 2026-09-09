@@ -6,14 +6,12 @@
  * Chỉ hiện người đã đồng ý công khai. Hành động chia sẻ / gửi lời chúc chỉ ở C02.
  */
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { R } from "@/lib/routes";
 import { fmtDate, fmtNum, thangLabel, thoiGianLabel } from "@/lib/seed";
 import { Breadcrumb, Button, Card, Chip, EmptyState, H1, H2, Hero, ImageBox, MoreLink, Muted, Table } from "@/components/ui";
-import { ChonThang, TheTVV, anhTVV, fmtTien, linkC02, useHonor } from "@/components/vinh-danh/honor";
+import { TheTVV, anhTVV, fmtTien, linkC02, useHonor } from "@/components/vinh-danh/honor";
 
 export function BangVinhDanhThang({ thangId }: { thangId?: string }) {
-  const router = useRouter();
   const { published, latest, congKhai, hangMucCoNguoi, tongCongKhai } = useHonor();
   const month = thangId ? published.find((m) => m.id === thangId) : latest;
 
@@ -32,7 +30,6 @@ export function BangVinhDanhThang({ thangId }: { thangId?: string }) {
 
   const hms = hangMucCoNguoi(month);
   const thongTin = [thoiGianLabel(month), month.congBo ? `công bố ${fmtDate(month.congBo)}` : "", `${tongCongKhai(month)} Tư vấn viên được vinh danh trong ${hms.length} hạng mục`].filter(Boolean).join(" · ");
-  const chonBang = <ChonThang months={published} value={month.id} onChange={(id) => { if (id !== month.id) router.push(id === latest.id ? R.C01 : R.C04(id)); }} />;
   // Các bảng gần đây: mỗi bảng một hàng (5 bảng công bố gần nhất khác bảng đang xem) → cùng màn này với bảng đó
   const luuTru = published.filter((m) => m.id !== month.id).slice(0, 5);
 
@@ -47,19 +44,18 @@ export function BangVinhDanhThang({ thangId }: { thangId?: string }) {
               <H1 className="mt-3 text-[34px] uppercase">{thangLabel(month)}</H1>
               <Muted className="mt-3 text-[16px]">{thongTin}</Muted>
             </div>
-            {chonBang}
           </div>
         </section>
       ) : hero}
       <div className="wrap py-10">
         {!thangId && (
-          /* C01 · trang đích tab: tiêu đề bảng + ô chọn bảng (không có dải tab hạng mục — mỗi hạng mục một khối bên dưới) */
+          /* C01 · trang đích tab: tiêu đề bảng + link sang lưu trữ (09/09: bỏ ô chọn bảng — C03 là nơi duyệt; không có dải tab hạng mục) */
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-vien pb-3">
             <div>
               <H2 className="text-[22px]">Bảng vinh danh {thangLabel(month)}</H2>
               <div className="mt-1 text-[13px] text-ink2">{[thoiGianLabel(month), month.congBo ? `công bố ${fmtDate(month.congBo)}` : ""].filter(Boolean).join(" · ")}</div>
             </div>
-            {chonBang}
+            <MoreLink href={R.C03}>Xem các bảng vinh danh khác</MoreLink>
           </div>
         )}
 
