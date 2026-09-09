@@ -116,7 +116,6 @@ export default function Page() {
         <Eyebrow className="mb-4">Bước tiếp theo</Eyebrow>
         <div className="flex flex-wrap gap-3">
           <Button href={R.E01}>Nói chuyện với Tư vấn viên</Button>
-          <Button href={R.F03("toan-tam-bao-ve")} kind="secondary">Xem giải pháp bảo vệ</Button>
           <Button kind="ghost" onClick={tinhLai}>Tính lại</Button>
         </div>
       </section>
