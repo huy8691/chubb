@@ -57,9 +57,8 @@ function Studio() {
   const gui = () => { actions.update("studioImages", (l) => [taoAnh("cho-duyet"), ...l]); flash("Đã gửi Chubb duyệt — ảnh hiển thị công khai trên Bộ sưu tập Studio sau khi duyệt"); setDongY(false); };
   const dungMau = (id: string) => { setMauId(id); topRef.current?.scrollIntoView({ behavior: "smooth" }); };
 
-  const boSuuTap = data.studioImages.filter((a) => a.trangThai === "da-duyet").sort((a, b) => (b.ngayDuyet ?? b.tao).localeCompare(a.ngayDuyet ?? a.tao)).slice(0, 4);
+  const mauKhac = mau.filter((x) => x.id !== m.id).sort((a, b) => b.soAnhDaTao - a.soAnhDaTao).slice(0, 4); // 09/09: khối cuối là mẫu khác để tham khảo, không phải ảnh TVV (D07 đi từ D08)
   const cuaToi = data.studioImages.filter((a) => a.advisorMa === tvv.ma).sort((a, b) => b.tao.localeCompare(a.tao));
-  const tenTVV = (ma: string) => data.advisors.find((a) => a.ma === ma)?.hoTen ?? ma;
   const tenMau = (id: string) => data.studioTemplates.find((t) => t.id === id)?.ten ?? "Mẫu Studio";
 
   if (!m) return <div className="wrap py-16"><Card className="p-8 text-center"><H2>Studio chưa có Mẫu Studio nào</H2><Muted className="mt-2">Chubb Life đang chuẩn bị mẫu. Bạn quay lại sau nhé.</Muted></Card></div>;
@@ -154,12 +153,12 @@ function Studio() {
 
       <section className="bg-xam">
         <div className="wrap py-14">
-          <div className="flex items-end justify-between gap-6 mb-6"><H2>Bộ sưu tập Studio</H2><MoreLink href={R.D07} /></div>
+          <div className="flex items-end justify-between gap-6 mb-6"><H2>Tham khảo mẫu khác</H2><MoreLink href={R.D08} /></div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {boSuuTap.map((a) => (
-              <div key={a.id} className="bg-white border border-vien rounded-sm p-3">
-                <div className="relative"><ImageBox src={a.anh} ratio="3/4" /><Button size="sm" kind="secondary" className="absolute bottom-2 right-2 bg-white" onClick={() => dungMau(a.templateId)}>Dùng mẫu này</Button></div>
-                <div className="mt-3 text-[14px] font-bold text-den truncate">{tenTVV(a.advisorMa)} · {tenMau(a.templateId)}</div>
+            {mauKhac.map((x) => (
+              <div key={x.id} className="bg-white border border-vien rounded-sm p-3">
+                <div className="relative"><ImageBox src={x.anh} ratio="3/4" /><Button size="sm" kind="secondary" className="absolute bottom-2 right-2 bg-white" onClick={() => dungMau(x.id)}>Dùng mẫu này</Button></div>
+                <div className="mt-3 text-[14px] font-bold text-den truncate">{x.ten} · {tiLeLabel(x.tiLe)}</div>
               </div>
             ))}
           </div>
