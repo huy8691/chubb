@@ -41,7 +41,7 @@ export function Chip({ tone = "grey", className, children }: { tone?: ChipTone; 
 export function StatusChip({ s }: { s: string }) {
   const map: Record<string, [string, ChipTone]> = {
     "nhap": ["Nháp", "grey"], "da-len-lich": ["Đã lên lịch", "blue"], "da-xuat-ban": ["Đã xuất bản", "green"], "da-go": ["Đã gỡ", "grey"], "luu-tru": ["Lưu trữ", "grey"],
-    "cho-duyet": ["Chờ duyệt", "amber"], "da-duyet": ["Đã duyệt", "green"], "bi-tu-choi": ["Bị từ chối", "red"], "rieng-tu": ["Riêng tư", "grey"],
+    "cho-duyet": ["Chờ duyệt", "amber"], "da-duyet": ["Đã duyệt", "green"], "bi-tu-choi": ["Bị từ chối", "red"], "rieng-tu": ["Chưa gửi", "grey"],
     "moi": ["Mới", "amber"], "da-xem": ["Đã xem", "grey"], "chua-xem": ["Chưa xem", "amber"], "da-tra-loi": ["Đã trả lời", "green"],
     "hoat-dong": ["Đang hoạt động", "blue"], "da-khoa": ["Đã khoá", "red"], "da-go-tk": ["Đã gỡ", "grey"],
     "da-cong-bo": ["Đã công bố", "green"], "cong-khai": ["Công khai", "blue"], "tvv": ["Dành cho Tư vấn viên", "amber"],

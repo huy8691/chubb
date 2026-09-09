@@ -121,7 +121,7 @@ function Studio() {
           <Muted className="mt-3 text-[12px] text-center">Phiên bản mẫu v{m.phienBan ?? 1} · cập nhật {fmtDate(m.capNhat)}</Muted>
           <div className="mt-5 flex flex-wrap items-center gap-2">
             <Button size="sm" onClick={() => flash("Đã tải ảnh PNG về máy")}>Tải ảnh PNG</Button>
-            <Button size="sm" kind="secondary" onClick={luu}>Lưu vào Ảnh của tôi</Button>
+            <Button size="sm" kind="secondary" onClick={luu}>Lưu vào Ảnh Studio của tôi</Button>
             <Button size="sm" kind="ghost" className="ml-auto" onClick={() => router.push(R.D01)}>Huỷ</Button>
           </div>
           <Muted className="mt-3 text-[12px]">Hệ thống lưu lựa chọn của bạn (mẫu, thông tin, vị trí ảnh) để mở lại lần sau — không lưu file ảnh.</Muted>
@@ -134,7 +134,7 @@ function Studio() {
 
       <section className="wrap py-10">
         <div className="flex items-end justify-between gap-6 mb-6"><H2>Ảnh Studio của tôi</H2><Link href={R.G02} className="link-more">Xem trong Đã lưu</Link></div>
-        {cuaToi.length === 0 ? <Muted>Bạn chưa lưu ảnh nào. Bấm “Lưu vào Ảnh của tôi” ở khung xem trước.</Muted> : (
+        {cuaToi.length === 0 ? <Muted>Bạn chưa lưu ảnh nào. Bấm “Lưu vào Ảnh Studio của tôi” ở khung xem trước.</Muted> : (
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {cuaToi.slice(0, 6).map((a) => (
               <div key={a.id} className="border border-vien rounded-sm p-2">

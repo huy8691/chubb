@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/static-components -- component trình bày cục bộ, không giữ state; đủ cho demo */
 /**
  * G02 · Trang cá nhân › Đã lưu — bài viết · tài liệu · danh thiếp đã lưu + Ảnh Studio của tôi.
- * Mỗi mục: Mở · Bỏ lưu. Ảnh Studio: chip trạng thái (Riêng tư · Chờ duyệt · Đã duyệt · Bị từ chối kèm lý do), Mở lại · Gửi vào Bộ sưu tập · Tải về · Xoá (xác nhận).
+ * Mỗi mục: Mở · Bỏ lưu. Ảnh Studio: chip trạng thái (Chưa gửi · Chờ duyệt · Đã duyệt · Bị từ chối kèm lý do), Mở lại · Tải PNG · Gửi vào Bộ sưu tập (khi chưa gửi / bị từ chối) · Xoá (xác nhận). 09/09: khớp wireframe G02.
  */
 import Link from "next/link";
 import { useState } from "react";
@@ -105,7 +105,7 @@ export default function Page() {
                   <div className="flex flex-wrap gap-x-4 gap-y-1 text-[12px] font-bold mt-auto">
                     <Link href={R.D02} className="text-blue">Mở lại</Link>
                     {(a.trangThai === "rieng-tu" || a.trangThai === "bi-tu-choi") && <button type="button" className="text-blue" onClick={() => { actions.update("studioImages", (l) => l.map((x) => x.id === a.id ? { ...x, trangThai: "cho-duyet", lyDoTuChoi: undefined, dongYCongKhai: true } : x)); flash("Đã gửi vào Bộ sưu tập Studio — Chubb sẽ duyệt trong 2 ngày làm việc"); }}>Gửi vào Bộ sưu tập</button>}
-                    <button type="button" className="text-blue" onClick={() => flash(`Đã tải "${tenMau(a.templateId)}" (PNG)`)}>Tải về</button>
+                    <button type="button" className="text-blue" onClick={() => flash(`Đã tải "${tenMau(a.templateId)}" (PNG)`)}>Tải PNG</button>
                     <button type="button" className="text-ink2 hover:text-red-fg" onClick={() => setXoa(a)}>Xoá</button>
                   </div>
                 </Card>
