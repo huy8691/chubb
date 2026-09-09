@@ -15,7 +15,7 @@ const KHU_VUC: KV[] = ["tat-ca", "Miền Bắc", "Miền Trung", "Miền Nam"];
 /** Miền theo tỉnh/thành của văn phòng */
 const mien = (vanPhong: string): KV => { const t = tinhThanh(vanPhong); return /Hà Nội|Hải Phòng|Bắc|Quảng Ninh|Nghệ An/.test(t) ? "Miền Bắc" : /Đà Nẵng|Huế|Nha Trang|Quy Nhơn/.test(t) ? "Miền Trung" : "Miền Nam"; };
 
-export function DanhBa() {
+export function DanhBa({ vanPhongLoc }: { vanPhongLoc?: string[] | null }) {
   const router = useRouter();
   const { data } = useStore();
   const [q, setQ] = useState("");
@@ -33,8 +33,8 @@ export function DanhBa() {
   const danhHieus = useMemo(() => Array.from(new Set(congKhai.flatMap((a) => danhHieuCongKhai(a).map((d) => d.replace(/\s*\d{4}$/, ""))))).sort(), [congKhai]);
   const demKv = (k: KV) => congKhai.filter((a) => k === "tat-ca" || mien(a.vanPhong) === k).length;
   const list = useMemo(() => congKhai
-    .filter((a) => (kv === "tat-ca" || mien(a.vanPhong) === kv) && (!vp || a.vanPhong === vp) && (!cd || a.chucDanh === cd) && (!dh || danhHieuCongKhai(a).some((d) => d.startsWith(dh))))
-    .sort((x, y) => sort === "kinh-nghiem" ? namKinhNghiem(y) - namKinhNghiem(x) : x.hoTen.localeCompare(y.hoTen, "vi")), [congKhai, kv, vp, cd, dh, sort]);
+    .filter((a) => (!vanPhongLoc || vanPhongLoc.includes(a.vanPhong)) && (kv === "tat-ca" || mien(a.vanPhong) === kv) && (!vp || a.vanPhong === vp) && (!cd || a.chucDanh === cd) && (!dh || danhHieuCongKhai(a).some((d) => d.startsWith(dh))))
+    .sort((x, y) => sort === "kinh-nghiem" ? namKinhNghiem(y) - namKinhNghiem(x) : x.hoTen.localeCompare(y.hoTen, "vi")), [congKhai, kv, vp, cd, dh, sort, vanPhongLoc]);
   const pages = Math.max(1, Math.ceil(list.length / PAGE));
   const p = Math.min(page, pages);
   const rows = list.slice((p - 1) * PAGE, p * PAGE);
@@ -49,8 +49,9 @@ export function DanhBa() {
   };
 
   return (
-    <section>
+    <section id="danh-ba">
       <H2 className="text-[22px]">Danh bạ Tư vấn viên</H2>
+      {vanPhongLoc && <div className="mt-2 text-[13px] text-blue font-bold">Đang lọc theo {vanPhongLoc.length} văn phòng gần bạn</div>}
       <Muted className="mt-2 text-[14px]">{fmtNum(congKhai.length)} Tư vấn viên đang có danh thiếp công khai. Lọc theo khu vực, văn phòng, hoặc tìm theo họ tên · mã 7 chữ số in trên thẻ.</Muted>
       <form onSubmit={tim} className="mt-5 flex gap-3 max-w-[820px]">
         <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Họ tên hoặc mã Tư vấn viên 7 chữ số…" aria-label="Tìm Tư vấn viên" className="h-11" />

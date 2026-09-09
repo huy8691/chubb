@@ -13,10 +13,9 @@ import { useStore } from "@/lib/store";
 import type { Advisor } from "@/lib/types";
 
 const CHUC_DANH = ["Tư vấn tài chính", "Tư vấn tài chính cao cấp", "Trưởng nhóm kinh doanh", "Giám đốc kinh doanh khu vực"];
-const VAN_PHONG = ["TP. Hồ Chí Minh — Q.1", "TP. Hồ Chí Minh — Q.7", "Hà Nội — Cầu Giấy", "Đà Nẵng — Hải Châu", "Cần Thơ — Ninh Kiều", "Hải Phòng — Lê Chân"];
 
 type Form = { ma: string; hoTen: string; email: string; chucDanh: string; vanPhong: string; ngayBatDau: string };
-const trong = (): Form => ({ ma: "", hoTen: "", email: "", chucDanh: CHUC_DANH[0], vanPhong: VAN_PHONG[0], ngayBatDau: new Date().toISOString().slice(0, 10) });
+const trong = (): Form => ({ ma: "", hoTen: "", email: "", chucDanh: CHUC_DANH[0], vanPhong: "", ngayBatDau: new Date().toISOString().slice(0, 10) });
 
 export function TvvForm({ ma }: { ma?: string }) {
   const router = useRouter();
@@ -82,7 +81,7 @@ export function TvvForm({ ma }: { ma?: string }) {
               <Select value={f.chucDanh} onChange={set("chucDanh")}>{CHUC_DANH.map((c) => <option key={c}>{c}</option>)}</Select>
             </Field>
             <Field label="Văn phòng">
-              <Select value={f.vanPhong} onChange={set("vanPhong")}>{VAN_PHONG.map((c) => <option key={c}>{c}</option>)}</Select>
+              <Select value={f.vanPhong} onChange={set("vanPhong")}><option value="">Chọn văn phòng</option>{data.offices.map((o) => <option key={o.id} value={o.ten}>{o.ten}</option>)}</Select>
             </Field>
             <Field label="Ngày bắt đầu" error={err.ngayBatDau}>
               <Input type="date" value={f.ngayBatDau} onChange={set("ngayBatDau")} />

@@ -14,6 +14,7 @@ import type { Notification, Role, Session } from "./types";
 
 export interface DemoData {
   advisors: typeof seed.advisors;
+  offices: typeof seed.offices;
   hangMuc: typeof seed.hangMuc;
   honorMonths: typeof seed.honorMonths;
   chuyenDe: typeof seed.chuyenDe;
@@ -38,6 +39,7 @@ export interface DemoData {
 
 const initialData = (): DemoData => ({
   advisors: seed.advisors,
+  offices: seed.offices,
   hangMuc: seed.hangMuc,
   honorMonths: seed.honorMonths,
   chuyenDe: seed.chuyenDe,
@@ -84,7 +86,7 @@ interface StoreValue {
 
 const Ctx = createContext<StoreValue | null>(null);
 /** Đổi số này mỗi lần sửa seed để phiên cũ trong sessionStorage không che dữ liệu mới */
-const SEED_VERSION = "2026-09-09e";
+const SEED_VERSION = "2026-09-10a";
 const KEY_DATA = `ecard2-demo-data-${SEED_VERSION}`;
 const KEY_SESSION = "ecard2-demo-session";
 const GUEST: Session = { role: "guest" };

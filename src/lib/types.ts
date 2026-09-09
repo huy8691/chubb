@@ -10,6 +10,15 @@ export interface Session {
   email?: string;
 }
 
+/** Văn phòng Chubb — thực thể phụ của Tư vấn viên (H11 popup H11c, 09/09): marker trên bản đồ "Tìm Tư vấn viên gần bạn" (E01) */
+export interface Office {
+  id: string;
+  ten: string; // trùng với Advisor.vanPhong
+  diaChi: string;
+  lat: number;
+  lng: number;
+}
+
 export interface Advisor {
   ma: string; // 7 số, ví dụ 0161363
   hoTen: string;

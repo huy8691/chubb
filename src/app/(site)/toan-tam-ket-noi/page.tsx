@@ -1,5 +1,5 @@
 "use client";
-/** E01 · Toàn Tâm Kết Nối (Tab 4 · Danh thiếp) — trang tổng (09/09): Danh bạ Tư vấn viên (tìm + lọc + danh sách) · bảng xếp hạng chia sẻ · CTA Tư vấn viên. Bỏ "Danh thiếp mẫu" và "Cách hoạt động" (dư khi đã có danh bạ). */
+/** E01 · Toàn Tâm Kết Nối (Tab 4 · Danh thiếp) — trang tổng (09/09): Tìm Tư vấn viên gần bạn (bản đồ) · Danh bạ Tư vấn viên (tìm + lọc + danh sách) · bảng xếp hạng chia sẻ · CTA Tư vấn viên. Bỏ "Danh thiếp mẫu" và "Cách hoạt động" (dư khi đã có danh bạ). */
 import Link from "next/link";
 import { useState } from "react";
 import { Avatar, Button, Chip, H2, Hero, Muted, Table } from "@/components/ui";
@@ -8,6 +8,7 @@ import { fmtNum } from "@/lib/seed";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
 import { QuickView } from "@/components/danh-thiep/QuickView";
 import { DanhBa } from "@/components/danh-thiep/DanhBa";
+import { GanBan } from "@/components/danh-thiep/GanBan";
 import { THANG_BXH, isThangChot, tinhThanh, xepHang } from "@/components/danh-thiep/lib";
 
 export default function Page() {
@@ -15,6 +16,7 @@ export default function Page() {
   const tvv = useCurrentAdvisor();
   const [xemNhanh, setXemNhanh] = useState<string>();
   const [moRong, setMoRong] = useState(false);
+  const [vanPhongLoc, setVanPhongLoc] = useState<string[] | null>(null);
 
   const bxh = xepHang(data, true);
   const top = moRong ? bxh.slice(0, 20) : bxh.slice(0, 5);
@@ -25,7 +27,8 @@ export default function Page() {
       <Hero eyebrow="Toàn Tâm Kết Nối" title="Nắm Chắc Cơ Hội" desc="Toàn Tâm trong từng điểm chạm, chủ động trong từng kết nối. Danh thiếp điện tử giúp Tư vấn viên dễ dàng chia sẻ dấu ấn cá nhân và mở ra cơ hội mới." image="/img/e01-kv.jpg" />
 
       <div className="wrap py-14 space-y-16">
-        <DanhBa />
+        <GanBan onLocVanPhong={(l) => { setVanPhongLoc(l); if (l) document.getElementById("danh-ba")?.scrollIntoView({ behavior: "smooth" }); }} />
+        <DanhBa vanPhongLoc={vanPhongLoc} />
 
         {/* Bảng xếp hạng chia sẻ */}
         <section>

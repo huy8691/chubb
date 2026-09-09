@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { CmsCard, CmsHeader } from "@/components/cms/CmsShell";
+import { VanPhongModal } from "@/components/cms/VanPhongModal";
 import { Button, FilterChips, Pagination, SearchBox, Table } from "@/components/ui";
 import { R } from "@/lib/routes";
 import { fmtNum } from "@/lib/seed";
@@ -15,6 +16,7 @@ const PAGE = 10;
 export default function Page() {
   const { data } = useStore();
   const [q, setQ] = useState("");
+  const [moVP, setMoVP] = useState(false);
   const [loc, setLoc] = useState<Loc>("tat-ca");
   const [page, setPage] = useState(1);
 
@@ -41,7 +43,7 @@ export default function Page() {
 
   return (
     <>
-      <CmsHeader title="Tư vấn viên & danh thiếp" desc={`${fmtNum(data.advisors.length)} Tư vấn viên`} right={<Button href={R.H11b()}>+ Thêm Tư vấn viên</Button>} />
+      <CmsHeader title="Tư vấn viên & danh thiếp" desc={`${fmtNum(data.advisors.length)} Tư vấn viên`} right={<div className="flex gap-3"><Button kind="secondary" onClick={() => setMoVP(true)}>Văn phòng ({data.offices.length})</Button><Button href={R.H11b()}>+ Thêm Tư vấn viên</Button></div>} />
       <CmsCard>
         <div className="flex flex-wrap items-center gap-4 mb-4">
           <SearchBox value={q} onChange={(v) => { setQ(v); setPage(1); }} placeholder="Tìm theo mã, họ tên, email…" className="w-[360px]" />
@@ -75,6 +77,7 @@ export default function Page() {
           <Pagination page={p} pages={pages} onChange={setPage} />
         </div>
       </CmsCard>
+      <VanPhongModal open={moVP} onClose={() => setMoVP(false)} />
     </>
   );
 }

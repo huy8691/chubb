@@ -1,7 +1,7 @@
 import type {
   Advisor, Article, Candidate, ChuyenDe, CmsUser, ContactMessage, DocType, Document, FAQ,
   FinanceParams, FlaggedRow, HangMuc, HonorMonth, NguoiDat, Notification, QuizQuestion, QuizResultType,
-  RankingRow, SavedItem, StudioImage, StudioTemplate, LoiChuc } from "./types";
+  RankingRow, SavedItem, StudioImage, StudioTemplate, LoiChuc, Office } from "./types";
 
 /* ---------- Tư vấn viên ---------- */
 const HO_TEN = [
@@ -11,6 +11,14 @@ const HO_TEN = [
   "Dương Hải Yến", "Cao Bảo Long",
 ];
 const VAN_PHONG = ["TP. Hồ Chí Minh — Q.1", "Hà Nội — Cầu Giấy", "Đà Nẵng — Hải Châu", "Cần Thơ — Ninh Kiều", "Hải Phòng — Lê Chân"];
+/** 5 văn phòng (H11c) — toạ độ để tính "gần bạn" trên E01 */
+export const offices: Office[] = [
+  { id: "vp-hcm-q1", ten: "TP. Hồ Chí Minh — Q.1", diaChi: "115 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh", lat: 10.7743, lng: 106.7021 },
+  { id: "vp-hn-cg", ten: "Hà Nội — Cầu Giấy", diaChi: "Tầng 12, 144 Xuân Thuỷ, Cầu Giấy, Hà Nội", lat: 21.0367, lng: 105.7826 },
+  { id: "vp-dn-hc", ten: "Đà Nẵng — Hải Châu", diaChi: "38 Bạch Đằng, Hải Châu, Đà Nẵng", lat: 16.0678, lng: 108.2208 },
+  { id: "vp-ct-nk", ten: "Cần Thơ — Ninh Kiều", diaChi: "209 đường 30/4, Ninh Kiều, Cần Thơ", lat: 10.0341, lng: 105.7784 },
+  { id: "vp-hp-lc", ten: "Hải Phòng — Lê Chân", diaChi: "1 Lê Hồng Phong, Lê Chân, Hải Phòng", lat: 20.8449, lng: 106.6881 },
+];
 const CHUC_DANH = ["Tư vấn tài chính", "Trưởng nhóm kinh doanh", "Giám đốc kinh doanh khu vực", "Tư vấn tài chính cao cấp"];
 
 
