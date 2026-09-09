@@ -119,16 +119,21 @@ function Studio() {
           <div className="font-bold text-[16px] text-den">Xem trước</div>
           <div className="mt-4 max-w-[380px] mx-auto"><StudioPreview template={m} portrait={anh} zoom={zoom} hoTen={hoTen} chucDanh={chucDanh} soDienThoai={sdt} /></div>
           <Muted className="mt-3 text-[12px] text-center">Phiên bản mẫu v{m.phienBan ?? 1} · cập nhật {fmtDate(m.capNhat)}</Muted>
-          <div className="mt-5 flex flex-wrap items-center gap-2">
-            <Button size="sm" onClick={() => flash("Đã tải ảnh về máy")}>Tải ảnh</Button>
-            <Button size="sm" kind="secondary" onClick={luu}>Lưu vào Ảnh Studio của tôi</Button>
-            <Button size="sm" kind="ghost" className="ml-auto" onClick={() => router.push(R.D01)}>Huỷ</Button>
+          <div className="mt-5">
+            <div className="text-[11.5px] font-bold tracking-wider text-mut">LƯU CHO RIÊNG BẠN</div>
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <Button size="sm" onClick={() => flash("Đã tải ảnh về máy")}>Tải ảnh</Button>
+              <Button size="sm" kind="secondary" onClick={luu}>Lưu vào Ảnh Studio của tôi</Button>
+            </div>
+            <Muted className="mt-2 text-[12px]">Chỉ bạn thấy. Ảnh nằm ở Trang cá nhân › Đã lưu › Ảnh Studio của tôi.</Muted>
           </div>
-          <Muted className="mt-3 text-[12px]">Ảnh đã lưu nằm ở Trang cá nhân › Đã lưu › Ảnh Studio của tôi.</Muted>
           <div className="mt-5 pt-5 border-t border-vien2">
-            <Checkbox checked={dongY} onChange={(e) => setDongY(e.target.checked)} label={<span className="text-[13px]">Tôi đồng ý cho ảnh này hiển thị công khai trên Bộ sưu tập Studio, kèm tên của tôi</span>} />
-            <Button className="mt-3 w-full" disabled={!dongY} onClick={gui}>Hiển thị công khai trên Bộ sưu tập Studio</Button>
+            <div className="text-[11.5px] font-bold tracking-wider text-mut">HIỂN THỊ CÔNG KHAI</div>
+            <div className="mt-2"><Checkbox checked={dongY} onChange={(e) => setDongY(e.target.checked)} label={<span className="text-[13px]">Tôi đồng ý cho ảnh này hiển thị công khai trên Bộ sưu tập Studio, kèm tên của tôi</span>} /></div>
+            <Button className="mt-3" kind="secondary" disabled={!dongY} onClick={gui}>Lưu và hiển thị công khai trên Bộ sưu tập Studio</Button>
+            <Muted className="mt-2 text-[12px]">Ảnh được lưu vào Ảnh Studio của tôi và gửi Chubb duyệt. Chỉ hiện sau khi duyệt, mỗi ảnh gửi một lần.</Muted>
           </div>
+          <button type="button" className="mt-5 text-[14px] font-bold text-blue hover:underline" onClick={() => router.push(R.D01)}>Huỷ</button>
         </Card>
       </section>
 
