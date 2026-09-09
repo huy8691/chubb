@@ -1,8 +1,7 @@
 import type {
   Advisor, Article, Candidate, ChuyenDe, CmsUser, ContactMessage, DocType, Document, FAQ,
   FinanceParams, FlaggedRow, HangMuc, HonorMonth, NguoiDat, Notification, QuizQuestion, QuizResultType,
-  RankingRow, SavedItem, StudioImage, StudioTemplate,
-} from "./types";
+  RankingRow, SavedItem, StudioImage, StudioTemplate, LoiChuc } from "./types";
 
 /* ---------- Tư vấn viên ---------- */
 const HO_TEN = [
@@ -393,6 +392,7 @@ export const financeParams: FinanceParams = {
 /* ---------- Thông báo · Đã lưu (TVV demo) ---------- */
 export const notifications: Notification[] = [
   { id: "n1", advisorMa: TVV_DEMO.ma, noiDung: "Chubb Life xin bạn đồng ý công khai danh hiệu Chubb Chiến tháng 9/2026.", ngay: "2026-09-06T09:00:00", daDoc: false, href: "/tai-khoan" },
+  { id: "n5", advisorMa: TVV_DEMO.ma, noiDung: `${advisors[1].hoTen} gửi lời chúc cho danh hiệu MDRT tháng 8/2026`, ngay: "2026-09-03T14:20:00", daDoc: false, href: `/toan-tam-dan-dau/hang-muc/${TVV_DEMO.ma}?thang=2026-08&hm=mdrt` },
   { id: "n2", advisorMa: TVV_DEMO.ma, noiDung: 'Ảnh "Ưu đãi tháng 8" bị từ chối · xem lý do', ngay: "2026-09-04T15:20:00", daDoc: false, href: "/tai-khoan/da-luu" },
   { id: "n3", advisorMa: TVV_DEMO.ma, noiDung: "Bảng xếp hạng tháng 8/2026 đã chốt: bạn xếp hạng 1.", ngay: "2026-09-01T08:00:00", daDoc: true, href: "/toan-tam-ket-noi" },
   { id: "n4", advisorMa: TVV_DEMO.ma, noiDung: "Tài liệu mới: Brochure Chubb Bảo An Toàn Diện v2.1", ngay: "2026-08-28T10:00:00", daDoc: true, href: "/tai-khoan/tai-lieu" },
@@ -403,6 +403,15 @@ export const savedItems: SavedItem[] = [
   { id: "s2", advisorMa: TVV_DEMO.ma, loai: "bai-viet", refId: "bv6", ngay: "2026-08-30" },
   { id: "s3", advisorMa: TVV_DEMO.ma, loai: "tai-lieu", refId: "tl3", ngay: "2026-08-25" },
   { id: "s4", advisorMa: TVV_DEMO.ma, loai: "danh-thiep", refId: advisors[3].ma, ngay: "2026-08-20" },
+];
+
+/* ---------- Lời chúc (09/09, phương án B) ---------- */
+export const loiChuc: LoiChuc[] = [
+  { id: "lc1", nguoiGuiMa: advisors[1].ma, nguoiNhanMa: TVV_DEMO.ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: `Chúc mừng ${TVV_DEMO.hoTen} đạt MDRT tháng 8! Cả văn phòng tự hào về bạn.`, ngay: "2026-09-03T14:20:00", trangThai: "hien" },
+  { id: "lc2", nguoiGuiMa: advisors[2].ma, nguoiNhanMa: TVV_DEMO.ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: "10 năm liên tiếp, quá nể. Chúc bạn giữ vững phong độ!", ngay: "2026-09-03T09:05:00", trangThai: "hien" },
+  { id: "lc3", nguoiGuiMa: advisors[3].ma, nguoiNhanMa: TVV_DEMO.ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: "Cảm ơn bạn đã truyền cảm hứng cho cả đội. Chúc mừng!", ngay: "2026-09-02T17:40:00", trangThai: "hien" },
+  { id: "lc4", nguoiGuiMa: advisors[4].ma, nguoiNhanMa: advisors[1].ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: "Chúc mừng bạn! Xem thêm tại bit.ly/xyz để nhận ưu đãi từ đội mình nhé.", ngay: "2026-09-02T11:12:00", trangThai: "gan-co", lyDoCo: "Chứa liên kết ngoài (bit.ly)" },
+  { id: "lc5", nguoiGuiMa: advisors[5].ma, nguoiNhanMa: advisors[2].ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: "Chúc mừng em!", ngay: "2026-09-01T08:30:00", trangThai: "da-an", lyDoCo: "Người nhận ẩn" },
 ];
 
 /* ---------- Tiện ích ---------- */

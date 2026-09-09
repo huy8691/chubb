@@ -8,9 +8,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { R } from "@/lib/routes";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
-import { fmtDate, thangLabel } from "@/lib/seed";
+import { fmtDate, fmtDateTime, thangLabel } from "@/lib/seed";
 import type { DanhHieu } from "@/lib/types";
 import { Button, Card, Chip, H2, Muted, Stat, useFlash } from "@/components/ui";
+import { linkC02 } from "@/components/vinh-danh/honor";
 
 export default function Page() {
   const router = useRouter();
@@ -54,6 +55,11 @@ export default function Page() {
     return rows.sort((a, b) => b.ngay.localeCompare(a.ngay));
   })();
   const hienHoatDong = moRong ? hoatDong : hoatDong.slice(0, 4);
+
+  /* Lời chúc từ đồng nghiệp (09/09): 3 mới nhất, người nhận có thể Ẩn; xem đủ trên trang Thành tích (C02) */
+  const loiChuc = data.loiChuc.filter((l) => l.nguoiNhanMa === tvv.ma && l.trangThai === "hien").sort((a, b) => b.ngay.localeCompare(a.ngay));
+  const anLoiChuc = (id: string) => { actions.update("loiChuc", (ls) => ls.map((l) => l.id === id ? { ...l, trangThai: "da-an", lyDoCo: "Người nhận ẩn" } : l)); flash("Đã ẩn lời chúc khỏi trang Thành tích của bạn"); };
+  const tenGui = (ma: string) => { const a = data.advisors.find((x) => x.ma === ma); return a ? `${a.hoTen} — ${a.vanPhong.replace(/ — .*$/, "")}` : ma; };
 
   /* Danh hiệu & vinh danh */
   const soNguoi = (d: DanhHieu) => data.honorMonths.find((m) => m.id === d.thangId)?.hangMuc.find((h) => h.hangMucId === d.hangMucId)?.nguoiDat.length ?? 0;
@@ -154,6 +160,28 @@ export default function Page() {
                   </li>
                 );
               })}
+            </ul>
+          )}
+        </Card>
+      </section>
+
+      <section>
+        <div className="flex items-end justify-between gap-4 mb-4">
+          <H2>Lời chúc từ đồng nghiệp</H2>
+          {loiChuc[0] && <Link href={linkC02(tvv.ma, loiChuc[0].thangId, loiChuc[0].hangMucId)} className="text-[14px] font-bold text-blue hover:underline">Xem tất cả trên trang Thành tích</Link>}
+        </div>
+        <Card>
+          {loiChuc.length === 0 ? <div className="px-5 py-6 text-[14px] text-ink2">Chưa có lời chúc nào.</div> : (
+            <ul>
+              {loiChuc.slice(0, 3).map((l) => (
+                <li key={l.id} className="flex items-start gap-4 px-5 py-4 border-b border-vien2 last:border-0">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-baseline gap-3"><span className="font-bold text-[15px] text-den">{tenGui(l.nguoiGuiMa)}</span><span className="text-[12.5px] text-mut">{fmtDateTime(l.ngay)}</span></div>
+                    <p className="text-[13.5px] text-ink2 mt-1">{l.noiDung}</p>
+                  </div>
+                  <Button kind="secondary" size="sm" onClick={() => anLoiChuc(l.id)}>Ẩn</Button>
+                </li>
+              ))}
             </ul>
           )}
         </Card>

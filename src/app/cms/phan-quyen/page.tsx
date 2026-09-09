@@ -31,7 +31,7 @@ export default function Page() {
         <Table head={["Vai trò", "Module được vào"]}>
           <tr>
             <td className="font-bold text-den w-[380px]">Quản trị</td>
-            <td className="text-ink2">Tất cả 14 module, kể cả Phân quyền và Báo cáo BXH</td>
+            <td className="text-ink2">Tất cả 15 module, kể cả Phân quyền, Báo cáo BXH và Lời chúc</td>
           </tr>
           <tr>
             <td className="font-bold text-den">Biên tập</td>

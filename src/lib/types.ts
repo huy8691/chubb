@@ -315,6 +315,21 @@ export interface Notification {
   href?: string;
 }
 
+/** Lời chúc TVV gửi nhau trên trang Thành tích (09/09, phương án B): hiện ngay, bộ lọc tự gắn cờ, Quản trị ẩn */
+export type TrangThaiLoiChuc = "hien" | "gan-co" | "da-an";
+export interface LoiChuc {
+  id: string;
+  nguoiGuiMa: string;
+  nguoiNhanMa: string;
+  thangId: string;
+  hangMucId: string;
+  noiDung: string;
+  ngay: string;
+  trangThai: TrangThaiLoiChuc;
+  /** lý do gắn cờ (tự động) hoặc lý do ẩn (Quản trị / người nhận) */
+  lyDoCo?: string;
+}
+
 export interface SavedItem {
   id: string;
   advisorMa: string;

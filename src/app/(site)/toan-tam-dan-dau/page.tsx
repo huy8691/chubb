@@ -9,7 +9,7 @@ import { useState } from "react";
 import { R } from "@/lib/routes";
 import { thangLabel } from "@/lib/seed";
 import { Button, Card, EmptyState, H2, Hero, ImageBox, MoreLink, Muted, Table, cx, useFlash } from "@/components/ui";
-import { ChonThang, ShareButtons, TheTVV, anhTVV, linkC02, useHonor, type NguoiDatView } from "@/components/vinh-danh/honor";
+import { ChonThang, GuiLoiChucButton, ShareButtons, TheTVV, anhTVV, linkC02, useHonor, type NguoiDatView } from "@/components/vinh-danh/honor";
 
 const SO_CHU = ["Không", "Một", "Hai", "Ba", "Bốn", "Năm", "Sáu"];
 
@@ -75,6 +75,7 @@ export default function Page() {
               <div className="mt-8 flex flex-wrap items-center gap-2">
                 <span className="font-bold text-[13px] text-den mr-2">Chia sẻ thành tựu:</span>
                 <ShareButtons onDone={flash} />
+                <span className="ml-4"><GuiLoiChucButton kind="secondary" nguoiNhan={{ ma: leader.ma, hoTen: leader.hoTen }} thangId={latest.id} hangMucId={active.id} onDone={flash} /></span>
               </div>
               <div className="mt-5"><MoreLink href={linkC02(leader.ma, latest.id, active.id)}>Xem chi tiết thành tích</MoreLink></div>
             </div>

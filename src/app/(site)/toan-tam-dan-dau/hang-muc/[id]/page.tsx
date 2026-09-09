@@ -13,7 +13,7 @@ import { R } from "@/lib/routes";
 import { fmtNum, thangLabel } from "@/lib/seed";
 import type { NguoiDat } from "@/lib/types";
 import { Avatar, Button, Card, Chip, EmptyState, H1, H2, Muted, useFlash } from "@/components/ui";
-import { ShareButtons, TheTVV, useHonor } from "@/components/vinh-danh/honor";
+import { LoiChucBlock, ShareButtons, TheTVV, useHonor } from "@/components/vinh-danh/honor";
 
 /** 2.450.000.000 → "2,45 tỷ ₫"; 850.000.000 → "850 triệu ₫" */
 export const fmtTien = (n?: number) => n === undefined ? "—" : n >= 1e9 ? `${(n / 1e9).toFixed(2).replace(".", ",").replace(/,?0+$/, "")} tỷ ₫` : `${Math.round(n / 1e6)} triệu ₫`;
@@ -93,6 +93,8 @@ function ChiTiet({ ma }: { ma: string }) {
             {cungHangMuc.map((x) => <TheTVV key={x.ma} v={x} sub={`${hm.ten} ${m.nam} · ${x.vanPhong}`} thangId={m.id} hangMucId={h.id} />)}
           </div>
         )}
+        <LoiChucBlock nguoiNhan={{ ma: v.ma, hoTen: v.hoTen }} thangId={m.id} hangMucId={h.id} onDone={flash} />
+
         <Card className="mt-10 p-5 flex flex-wrap items-center justify-between gap-4">
           <div className="text-[14px] text-ink2">Bảng vinh danh {thangLabel(m)} — {hm.ten}</div>
           <Button kind="secondary" href={R.C04(m.id)}>Xem cả tháng</Button>

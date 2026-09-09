@@ -1,7 +1,7 @@
 "use client";
 /**
  * Khung CMS: thanh trên xanh đậm #000066 (C H U B B · KHU VỰC QUẢN TRỊ · email · Đăng xuất · Cổng công khai)
- * + sidebar 14 mục (Biên tập chỉ thấy 6 mục nội dung) + vùng nội dung.
+ * + sidebar 15 mục (Biên tập chỉ thấy 6 mục nội dung) + vùng nội dung.
  * Dùng trong app/cms/layout.tsx. H00 (đăng nhập CMS) không dùng khung này.
  */
 import Link from "next/link";
