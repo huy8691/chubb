@@ -39,7 +39,7 @@ export default function Page() {
 
   const congCu = [
     { ten: "Quản lý tài chính cá nhân", moTa: "Ước tính khoản tiết kiệm và thời gian để đạt mục tiêu tài chính.", href: R.D03, anh: "/img/d01-m1.jpg" },
-    { ten: "Studio", moTa: "Chọn mẫu Chubb đã duyệt, tải ảnh của bạn, xuất ảnh đúng nhận diện.", href: tvv ? R.D02 : `${R.G01}?next=${encodeURIComponent(R.D02)}`, anh: "/img/d01-m2.jpg", canDangNhap: true },
+    { ten: "Studio", moTa: "Chọn mẫu Chubb đã duyệt, tải ảnh của bạn, xuất ảnh đúng nhận diện.", href: R.D08, anh: "/img/d01-m2.jpg", canDangNhap: true },
     { ten: "Trắc Nghiệm Tính Cách", moTa: "Khám phá mức độ phù hợp với nghề tư vấn tài chính.", href: R.D04, anh: "/img/d01-m3.jpg" },
     { ten: "Sẵn Sàng Kết Nối", moTa: "Danh thiếp điện tử với mã QR riêng.", href: R.E01, anh: "/img/d01-m4.jpg" },
   ];

@@ -50,7 +50,7 @@ function KetQuaTim() {
     const congCu = [
       { ten: "Quản lý tài chính cá nhân", phu: "Công khai · bảng tính tiết kiệm và mục tiêu", href: R.D03, tu: "tiết kiệm tài chính mục tiêu" },
       { ten: "Trắc nghiệm nghề Tư vấn Tài chính", phu: `Công khai · ${data.quizQuestions.filter((x) => x.hien).length} câu`, href: R.D04, tu: "trắc nghiệm tính cách" },
-      { ten: "Studio", phu: "Dành cho Tư vấn viên · tạo ảnh từ Mẫu Studio", href: R.D02, tu: "studio ảnh mẫu" },
+      { ten: "Studio", phu: "Mẫu Studio · Tư vấn viên đăng nhập để tạo ảnh", href: R.D08, tu: "studio ảnh mẫu" },
       { ten: "Tài liệu", phu: `Công khai · ${data.documents.filter((x) => x.phan === "cong-khai" && x.trangThai === "da-xuat-ban").length} tệp`, href: R.G04, tu: "tài liệu brochure biểu mẫu" },
       { ten: "Tìm Tư vấn viên", phu: "Công khai · tìm theo tên hoặc mã 7 số", href: R.E01, tu: "danh thiếp tư vấn viên kết nối" },
     ];

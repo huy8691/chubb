@@ -92,7 +92,7 @@ export default function Page() {
       {show("anh-studio") && !trong && (
         <section>
           <Title>Ảnh Studio của tôi ({anh.length})</Title>
-          {anh.length === 0 ? <EmptyState title="Bạn chưa tạo ảnh nào trong Studio" action={<Button kind="secondary" href={R.D02}>Mở Studio</Button>} /> : (
+          {anh.length === 0 ? <EmptyState title="Bạn chưa tạo ảnh nào trong Studio" action={<Button kind="secondary" href={R.D08}>Mở Studio</Button>} /> : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {anh.map((a) => (
                 <Card key={a.id} className="p-4 flex flex-col gap-3">
@@ -104,7 +104,7 @@ export default function Page() {
                     {a.trangThai === "bi-tu-choi" && a.lyDoTuChoi && <div className="mt-2 text-[12.5px] text-red-fg bg-red-bg rounded-sm px-2.5 py-1.5">Lý do từ chối: {a.lyDoTuChoi}</div>}
                   </div>
                   <div className="flex flex-wrap gap-x-4 gap-y-1 text-[12px] font-bold mt-auto">
-                    <Link href={R.D02} className="text-blue">Mở</Link>
+                    <Link href={`${R.D02}?mau=${a.templateId}`} className="text-blue">Mở</Link>
                     <button type="button" className="text-blue" onClick={() => flash(`Đã tải ảnh "${tenMau(a.templateId)}" về máy`)}>Tải ảnh</button>
                     <button type="button" className="text-ink2 hover:text-red-fg" onClick={() => setXoa(a)}>Xoá</button>
                     {a.trangThai === "rieng-tu" && <button type="button" className="text-blue basis-full text-left" onClick={() => { actions.update("studioImages", (l) => l.map((x) => x.id === a.id ? { ...x, trangThai: "cho-duyet", dongYCongKhai: true } : x)); flash("Đã gửi Chubb duyệt — ảnh hiển thị công khai trên Bộ sưu tập Studio sau khi duyệt"); }}>Hiển thị công khai</button>}

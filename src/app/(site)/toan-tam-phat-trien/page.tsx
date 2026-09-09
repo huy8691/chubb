@@ -14,7 +14,7 @@ export default function Page() {
 
   const congCu = [
     { ten: "Quản lý tài chính cá nhân", moTa: "Ước tính khoản tiết kiệm và thời gian để đạt mục tiêu tài chính.", href: R.D03, nut: "Mở công cụ" },
-    { ten: "Studio", moTa: "Chọn mẫu Chubb đã duyệt, tải ảnh của bạn, xuất ảnh đúng nhận diện.", href: R.D02, nut: daDangNhap ? "Mở công cụ" : "Đăng nhập để mở", canDangNhap: true },
+    { ten: "Studio", moTa: "Chọn mẫu Chubb đã duyệt, tải ảnh của bạn, xuất ảnh đúng nhận diện.", href: R.D08, nut: "Xem mẫu Studio", chip: "Tạo ảnh cần đăng nhập" },
     { ten: "Trắc Nghiệm Tính Cách", moTa: "Khám phá mức độ phù hợp với nghề tư vấn tài chính.", href: R.D04, nut: "Mở công cụ" },
   ];
 
@@ -32,8 +32,8 @@ export default function Page() {
             <Card key={c.ten} className="p-6 flex flex-col">
               <H3>{c.ten}</H3>
               <Muted className="mt-2 flex-1">{c.moTa}</Muted>
-              {c.canDangNhap && !daDangNhap && <div className="mt-4"><Chip tone="amber">Cần đăng nhập</Chip></div>}
-              <div className="mt-5"><Button href={c.canDangNhap && !daDangNhap ? `${R.G01}?next=${encodeURIComponent(R.D02)}` : c.href}>{c.nut}</Button></div>
+              {c.chip && !daDangNhap && <div className="mt-4"><Chip tone="amber">{c.chip}</Chip></div>}
+              <div className="mt-5"><Button href={c.href}>{c.nut}</Button></div>
             </Card>
           ))}
         </div>

@@ -24,6 +24,7 @@ export const R = {
   // Công cụ
   D01: "/toan-tam-phat-trien",
   D02: "/toan-tam-phat-trien/studio",
+  D08: "/toan-tam-phat-trien/studio/mau",
   D07: "/toan-tam-phat-trien/studio/bo-suu-tap",
   D03: "/toan-tam-phat-trien/tai-chinh-ca-nhan",
   D04: "/toan-tam-phat-trien/trac-nghiem",

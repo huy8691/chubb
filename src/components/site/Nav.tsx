@@ -63,7 +63,7 @@ export function Nav({ active }: { active?: string }) {
             {menu === "account" && (
               <div className="absolute right-0 top-11 w-[300px] bg-white border border-vien rounded-sm shadow-lg p-2 text-[14px]" role="menu">
                 <div className="px-3 py-2 font-bold text-den border-b border-vien2 mb-1">{tvv.hoTen} · Mã {tvv.ma}</div>
-                {[["Trang cá nhân", R.G02a], ["Danh thiếp của tôi", R.E04], ["Đã lưu", R.G02], ["Studio của tôi", R.D02], ["Tài khoản & cài đặt", R.G06]].map(([l, h]) => (
+                {[["Trang cá nhân", R.G02a], ["Danh thiếp của tôi", R.E04], ["Đã lưu", R.G02], ["Studio của tôi", R.D08], ["Tài khoản & cài đặt", R.G06]].map(([l, h]) => (
                   <Link key={h} href={h} onClick={() => setMenu("none")} className="block px-3 py-2 rounded-sm text-ink2 hover:bg-xam hover:text-blue">{l}</Link>
                 ))}
                 <button type="button" onClick={() => { actions.logout(); setMenu("none"); router.push(R.A01); }} className="w-full text-left px-3 py-2 rounded-sm text-red-fg hover:bg-xam font-bold">Đăng xuất</button>

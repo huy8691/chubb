@@ -77,17 +77,18 @@ function Studio() {
       <section className="wrap py-10 grid grid-cols-1 lg:grid-cols-[1fr_560px] gap-8 items-start">
         <div className="space-y-8">
           <Card className="p-6">
-            <div className="font-bold text-[16px] text-den">Bước 1 — Chọn mẫu</div>
-            <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-              {mau.map((x) => (
-                <button key={x.id} type="button" onClick={() => setMauId(x.id)} className={cx("text-left rounded-sm border p-2 transition-colors", x.id === m.id ? "border-blue bg-blue-soft" : "border-vien hover:border-blue")}>
-                  <ImageBox src={x.anh} ratio="3/4" />
-                  <div className="mt-2 text-[12px] font-bold text-den truncate">{x.ten}</div>
-                  <div className="text-[11px] text-mut">{x.id === m.id ? "Đang chọn" : tiLeLabel(x.tiLe)}</div>
-                </button>
-              ))}
+            <div className="font-bold text-[16px] text-den">Bước 1 — Mẫu đã chọn</div>
+            <div className="mt-4 flex items-start gap-5">
+              <div className="w-[130px] shrink-0 rounded-sm border border-blue bg-blue-soft p-2">
+                <ImageBox src={m.anh} ratio="3/4" />
+                <div className="mt-2 text-[11px] text-blue font-bold">Đã chọn</div>
+              </div>
+              <div>
+                <div className="font-bold text-[15px] text-den">{m.ten}</div>
+                <Muted className="mt-1 text-[12.5px]">{tiLeLabel(m.tiLe)} · phiên bản v{m.phienBan ?? 1} · cập nhật {fmtDate(m.capNhat)}</Muted>
+                <Link href={R.D08} className="mt-3 inline-block text-[13px] font-bold text-blue hover:underline">Đổi mẫu</Link>
+              </div>
             </div>
-            <Muted className="mt-3 text-[13px]">Chỉ hiện mẫu đã được Chubb phê duyệt</Muted>
           </Card>
 
           <Card className="p-6">

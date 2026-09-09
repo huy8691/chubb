@@ -96,7 +96,7 @@ export default function Page() {
           <H2 className="mb-4">Lối tắt</H2>
           <div className="grid grid-cols-2 gap-3">
             <Button kind="secondary" href={R.E04}>Sửa danh thiếp</Button>
-            <Button kind="secondary" href={R.D02}>Studio của tôi</Button>
+            <Button kind="secondary" href={R.D08}>Studio của tôi</Button>
             <Button kind="secondary" href={R.G02}>Đã lưu</Button>
             <Button kind="secondary" href={R.G06}>Tài khoản & cài đặt</Button>
             <Button kind="secondary" href={R.G10}>Tài liệu</Button>

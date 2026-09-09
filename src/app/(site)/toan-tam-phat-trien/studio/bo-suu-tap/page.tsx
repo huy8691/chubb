@@ -35,7 +35,7 @@ export default function Page() {
     <>
       <section className="bg-xam">
         <div className="wrap py-10">
-          <Breadcrumb items={[{ label: "Trang chủ", href: R.A01 }, { label: "Toàn Tâm Phát Triển", href: R.D01 }, { label: "Studio", href: R.D02 }, { label: "Bộ sưu tập Studio" }]} />
+          <Breadcrumb items={[{ label: "Trang chủ", href: R.A01 }, { label: "Toàn Tâm Phát Triển", href: R.D01 }, { label: "Mẫu Studio", href: R.D08 }, { label: "Bộ sưu tập Studio" }]} />
           <H1 className="mt-3">Bộ sưu tập Studio</H1>
           <Muted className="mt-3 text-[16px]">{tatCa.length} ảnh do Tư vấn viên tạo trong Studio, Chubb đã duyệt và Tư vấn viên đồng ý công khai.</Muted>
         </div>

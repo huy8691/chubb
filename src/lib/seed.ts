@@ -229,11 +229,21 @@ export const articles: Article[] = TIEU_DE.map((tieuDe, i) => {
 });
 
 /* ---------- Studio ---------- */
-export const studioTemplates: StudioTemplate[] = [
+const studioTemplatesGoc: StudioTemplate[] = [
   { id: "m1", ten: "Chúc mừng năm mới", anh: "/img/d01-m1.jpg", tiLe: "4:5", trangThai: "da-xuat-ban", soAnhDaTao: 214, capNhat: "2026-08-01T09:00:00", phienBan: 3, disclaimer: "Sản phẩm bảo hiểm do Chubb Life Việt Nam cung cấp. Thông tin mang tính tham khảo.", mauNen: "#000ECC", khungAnh: "tron", tiLeKhung: 40, truong: { hoTen: true, chucDanh: true, soDienThoai: true, gioiThieu: false } },
   { id: "m2", ten: "Cảm ơn khách hàng", anh: "/img/d01-m2.jpg", tiLe: "1:1", trangThai: "da-xuat-ban", soAnhDaTao: 98, capNhat: "2026-07-12T09:00:00", phienBan: 2, disclaimer: "Sản phẩm bảo hiểm do Chubb Life Việt Nam cung cấp. Thông tin mang tính tham khảo.", mauNen: "#000066", khungAnh: "vuong", tiLeKhung: 45, truong: { hoTen: true, chucDanh: true, soDienThoai: true, gioiThieu: false } },
   { id: "m3", ten: "Tôi là Tư vấn viên Chubb Life", anh: "/img/d01-m3.jpg", tiLe: "9:16", trangThai: "nhap", soAnhDaTao: 0, capNhat: "2026-09-02T09:00:00", phienBan: 1, disclaimer: "Sản phẩm bảo hiểm do Chubb Life Việt Nam cung cấp. Thông tin mang tính tham khảo.", mauNen: "#FC0386", khungAnh: "tron", tiLeKhung: 40, truong: { hoTen: true, chucDanh: true, soDienThoai: true, gioiThieu: true } },
   { id: "m4", ten: "Vinh danh tháng", anh: "/img/d01-m4.jpg", tiLe: "1:1", trangThai: "luu-tru", soAnhDaTao: 41, capNhat: "2026-05-20T09:00:00", phienBan: 1, disclaimer: "Sản phẩm bảo hiểm do Chubb Life Việt Nam cung cấp. Thông tin mang tính tham khảo.", mauNen: "#FFA300", khungAnh: "tron", tiLeKhung: 40, truong: { hoTen: true, chucDanh: false, soDienThoai: false, gioiThieu: false } },
+];
+/** 09/09: Chubb sẽ có nhiều mẫu → D08 là trang danh sách mẫu; sinh thêm 20 mẫu từ 4 mẫu gốc */
+const TEN_MAU_THEM = ["Danh thiếp dọc — Xanh", "Giới thiệu bản thân", "Ưu đãi tháng", "Sự kiện đào tạo", "Thiệp chúc mừng MDRT", "Chào mừng thành viên mới", "Lời chúc sinh nhật khách hàng", "Tổng kết quý", "Tri ân ngày 20/10", "Hẹn gặp tại hội thảo", "Kỷ niệm ngày vào nghề", "Đồng hành cùng gia đình", "Bảo vệ tương lai con", "Câu chuyện nghề của tôi", "Tết Trung thu", "Chúc mừng đạt chỉ tiêu", "Mời tham gia sự kiện", "Lời cảm ơn cuối năm", "Tôi là Tư vấn viên Chubb Life", "Danh thiếp ngang — Trắng"];
+const TI_LE_THEM: StudioTemplate["tiLe"][] = ["3:4", "1:1", "4:5", "9:16"];
+export const studioTemplates: StudioTemplate[] = [
+  ...studioTemplatesGoc,
+  ...TEN_MAU_THEM.map((ten, i) => ({
+    ...studioTemplatesGoc[i % 4], id: `m${i + 5}`, ten, tiLe: TI_LE_THEM[i % 4], anh: `/img/d01-m${(i % 4) + 1}.jpg`, trangThai: "da-xuat-ban" as const,
+    soAnhDaTao: 214 - i * 9, capNhat: `2026-0${8 - (i % 3)}-${String(28 - i).padStart(2, "0")}T09:00:00`, phienBan: (i % 3) + 1,
+  })),
 ];
 
 export const studioImages: StudioImage[] = Array.from({ length: 41 }, (_, i) => ({
