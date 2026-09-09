@@ -76,7 +76,7 @@ export default function Page() {
           <Card className="p-5">
             <H3>Cách tham gia bộ sưu tập</H3>
             <div className="mt-3 font-bold text-[15px] text-den">Bạn là Tư vấn viên Chubb Life?</div>
-            <Muted className="mt-1 text-[13px]">Tạo ảnh của bạn trong Studio, gửi vào bộ sưu tập để đồng nghiệp tham khảo.</Muted>
+            <Muted className="mt-1 text-[13px]">Tạo ảnh của bạn trong Studio rồi bấm “Hiển thị công khai” để đồng nghiệp tham khảo.</Muted>
             <Button className="mt-4" href={session.role === "tvv" ? hrefStudio() : `${R.G01}?next=${encodeURIComponent(R.D02)}`}>Mở Studio</Button>
           </Card>
         </aside>

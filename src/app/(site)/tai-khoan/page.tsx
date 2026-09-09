@@ -47,7 +47,7 @@ export default function Page() {
     });
     anhStudio.filter((a) => a.trangThai === "cho-duyet" || a.trangThai === "da-duyet").forEach((a) => {
       const mau = data.studioTemplates.find((m) => m.id === a.templateId)?.ten ?? "Ảnh Studio";
-      rows.push({ ngay: a.tao, text: a.trangThai === "cho-duyet" ? `Bạn đã gửi ảnh "${mau}" vào Bộ sưu tập Studio` : `Chubb đã duyệt ảnh "${mau}"`, href: R.G02 });
+      rows.push({ ngay: a.tao, text: a.trangThai === "cho-duyet" ? `Bạn đã yêu cầu hiển thị công khai ảnh "${mau}"` : `Ảnh "${mau}" đang hiển thị công khai trên Bộ sưu tập Studio`, href: R.G02 });
     });
     return rows.sort((a, b) => b.ngay.localeCompare(a.ngay));
   })();

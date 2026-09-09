@@ -18,7 +18,8 @@ import { tiLeToRatio } from "@/components/cong-cu/StudioPreview";
 
 const PER_PAGE = 20;
 type Loc = StudioImage["trangThai"];
-const LOC: Loc[] = ["cho-duyet", "da-duyet", "bi-tu-choi", "rieng-tu"];
+/** Ảnh Riêng tư không vào CMS — chỉ ảnh TVV đã bấm Hiển thị công khai (09/09) */
+const LOC: Loc[] = ["cho-duyet", "da-duyet", "bi-tu-choi", "da-ngung"];
 
 export default function Page() {
   return <Suspense fallback={null}><DanhSach /></Suspense>;
@@ -46,11 +47,11 @@ function DanhSach() {
   const shown = list.slice((cur - 1) * PER_PAGE, cur * PER_PAGE);
   const tvvLoc = tvv ? advisor(tvv) : undefined;
 
-  const nhanTT = (s: Loc) => (s === "cho-duyet" ? "Chờ duyệt" : s === "da-duyet" ? "Đã duyệt" : s === "bi-tu-choi" ? "Từ chối" : "Riêng tư");
+  const nhanTT = (s: Loc) => (s === "cho-duyet" ? "Chờ duyệt" : s === "da-duyet" ? "Đang công khai" : s === "bi-tu-choi" ? "Từ chối" : s === "da-ngung" ? "Đã ngừng công khai" : "Riêng tư");
 
   return (
     <>
-      <CmsHeader title="Duyệt ảnh Studio Tư vấn viên gửi lên" desc="Ảnh Tư vấn viên tạo trong Studio và xin đăng vào Bộ sưu tập Studio." />
+      <CmsHeader title="Duyệt ảnh Studio Tư vấn viên gửi lên" desc="Ảnh Tư vấn viên tạo trong Studio và xin hiển thị công khai trên Bộ sưu tập Studio. Mỗi ảnh chỉ gửi một lần." />
       <CmsCard>
         <div className="flex flex-wrap items-center gap-3 mb-4">
           <FilterChips<Loc> value={tt} onChange={(v) => { setTt(v); setPage(1); }} options={LOC.map((s) => ({ value: s, label: nhanTT(s), count: count(s) }))} />
@@ -59,7 +60,7 @@ function DanhSach() {
           )}
         </div>
         {shown.length === 0 ? (
-          <EmptyState title={tt === "cho-duyet" ? "Không còn ảnh chờ duyệt" : `Không có ảnh ở trạng thái ${nhanTT(tt)}`} desc={tt === "cho-duyet" ? "Ảnh Tư vấn viên gửi vào Bộ sưu tập Studio sẽ hiện ở đây." : "Đổi bộ lọc để xem ảnh khác."} />
+          <EmptyState title={tt === "cho-duyet" ? "Không còn ảnh chờ duyệt" : `Không có ảnh ở trạng thái ${nhanTT(tt)}`} desc={tt === "cho-duyet" ? "Ảnh Tư vấn viên bấm Hiển thị công khai sẽ hiện ở đây." : "Đổi bộ lọc để xem ảnh khác."} />
         ) : (
           <Table head={["Ảnh", "Tư vấn viên", "Mẫu", "Ngày gửi", "Đồng ý", "Trạng thái", "Hành động"]}>
             {shown.map((a) => {
@@ -75,7 +76,7 @@ function DanhSach() {
                   <td className="whitespace-nowrap">
                     <div className="flex items-center gap-2">
                       {a.trangThai === "cho-duyet" && <>
-                        <Button size="sm" onClick={() => { duyet(a); flash(`Đã duyệt ảnh của ${ad?.hoTen ?? a.advisorMa} vào Bộ sưu tập Studio`); }}>Duyệt</Button>
+                        <Button size="sm" onClick={() => { duyet(a); flash(`Đã duyệt — ảnh của ${ad?.hoTen ?? a.advisorMa} đang hiển thị công khai trên Bộ sưu tập Studio`); }}>Duyệt</Button>
                         <Button size="sm" kind="secondary" onClick={() => setTuChoiAnh(a)}>Từ chối</Button>
                       </>}
                       <Link href={R.H07a(a.id)} className="text-blue font-bold text-[13px] px-1">Xem</Link>

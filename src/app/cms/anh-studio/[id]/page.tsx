@@ -48,8 +48,9 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const tongDaDuyet = data.studioImages.filter((x) => x.trangThai === "da-duyet").length;
 
   const trangThaiChuoi = a.trangThai === "cho-duyet" ? `Chờ duyệt · gửi ${fmtDateTime(a.tao)}`
-    : a.trangThai === "da-duyet" ? `Đã duyệt · ${fmtDateTime(a.ngayDuyet)} · đang hiện trong Bộ sưu tập Studio`
-    : a.trangThai === "bi-tu-choi" ? `Bị từ chối · Tư vấn viên đã thấy lý do`
+    : a.trangThai === "da-duyet" ? `Đang công khai · duyệt ${fmtDateTime(a.ngayDuyet)} · hiển thị trên Bộ sưu tập Studio`
+    : a.trangThai === "bi-tu-choi" ? `Từ chối · Tư vấn viên đã thấy lý do · không gửi lại được`
+    : a.trangThai === "da-ngung" ? `Đã ngừng công khai · ảnh vẫn trong Ảnh Studio của Tư vấn viên · không gửi lại được`
     : "Riêng tư · chỉ Tư vấn viên thấy trong Ảnh Studio của mình";
 
   return (
@@ -77,12 +78,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
               </div>
             )}
             <div className="flex flex-wrap gap-3 mt-6">
-              {a.trangThai !== "da-duyet" && <Button onClick={() => { duyet(a); setMoTuChoi(false); flash(`Đã duyệt — ảnh hiện trong Bộ sưu tập Studio, ${ad?.hoTen ?? "Tư vấn viên"} nhận thông báo`); }} disabled={!a.dongYCongKhai}>Duyệt</Button>}
+              {(a.trangThai === "cho-duyet" || a.trangThai === "bi-tu-choi") && <Button onClick={() => { duyet(a); setMoTuChoi(false); flash(`Đã duyệt — ảnh hiển thị công khai trên Bộ sưu tập Studio, ${ad?.hoTen ?? "Tư vấn viên"} nhận thông báo`); }} disabled={!a.dongYCongKhai}>Duyệt</Button>}
               {a.trangThai === "cho-duyet" && <Button kind="secondary" onClick={() => setMoTuChoi(true)}>Từ chối (lý do)</Button>}
-              {a.trangThai === "da-duyet" && <Button kind="danger" onClick={() => { go(a); flash("Đã gỡ khỏi Bộ sưu tập Studio — ảnh về Riêng tư, Tư vấn viên nhận thông báo"); }}>Gỡ khỏi bộ sưu tập</Button>}
+              {a.trangThai === "da-duyet" && <Button kind="danger" onClick={() => { go(a); flash("Đã ngừng hiển thị công khai — ảnh vẫn trong Ảnh Studio của Tư vấn viên, Tư vấn viên nhận thông báo"); }}>Ngừng hiển thị công khai</Button>}
               <Button kind="ghost" onClick={() => router.push(R.H07)}>Về danh sách</Button>
             </div>
-            {!a.dongYCongKhai && a.trangThai !== "da-duyet" && <div className="mt-2 text-[12.5px] text-mut">Chỉ duyệt được khi Tư vấn viên đã tick đồng ý công khai.</div>}
+            {!a.dongYCongKhai && (a.trangThai === "cho-duyet" || a.trangThai === "bi-tu-choi") && <div className="mt-2 text-[12.5px] text-mut">Chỉ duyệt được khi Tư vấn viên đã tick đồng ý công khai.</div>}
           </div>
         </div>
       </CmsCard>
@@ -93,7 +94,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         </CmsCard>
       )}
 
-      <CmsCard className="mt-6" title={`Đã duyệt (${tongDaDuyet})`} desc="Ảnh đang hiện trong Bộ sưu tập Studio — Gỡ khi cần." right={<Link href={`${R.H07}?tt=da-duyet`} className="text-[13px] font-bold text-blue hover:underline">Xem tất cả</Link>}>
+      <CmsCard className="mt-6" title={`Đang công khai (${tongDaDuyet})`} desc="Ảnh đang hiển thị trên Bộ sưu tập Studio — ngừng hiển thị khi cần." right={<Link href={`${R.H07}?tt=da-duyet`} className="text-[13px] font-bold text-blue hover:underline">Xem tất cả</Link>}>
         {daDuyetKhac.length === 0 ? <div className="text-[14px] text-ink2">Chưa có ảnh nào khác trong Bộ sưu tập Studio.</div> : (
           <ul className="divide-y divide-vien2 text-[13.5px]">
             {daDuyetKhac.map((x) => {
@@ -101,13 +102,13 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
               return (
                 <li key={x.id} className="py-3 flex items-center justify-between gap-4">
                   <Link href={R.H07a(x.id)} className="hover:text-blue">{xa?.hoTen ?? "Tư vấn viên"} · {x.advisorMa} — {xm?.ten ?? "Mẫu Studio"} v{x.phienBanMau ?? xm?.phienBan ?? 1} · duyệt {fmtDate(x.ngayDuyet)}</Link>
-                  <Button size="sm" kind="secondary" onClick={() => { go(x); flash(`Đã gỡ ảnh của ${xa?.hoTen ?? x.advisorMa} khỏi Bộ sưu tập Studio`); }}>Gỡ khỏi bộ sưu tập</Button>
+                  <Button size="sm" kind="secondary" onClick={() => { go(x); flash(`Đã ngừng hiển thị công khai ảnh của ${xa?.hoTen ?? x.advisorMa}`); }}>Ngừng hiển thị công khai</Button>
                 </li>
               );
             })}
           </ul>
         )}
-        {a.trangThai === "da-duyet" && <div className="mt-3"><Chip tone="green">Ảnh đang xem cũng nằm trong Bộ sưu tập</Chip></div>}
+        {a.trangThai === "da-duyet" && <div className="mt-3"><Chip tone="green">Ảnh đang xem cũng đang hiển thị công khai</Chip></div>}
       </CmsCard>
       {node}
     </>

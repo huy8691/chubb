@@ -239,12 +239,12 @@ export const studioTemplates: StudioTemplate[] = [
 export const studioImages: StudioImage[] = Array.from({ length: 41 }, (_, i) => ({
   id: `as${i + 1}`,
   templateId: studioTemplates[i % 2].id,
-  advisorMa: advisors[i % advisors.length].ma,
+  advisorMa: i === 30 || i === 31 ? advisors[0].ma : advisors[i % advisors.length].ma, // TVV demo có đủ năm trạng thái
   anh: `/img/aw-${(i % 8) + 1}.png`,
   tao: `2026-08-${String(1 + (i % 28)).padStart(2, "0")}T10:00:00`,
-  trangThai: i < 6 ? "cho-duyet" : i < 30 ? "da-duyet" : i === 30 ? "bi-tu-choi" : "rieng-tu",
+  trangThai: i < 6 ? "cho-duyet" : i < 30 ? "da-duyet" : i === 30 ? "bi-tu-choi" : i === 31 || i === 32 ? "da-ngung" : "rieng-tu",
   lyDoTuChoi: i === 30 ? "Ảnh mờ, không thấy rõ logo Chubb Life." : undefined,
-  dongYCongKhai: i < 31,
+  dongYCongKhai: i < 33,
   ngayDuyet: i >= 6 && i < 30 ? `2026-08-${String(2 + (i % 26)).padStart(2, "0")}T15:00:00` : undefined,
   phienBanMau: i % 2 === 0 ? 3 : 2,
 }));

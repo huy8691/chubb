@@ -30,7 +30,7 @@ export default function Page() {
 
   const hang: { loai: string; noiDung: string; nguon: string; so: number; chip: string; tone: "amber" | "grey"; href: string }[] = [
     { loai: "Ứng viên", noiDung: `Ứng viên mới từ form tuyển dụng (${ungVien})`, nguon: "Form Tuyển dụng", so: ungVien, chip: "Mới", tone: "amber", href: `${R.H12}?loc=moi` },
-    { loai: "Ảnh Studio", noiDung: `Ảnh gửi vào bộ sưu tập (${anhChoDuyet})`, nguon: "Tư vấn viên", so: anhChoDuyet, chip: "Chờ duyệt", tone: "amber", href: `${R.H07}?loc=cho-duyet` },
+    { loai: "Ảnh Studio", noiDung: `Ảnh xin hiển thị công khai (${anhChoDuyet})`, nguon: "Tư vấn viên", so: anhChoDuyet, chip: "Chờ duyệt", tone: "amber", href: `${R.H07}?loc=cho-duyet` },
     { loai: "Liên hệ", noiDung: `Tin nhắn liên hệ chưa xem (${tinChuaXem})`, nguon: "Form Liên hệ", so: tinChuaXem, chip: "Mới", tone: "amber", href: `${R.H16}?loc=chua-xem` },
     { loai: "Báo cáo BXH", noiDung: `Hàng gắn cờ chưa xử lý (${coChuaXuLy})`, nguon: "Hệ thống", so: coChuaXuLy, chip: "Chờ xử lý", tone: "amber", href: R.H08 },
     { loai: "Lời chúc", noiDung: `Lời chúc bị gắn cờ tự động (${loiChucCo})`, nguon: "Hệ thống", so: loiChucCo, chip: "Chờ xử lý", tone: "amber", href: `${R.H19}?loc=gan-co` },

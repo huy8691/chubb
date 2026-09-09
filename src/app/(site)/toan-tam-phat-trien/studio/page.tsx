@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable react-hooks/set-state-in-effect -- đọc sessionStorage / tham số URL sau mount là chủ ý (tránh lệch hydration) */
-/** D02 · Studio (cần đăng nhập TVV) — 3 bước: chọn Mẫu Studio → tải ảnh chân dung → thông tin hiển thị; xem trước; Lưu / Tải / Chia sẻ / Gửi vào Bộ sưu tập; khối Bộ sưu tập Studio + Ảnh Studio của tôi. */
+/** D02 · Studio (cần đăng nhập TVV) — 3 bước: chọn Mẫu Studio → tải ảnh chân dung → thông tin hiển thị; xem trước; Tải ảnh / Lưu vào Ảnh Studio của tôi (không duyệt) / Hiển thị công khai trên Bộ sưu tập Studio (Chubb duyệt, gửi một lần); khối Bộ sưu tập Studio + Ảnh Studio của tôi. */
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
@@ -55,7 +55,7 @@ function Studio() {
   };
   const taoAnh = (trangThai: StudioImage["trangThai"]): StudioImage => ({ id: `as${Date.now()}`, templateId: m.id, advisorMa: tvv.ma, anh: anh ?? m.anh, tao: new Date().toISOString(), trangThai, dongYCongKhai: trangThai === "cho-duyet", phienBanMau: m.phienBan });
   const luu = () => { actions.update("studioImages", (l) => [taoAnh("rieng-tu"), ...l]); flash("Đã lưu vào Ảnh Studio của tôi"); };
-  const gui = () => { actions.update("studioImages", (l) => [taoAnh("cho-duyet"), ...l]); flash("Đã gửi vào Bộ sưu tập Studio — chờ Chubb duyệt"); setDongY(false); };
+  const gui = () => { actions.update("studioImages", (l) => [taoAnh("cho-duyet"), ...l]); flash("Đã gửi Chubb duyệt — ảnh hiển thị công khai trên Bộ sưu tập Studio sau khi duyệt"); setDongY(false); };
   const dungMau = (id: string) => { setMauId(id); topRef.current?.scrollIntoView({ behavior: "smooth" }); };
 
   const boSuuTap = data.studioImages.filter((a) => a.trangThai === "da-duyet").sort((a, b) => (b.ngayDuyet ?? b.tao).localeCompare(a.ngayDuyet ?? a.tao)).slice(0, 4);
@@ -120,14 +120,14 @@ function Studio() {
           <div className="mt-4 max-w-[380px] mx-auto"><StudioPreview template={m} portrait={anh} zoom={zoom} hoTen={hoTen} chucDanh={chucDanh} soDienThoai={sdt} /></div>
           <Muted className="mt-3 text-[12px] text-center">Phiên bản mẫu v{m.phienBan ?? 1} · cập nhật {fmtDate(m.capNhat)}</Muted>
           <div className="mt-5 flex flex-wrap items-center gap-2">
-            <Button size="sm" onClick={() => flash("Đã tải ảnh PNG về máy")}>Tải ảnh PNG</Button>
+            <Button size="sm" onClick={() => flash("Đã tải ảnh về máy")}>Tải ảnh</Button>
             <Button size="sm" kind="secondary" onClick={luu}>Lưu vào Ảnh Studio của tôi</Button>
             <Button size="sm" kind="ghost" className="ml-auto" onClick={() => router.push(R.D01)}>Huỷ</Button>
           </div>
-          <Muted className="mt-3 text-[12px]">Hệ thống lưu lựa chọn của bạn (mẫu, thông tin, vị trí ảnh) để mở lại lần sau — không lưu file ảnh.</Muted>
+          <Muted className="mt-3 text-[12px]">Ảnh đã lưu nằm ở Trang cá nhân › Đã lưu › Ảnh Studio của tôi.</Muted>
           <div className="mt-5 pt-5 border-t border-vien2">
-            <Checkbox checked={dongY} onChange={(e) => setDongY(e.target.checked)} label={<span className="text-[13px]">Tôi đồng ý cho Chubb Life đăng ảnh này vào Bộ sưu tập Studio (có tên & ảnh của tôi)</span>} />
-            <Button className="mt-3 w-full" disabled={!dongY} onClick={gui}>Gửi vào Bộ sưu tập Studio (chờ duyệt)</Button>
+            <Checkbox checked={dongY} onChange={(e) => setDongY(e.target.checked)} label={<span className="text-[13px]">Tôi đồng ý cho ảnh này hiển thị công khai trên Bộ sưu tập Studio, kèm tên của tôi</span>} />
+            <Button className="mt-3 w-full" disabled={!dongY} onClick={gui}>Hiển thị công khai trên Bộ sưu tập Studio</Button>
           </div>
         </Card>
       </section>
