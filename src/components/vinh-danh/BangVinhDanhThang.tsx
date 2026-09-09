@@ -1,7 +1,7 @@
 "use client";
 /**
- * Một bảng vinh danh — dùng cho C01 (/toan-tam-dan-dau: bảng công bố mới nhất) và bảng khác
- * (/toan-tam-dan-dau/bang/[id]; C04 gộp vào C01 ngày 09/09 — cùng một màn, chỉ khác bảng). 09/09: bảng có TÊN do Chubb đặt (tháng, quý, đợt riêng).
+ * Một bảng vinh danh — C01 (/toan-tam-dan-dau: bảng công bố mới nhất, có hero) và C04 (/toan-tam-dan-dau/bang/[id]: bảng mở từ lưu trữ,
+ * masthead gọn thay hero — trạng thái của C01, cùng thân trang; 09/09). Bảng có TÊN do Chubb đặt (tháng, quý, đợt riêng).
  * Khối 1: thẻ người dẫn đầu lớn + bốn người kế tiếp; khối 2–4: một hàng ngang, người dẫn đầu là thẻ rộng.
  * Chỉ hiện người đã đồng ý công khai. Hành động chia sẻ / gửi lời chúc chỉ ở C02.
  */
@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { R } from "@/lib/routes";
 import { fmtDate, fmtNum, thangLabel, thoiGianLabel } from "@/lib/seed";
-import { Button, Card, Chip, EmptyState, H2, Hero, ImageBox, MoreLink, Muted, Table } from "@/components/ui";
+import { Breadcrumb, Button, Card, Chip, EmptyState, H1, H2, Hero, ImageBox, MoreLink, Muted, Table } from "@/components/ui";
 import { ChonThang, TheTVV, anhTVV, fmtTien, linkC02, useHonor } from "@/components/vinh-danh/honor";
 
 export function BangVinhDanhThang({ thangId }: { thangId?: string }) {
@@ -31,21 +31,37 @@ export function BangVinhDanhThang({ thangId }: { thangId?: string }) {
   }
 
   const hms = hangMucCoNguoi(month);
+  const thongTin = [thoiGianLabel(month), month.congBo ? `công bố ${fmtDate(month.congBo)}` : "", `${tongCongKhai(month)} Tư vấn viên được vinh danh trong ${hms.length} hạng mục`].filter(Boolean).join(" · ");
+  const chonBang = <ChonThang months={published} value={month.id} onChange={(id) => { if (id !== month.id) router.push(id === latest.id ? R.C01 : R.C04(id)); }} />;
   // Các bảng gần đây: mỗi bảng một hàng (5 bảng công bố gần nhất khác bảng đang xem) → cùng màn này với bảng đó
   const luuTru = published.filter((m) => m.id !== month.id).slice(0, 5);
 
   return (
     <>
-      {hero}
-      <div className="wrap py-10">
-        {/* Tiêu đề tháng + ô chọn tháng (không có dải tab hạng mục — mỗi hạng mục một khối bên dưới) */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-vien pb-3">
-          <div>
-            <H2 className="text-[22px]">Bảng vinh danh {thangLabel(month)}</H2>
-            <div className="mt-1 text-[13px] text-ink2">{[thoiGianLabel(month), month.congBo ? `công bố ${fmtDate(month.congBo)}` : ""].filter(Boolean).join(" · ")}</div>
+      {thangId ? (
+        /* C04 · mở từ lưu trữ: masthead gọn thay hero (breadcrumb · tên bảng · thời gian · công bố · ô chọn bảng) */
+        <section className="bg-xam">
+          <div className="wrap pt-6 pb-10 flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <Breadcrumb items={[{ label: "Trang chủ", href: R.A01 }, { label: "Toàn Tâm Dẫn Đầu", href: R.C01 }, { label: "Các bảng vinh danh", href: R.C03 }, { label: thangLabel(month) }]} />
+              <H1 className="mt-3 text-[34px] uppercase">{thangLabel(month)}</H1>
+              <Muted className="mt-3 text-[16px]">{thongTin}</Muted>
+            </div>
+            {chonBang}
           </div>
-          <ChonThang months={published} value={month.id} onChange={(id) => { if (id !== month.id) router.push(id === latest.id ? R.C01 : R.C04(id)); }} />
-        </div>
+        </section>
+      ) : hero}
+      <div className="wrap py-10">
+        {!thangId && (
+          /* C01 · trang đích tab: tiêu đề bảng + ô chọn bảng (không có dải tab hạng mục — mỗi hạng mục một khối bên dưới) */
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-vien pb-3">
+            <div>
+              <H2 className="text-[22px]">Bảng vinh danh {thangLabel(month)}</H2>
+              <div className="mt-1 text-[13px] text-ink2">{[thoiGianLabel(month), month.congBo ? `công bố ${fmtDate(month.congBo)}` : ""].filter(Boolean).join(" · ")}</div>
+            </div>
+            {chonBang}
+          </div>
+        )}
 
         {hms.length === 0 && <div className="mt-8"><EmptyState title="Bảng này chưa có Tư vấn viên nào đồng ý công khai" /></div>}
         {hms.map((h, idx) => {

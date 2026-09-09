@@ -1,5 +1,5 @@
 "use client";
-/** Tháng cũ — cùng màn C01 với tháng được chọn (C04 gộp vào C01 ngày 09/09). Đích của C03, ô chọn tháng và bảng Lưu trữ theo tháng. */
+/** C04 · Bảng vinh danh mở từ lưu trữ — trạng thái của C01: cùng thân trang, đầu trang gọn (không hero). Đích của C03 "Xem bảng", ô chọn bảng, "Các bảng gần đây", C02 "Xem cả bảng", H03b "Xem trang công khai". */
 import { use } from "react";
 import { BangVinhDanhThang } from "@/components/vinh-danh/BangVinhDanhThang";
 

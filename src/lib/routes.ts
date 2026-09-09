@@ -20,7 +20,7 @@ export const R = {
   C01: "/toan-tam-dan-dau",
   C02: (hangMuc: string) => `/toan-tam-dan-dau/hang-muc/${hangMuc}`,
   C03: "/toan-tam-dan-dau/cac-bang", // các bảng vinh danh đã công bố (lưu trữ)
-  C04: (id: string) => `/toan-tam-dan-dau/bang/${id}`, // C04 gộp vào C01 (09/09): cùng màn C01, chỉ khác bảng vinh danh
+  C04: (id: string) => `/toan-tam-dan-dau/bang/${id}`, // C04 = trạng thái của C01 (09/09): cùng thân trang, đầu trang gọn không hero
   // Công cụ
   D01: "/toan-tam-phat-trien",
   D02: "/toan-tam-phat-trien/studio",
