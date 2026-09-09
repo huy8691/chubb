@@ -3,7 +3,7 @@
  * H03b · CMS — Một tháng vinh danh: hạng mục sửa tại chỗ (tên · Ẩn/Hiện · thứ tự · + Thêm hạng mục)
  * và mỗi hạng mục một bảng Người đạt (+ Thêm TVV → popup H03c · Thêm từ Excel → H03d). Công bố / Gỡ công bố.
  */
-import { fmtTien } from "@/app/(site)/toan-tam-dan-dau/hang-muc/[id]/page";
+import { fmtTien } from "@/components/vinh-danh/honor";
 import { useRouter } from "next/navigation";
 import { use, useState } from "react";
 import { R } from "@/lib/routes";

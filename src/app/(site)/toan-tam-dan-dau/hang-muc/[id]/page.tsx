@@ -13,10 +13,8 @@ import { R } from "@/lib/routes";
 import { fmtNum, thangLabel } from "@/lib/seed";
 import type { NguoiDat } from "@/lib/types";
 import { Avatar, Button, Card, Chip, EmptyState, H1, H2, Muted, useFlash } from "@/components/ui";
-import { LoiChucBlock, ShareButtons, TheTVV, useHonor } from "@/components/vinh-danh/honor";
+import { LoiChucBlock, ShareButtons, TheTVV, fmtTien, useHonor } from "@/components/vinh-danh/honor";
 
-/** 2.450.000.000 → "2,45 tỷ ₫"; 850.000.000 → "850 triệu ₫" */
-export const fmtTien = (n?: number) => n === undefined ? "—" : n >= 1e9 ? `${(n / 1e9).toFixed(2).replace(".", ",").replace(/,?0+$/, "")} tỷ ₫` : `${Math.round(n / 1e6)} triệu ₫`;
 const delta = (cur?: number, prev?: number) => cur === undefined || prev === undefined || prev === 0 ? null : Math.round(((cur - prev) / prev) * 100);
 
 function ChiSo({ label, value, d, prevLabel }: { label: string; value: string; d: number | null; prevLabel: string }) {
@@ -96,7 +94,7 @@ function ChiTiet({ ma }: { ma: string }) {
 
         <Card className="mt-10 p-5 flex flex-wrap items-center justify-between gap-4">
           <div className="text-[14px] text-ink2">Bảng vinh danh {thangLabel(m)} — {hm.ten}</div>
-          <Button kind="secondary" href={R.C04(m.id)}>Xem cả tháng</Button>
+          <Button kind="secondary" href={R.C04(m.id)}>Xem cả tháng</Button>{/* → C01 với tháng này (C04 gộp vào C01, 09/09) */}
         </Card>
       </div>
       {node}

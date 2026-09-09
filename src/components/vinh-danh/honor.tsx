@@ -98,6 +98,9 @@ export function ChonThang({ months, value, onChange }: { months: HonorMonth[]; v
   );
 }
 
+/** 2.450.000.000 → "2,45 tỷ ₫"; 850.000.000 → "850 triệu ₫" (dùng cho C01 · C02 · H03b) */
+export const fmtTien = (n?: number) => n === undefined ? "—" : n >= 1e9 ? `${(n / 1e9).toFixed(2).replace(".", ",").replace(/,?0+$/, "")} tỷ ₫` : `${Math.round(n / 1e6)} triệu ₫`;
+
 /* ---------- Lời chúc (09/09, phương án B) ---------- */
 const coLienKet = (t: string) => /https?:\/\/|www\.|bit\.ly|\.vn\b|\.com\b/i.test(t);
 
