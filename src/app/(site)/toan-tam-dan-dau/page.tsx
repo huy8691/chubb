@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { R } from "@/lib/routes";
 import { fmtNum, thangLabel } from "@/lib/seed";
 import { fmtTien } from "./hang-muc/[id]/page";
-import { Button, Card, EmptyState, H2, Hero, ImageBox, MoreLink, Muted, Table } from "@/components/ui";
+import { Button, Card, Chip, EmptyState, H2, Hero, ImageBox, MoreLink, Muted, Table } from "@/components/ui";
 import { ChonThang, TheTVV, anhTVV, linkC02, useHonor } from "@/components/vinh-danh/honor";
 
 export default function Page() {
@@ -40,28 +40,45 @@ export default function Page() {
           <ChonThang months={published} value={latest.id} onChange={(id) => { if (id !== latest.id) router.push(R.C04(id)); }} />
         </div>
 
-        {/* Mỗi hạng mục một khối: người dẫn đầu (tên · văn phòng · ảnh · ba số tháng) + bốn người kế tiếp. Hành động chia sẻ / gửi lời chúc chỉ ở C02. */}
-        {hms.map((h) => {
+        {/* Mỗi hạng mục một khối. Khối 1: thẻ người dẫn đầu lớn + bốn người kế tiếp. Khối 2–4 (09/09, chủ dự án): một hàng ngang, người dẫn đầu là thẻ rộng hơn có nhãn + ba số, bốn người kế tiếp thẻ nhỏ bên phải. Hành động chia sẻ / gửi lời chúc chỉ ở C02. */}
+        {hms.map((h, idx) => {
           const list = congKhai(latest, h.id); const leader = list[0]; const keTiep = list.slice(1, 5);
           if (!leader) return null;
+          const vp = leader.vanPhong.replace(/ — .*$/, "");
+          const soLine = `${fmtTien(leader.nd.doanhSo)} · ${leader.nd.hopDong ?? "—"} hợp đồng mới · ${leader.nd.khachHang ?? "—"} khách hàng mới`;
           return (
             <section key={h.id} className="mt-10">
               <H2 className="text-[22px] uppercase">{h.ten} <span className="normal-case font-normal text-[16px] text-ink2">· {list.length} người được vinh danh</span></H2>
-              <Card className="mt-5 grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-8 p-6">
-                <ImageBox src={anhTVV(leader.ma)} alt={leader.hoTen} ratio="1/1" />
-                <div className="flex flex-col">
-                  <h3 className="font-serif font-semibold text-[32px] leading-tight text-den">{leader.hoTen}</h3>
-                  <div className="mt-2 text-[15px] text-ink2">{h.ten} {latest.nam} · {leader.vanPhong.replace(/ — .*$/, "")}</div>
-                  <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-[940px]">
-                    {[[fmtTien(leader.nd.doanhSo), `Doanh số ${thangLabel(latest).toLowerCase()} · phí năm đầu`], [leader.nd.hopDong === undefined ? "—" : fmtNum(leader.nd.hopDong), "Hợp đồng mới"], [leader.nd.khachHang === undefined ? "—" : fmtNum(leader.nd.khachHang), "Khách hàng mới"]].map(([v, l]) => (
-                      <div key={l} className="bg-xam rounded-sm px-5 py-4"><div className="font-serif font-semibold text-[26px] text-blue leading-none">{v}</div><div className="mt-2 text-[13px] text-ink2">{l}</div></div>
-                    ))}
-                  </div>
-                  <div className="mt-6"><MoreLink href={linkC02(leader.ma, latest.id, h.id)}>Xem chi tiết thành tích</MoreLink></div>
-                </div>
-              </Card>
-              {keTiep.length > 0 && (
-                <div className="mt-5 grid grid-cols-2 lg:grid-cols-4 gap-5">
+              {idx === 0 ? (
+                <>
+                  <Card className="mt-5 grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-8 p-6">
+                    <ImageBox src={anhTVV(leader.ma)} alt={leader.hoTen} ratio="1/1" />
+                    <div className="flex flex-col">
+                      <h3 className="font-serif font-semibold text-[32px] leading-tight text-den">{leader.hoTen}</h3>
+                      <div className="mt-2 text-[15px] text-ink2">{h.ten} {latest.nam} · {vp}</div>
+                      <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-[940px]">
+                        {[[fmtTien(leader.nd.doanhSo), `Doanh số ${thangLabel(latest).toLowerCase()} · phí năm đầu`], [leader.nd.hopDong === undefined ? "—" : fmtNum(leader.nd.hopDong), "Hợp đồng mới"], [leader.nd.khachHang === undefined ? "—" : fmtNum(leader.nd.khachHang), "Khách hàng mới"]].map(([v, l]) => (
+                          <div key={l} className="bg-xam rounded-sm px-5 py-4"><div className="font-serif font-semibold text-[26px] text-blue leading-none">{v}</div><div className="mt-2 text-[13px] text-ink2">{l}</div></div>
+                        ))}
+                      </div>
+                      <div className="mt-6"><MoreLink href={linkC02(leader.ma, latest.id, h.id)}>Xem chi tiết thành tích</MoreLink></div>
+                    </div>
+                  </Card>
+                  {keTiep.length > 0 && (
+                    <div className="mt-5 grid grid-cols-2 lg:grid-cols-4 gap-5">
+                      {keTiep.map((v) => <TheTVV key={v.ma} v={v} sub={`${h.ten} ${latest.nam} · ${v.vanPhong.replace(/ — .*$/, "")}`} thangId={latest.id} hangMucId={h.id} />)}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="mt-5 grid grid-cols-2 lg:grid-cols-[minmax(0,2.4fr)_repeat(4,minmax(0,1fr))] gap-4 items-stretch">
+                  <Card className="p-4 flex flex-col col-span-2 lg:col-span-1">
+                    <div className="relative"><ImageBox src={anhTVV(leader.ma)} alt={leader.hoTen} ratio="16/9" /><Chip tone="blue" className="absolute top-3 left-3">NGƯỜI DẪN ĐẦU</Chip></div>
+                    <div className="mt-3 font-bold text-[18px] text-den"><Link href={linkC02(leader.ma, latest.id, h.id)} className="hover:text-blue">{leader.hoTen}</Link></div>
+                    <div className="text-[13px] text-ink2 mt-0.5">{h.ten} {latest.nam} · {vp}</div>
+                    <div className="mt-2 text-[13px] text-den">{soLine}</div>
+                    <div className="mt-auto pt-4"><Link href={linkC02(leader.ma, latest.id, h.id)} className="text-[13px] font-bold text-blue hover:underline">Xem chi tiết thành tích</Link></div>
+                  </Card>
                   {keTiep.map((v) => <TheTVV key={v.ma} v={v} sub={`${h.ten} ${latest.nam} · ${v.vanPhong.replace(/ — .*$/, "")}`} thangId={latest.id} hangMucId={h.id} />)}
                 </div>
               )}
