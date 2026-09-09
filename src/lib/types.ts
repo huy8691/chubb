@@ -145,7 +145,6 @@ export interface NguoiDat {
   /** mã TVV; người nhập tay không có tài khoản dùng mã tạm "tay-<timestamp>" */
   advisorMa: string;
   thuHang: number;
-  trichDan?: string;
   dongYCongKhai: "cho" | "dong-y" | "khong";
   /** Thành tích tháng (C02 · H03b · H03c · H03d) — Chubb nạp cùng danh sách; chủ dự án 08/09: công khai */
   doanhSo?: number; // phí năm đầu, VND

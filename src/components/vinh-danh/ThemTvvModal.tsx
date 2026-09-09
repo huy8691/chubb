@@ -32,7 +32,6 @@ export function ThemTvvModal({ open, onClose, month, hangMuc, edit, onDone }: Pr
   const [anh, setAnh] = useState("");
   const list = month.hangMuc.find((h) => h.hangMucId === hangMuc.id)?.nguoiDat ?? [];
   const [thuHang, setThuHang] = useState(edit?.thuHang ?? list.length + 1);
-  const [trichDan, setTrichDan] = useState(edit?.trichDan ?? "");
   const [doanhSo, setDoanhSo] = useState<string>(edit?.doanhSo !== undefined ? String(edit.doanhSo) : "");
   const [hopDong, setHopDong] = useState<string>(edit?.hopDong !== undefined ? String(edit.hopDong) : "");
   const [khachHang, setKhachHang] = useState<string>(edit?.khachHang !== undefined ? String(edit.khachHang) : "");
@@ -46,20 +45,20 @@ export function ThemTvvModal({ open, onClose, month, hangMuc, edit, onDone }: Pr
     return data.advisors.filter((a) => a.trangThaiTaiKhoan === "hoat-dong" && (!k || a.hoTen.toLowerCase().includes(k) || a.ma.includes(k))).slice(0, 6);
   }, [q, data.advisors]);
 
-  const reset = () => { setQ(""); setChon(""); setHoTen(""); setMaTay(""); setVanPhong(""); setAnh(""); setThuHang(list.length + 2); setTrichDan(""); setErr(""); };
+  const reset = () => { setQ(""); setChon(""); setHoTen(""); setMaTay(""); setVanPhong(""); setAnh(""); setThuHang(list.length + 2); setErr(""); };
 
   /** trả về thông báo lỗi hoặc "" nếu lưu được */
   const luu = (): string => {
     let nd: NguoiDat;
     if (mode === "chon") {
       if (!chon) return "Chọn một Tư vấn viên trong danh sách.";
-      nd = { advisorMa: chon, thuHang, trichDan: trichDan.trim() || undefined, dongYCongKhai: edit?.dongYCongKhai ?? "cho", nguon: edit?.nguon ?? "tay", ...soLieu() };
+      nd = { advisorMa: chon, thuHang, dongYCongKhai: edit?.dongYCongKhai ?? "cho", nguon: edit?.nguon ?? "tay", ...soLieu() };
     } else {
       if (!hoTen.trim()) return "Họ tên là trường bắt buộc.";
       const a = maTay.trim() ? data.advisors.find((x) => x.ma === maTay.trim()) : undefined;
       nd = a
-        ? { advisorMa: a.ma, thuHang, trichDan: trichDan.trim() || undefined, dongYCongKhai: edit?.dongYCongKhai ?? "cho", nguon: "tay", ...soLieu() }
-        : { advisorMa: edit?.advisorMa ?? (maTay.trim() || `tay-${Date.now()}`), hoTen: hoTen.trim(), vanPhong: vanPhong || undefined, thuHang, trichDan: trichDan.trim() || undefined, ...soLieu(), dongYCongKhai: edit?.dongYCongKhai ?? "dong-y", nguon: "tay" };
+        ? { advisorMa: a.ma, thuHang, dongYCongKhai: edit?.dongYCongKhai ?? "cho", nguon: "tay", ...soLieu() }
+        : { advisorMa: edit?.advisorMa ?? (maTay.trim() || `tay-${Date.now()}`), hoTen: hoTen.trim(), vanPhong: vanPhong || undefined, thuHang, ...soLieu(), dongYCongKhai: edit?.dongYCongKhai ?? "dong-y", nguon: "tay" };
     }
     const trung = list.some((x) => x.advisorMa === nd.advisorMa && x.advisorMa !== edit?.advisorMa);
     if (trung) return `${nd.advisorMa} đã có trong ${hangMuc.ten} tháng này — không thêm trùng`;
@@ -149,7 +148,6 @@ export function ThemTvvModal({ open, onClose, month, hangMuc, edit, onDone }: Pr
         <Field label="Thứ tự trong hạng mục" hint="1 = người dẫn đầu">
           <Select value={thuHang} onChange={(e) => setThuHang(Number(e.target.value))}>{Array.from({ length: soVT }, (_, i) => i + 1).map((n) => <option key={n} value={n}>{n}</option>)}</Select>
         </Field>
-        <Field label="Thành tích / trích dẫn" count={`${trichDan.length}/160`}><Input maxLength={160} value={trichDan} onChange={(e) => setTrichDan(e.target.value)} placeholder="MDRT 2026 · COT" /></Field>
       </div>
       <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
         <Field label="Doanh số tháng · phí năm đầu (₫)"><Input inputMode="numeric" value={doanhSo ? Number(doanhSo.replace(/\D/g, "")).toLocaleString("vi-VN") : ""} onChange={(e) => setDoanhSo(e.target.value.replace(/\D/g, ""))} placeholder="2.450.000.000" /></Field>

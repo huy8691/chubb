@@ -119,16 +119,16 @@ export const hangMuc: HangMuc[] = [
 
 const monthOf = (nam: number, thang: number, trangThai: HonorMonth["trangThai"], shift: number): HonorMonth => {
   const id = `${nam}-${String(thang).padStart(2, "0")}`;
-  const nd = (ks: number[], cho: (r: number) => boolean, trich?: (r: number) => string | undefined) =>
-    ks.map((k, r) => ({ advisorMa: advisors[(k + shift) % advisors.length].ma, thuHang: r + 1, dongYCongKhai: (cho(r) ? "cho" : "dong-y") as NguoiDat["dongYCongKhai"], trichDan: trich?.(r), nguon: (r % 5 === 3 ? "tay" : "excel") as NguoiDat["nguon"], doanhSo: (2450 - r * 180 - (thang % 5) * 40 + (k % 3) * 25) * 1_000_000, hopDong: 18 - r + (thang % 3), khachHang: 15 - r + ((thang + k) % 3) }));
+  const nd = (ks: number[], cho: (r: number) => boolean) =>
+    ks.map((k, r) => ({ advisorMa: advisors[(k + shift) % advisors.length].ma, thuHang: r + 1, dongYCongKhai: (cho(r) ? "cho" : "dong-y") as NguoiDat["dongYCongKhai"], nguon: (r % 5 === 3 ? "tay" : "excel") as NguoiDat["nguon"], doanhSo: (2450 - r * 180 - (thang % 5) * 40 + (k % 3) * 25) * 1_000_000, hopDong: 18 - r + (thang % 3), khachHang: 15 - r + ((thang + k) % 3) }));
   // tháng sau công bố ngày 03 tháng kế tiếp
   const congBoDate = new Date(nam, thang, 3, 10, 0, 0);
   return {
     id, thang, nam, trangThai,
     hangMuc: [
-      { hangMucId: "mdrt", nguoiDat: nd([0, 1, 2, 3, 4, 5, 6, 7], (r) => r === 2 && trangThai === "nhap", (r) => (r === 0 ? "Kiên trì mỗi ngày, thành quả sẽ đến." : undefined)) },
-      { hangMucId: "chubb-star", nguoiDat: nd([8, 9, 10, 11, 12, 13], () => false, (r) => (r === 0 ? `Doanh số dẫn đầu tháng ${thang}` : undefined)) },
-      { hangMucId: "chubb-chien", nguoiDat: nd([14, 15, 16, 17, 18, 19], (r) => r === 0 && trangThai === "nhap", (r) => (r === 0 ? "Nhiều hợp đồng mới nhất" : undefined)) },
+      { hangMucId: "mdrt", nguoiDat: nd([0, 1, 2, 3, 4, 5, 6, 7], (r) => r === 2 && trangThai === "nhap") },
+      { hangMucId: "chubb-star", nguoiDat: nd([8, 9, 10, 11, 12, 13], () => false) },
+      { hangMucId: "chubb-chien", nguoiDat: nd([14, 15, 16, 17, 18, 19], (r) => r === 0 && trangThai === "nhap") },
       { hangMucId: "chubb-prime", nguoiDat: nd([1, 5, 9, 13], () => false) },
     ],
     capNhat: `${id}-05T10:00:00`,

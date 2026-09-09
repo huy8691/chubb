@@ -146,7 +146,6 @@ export default function Page() {
                 <Eyebrow className="mb-2">{tenHangMuc} · {thang ? thangLabel(thang) : ""}</Eyebrow>
                 <div className="font-serif font-semibold text-[26px] text-den">{dauBang.tvv.hoTen}</div>
                 <Muted className="mt-1">{tenHangMuc} 2026 · {tinh(dauBang.tvv.vanPhong)}</Muted>
-                {dauBang.trichDan && <p className="mt-4 text-[15px] text-ink2 italic">“{dauBang.trichDan}”</p>}
                 <div className="mt-5"><XemNhanhButton ma={dauBang.tvv.ma} /></div>
               </div>
             </Card>

@@ -43,7 +43,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                   <div className="flex-1 min-w-[200px]">
                     <div className="eyebrow text-[10.5px]">Người dẫn đầu</div>
                     <div className="font-bold text-[16px] text-den">{ld.hoTen}</div>
-                    <div className="text-[13px] text-ink2">{ld.nd.trichDan ?? `${h.ten} ${m.nam} · ${ld.vanPhong}`}</div>
+                    <div className="text-[13px] text-ink2">{`${h.ten} ${m.nam} · ${ld.vanPhong}`}</div>
                   </div>
                   <div className="flex gap-2">
                     <Link href={linkC02(ld.ma, m.id, h.id)} className="h-8 inline-flex items-center text-[13px] font-bold text-blue hover:underline">Chi tiết</Link>

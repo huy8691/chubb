@@ -7,7 +7,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { R } from "@/lib/routes";
-import { thangLabel } from "@/lib/seed";
+import { fmtNum, thangLabel } from "@/lib/seed";
+import { fmtTien } from "./hang-muc/[id]/page";
 import { Button, Card, EmptyState, H2, Hero, ImageBox, MoreLink, Muted, Table, cx, useFlash } from "@/components/ui";
 import { ChonThang, GuiLoiChucButton, ShareButtons, TheTVV, anhTVV, linkC02, useHonor, type NguoiDatView } from "@/components/vinh-danh/honor";
 
@@ -35,8 +36,6 @@ export default function Page() {
   const leader = list[0];
   const keTiep = list.slice(1, 5);
   const conLai = hms.filter((h) => h.id !== active?.id);
-  const namKinhNghiem = (v: NguoiDatView) => (v.advisor ? latest.nam - new Date(v.advisor.ngayBatDau).getFullYear() : 0);
-  const soThangVinhDanh = (v: NguoiDatView, hm: string) => published.filter((m) => congKhai(m, hm).some((x) => x.ma === v.ma)).length;
 
   // Lưu trữ theo tháng: các tháng trước, mỗi hàng một tháng · hạng mục (5 hàng đầu)
   const luuTru = published.filter((m) => m.id !== latest.id).flatMap((m) => hangMucCoNguoi(m).map((h) => ({ m, h, n: congKhai(m, h.id).length }))).slice(0, 5);
@@ -65,10 +64,10 @@ export default function Page() {
             <div className="flex flex-col">
               <h2 className="font-serif font-semibold text-[32px] leading-tight text-den">{leader.hoTen}</h2>
               <div className="mt-2 text-[15px] text-ink2">{active.ten} {latest.nam} · {leader.vanPhong.replace(/ — .*$/, "")}</div>
-              {(leader.advisor?.hoSoNangLuc?.gioiThieu || leader.nd.trichDan) && <p className="mt-5 text-[15px] leading-relaxed text-den max-w-[720px]">{leader.advisor?.hoSoNangLuc?.gioiThieu ?? leader.nd.trichDan}</p>}
-              <div className="mt-6 flex flex-wrap gap-4">
-                {(leader.advisor?.hoSoNangLuc?.noiBat?.slice(0, 2) ?? [`${soThangVinhDanh(leader, active.id)} tháng được vinh danh`, leader.advisor ? `${namKinhNghiem(leader)} năm kinh nghiệm` : ""]).filter(Boolean).map((t) => (
-                  <div key={t} className="bg-xam rounded-sm px-6 py-4 font-bold text-[16px] text-den">{t}</div>
+              {/* Ba số thành tích của tháng (09/09, phương án C: masthead không còn câu trích dẫn / điểm nhấn) */}
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-[940px]">
+                {[[fmtTien(leader.nd.doanhSo), `Doanh số ${thangLabel(latest).toLowerCase()} · phí năm đầu`], [leader.nd.hopDong === undefined ? "—" : fmtNum(leader.nd.hopDong), "Hợp đồng mới"], [leader.nd.khachHang === undefined ? "—" : fmtNum(leader.nd.khachHang), "Khách hàng mới"]].map(([v, l]) => (
+                  <div key={l} className="bg-xam rounded-sm px-5 py-4"><div className="font-serif font-semibold text-[26px] text-blue leading-none">{v}</div><div className="mt-2 text-[13px] text-ink2">{l}</div></div>
                 ))}
               </div>
               {/* Hàng chia sẻ nội tuyến (09/09: thay nút + popup; bỏ "Tạo thiệp chúc mừng") */}

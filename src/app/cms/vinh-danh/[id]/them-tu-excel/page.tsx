@@ -13,7 +13,7 @@ import { Button, Chip, EmptyState, FilterChips, Table, cx, useFlash } from "@/co
 import { CmsCard, CmsHeader } from "@/components/cms/CmsShell";
 import { useHonor } from "@/components/vinh-danh/honor";
 
-interface Dong { dong: number; ma: string; hoTen: string; hangMuc: string; hangMucId?: string; thuHang: number; trichDan?: string; kiem: "hop-le" | "cap-nhat" | "loi"; loi?: string }
+interface Dong { dong: number; ma: string; hoTen: string; hangMuc: string; hangMucId?: string; thuHang: number; kiem: "hop-le" | "cap-nhat" | "loi"; loi?: string }
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -38,7 +38,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       if (i === 5) out.push({ dong, ma: "", hoTen: "", hangMuc: hm.ten, thuHang, kiem: "loi", loi: "thiếu mã TVV" });
       else if (i === 10) out.push({ dong, ma: a.ma, hoTen: a.hoTen, hangMuc: "MDRT Gold", thuHang, kiem: "loi", loi: "hạng mục không tồn tại" });
       else if (i === 17) out.push({ dong, ma: "0199999", hoTen: "", hangMuc: hm.ten, thuHang, kiem: "loi", loi: "mã không có trong danh sách Tư vấn viên" });
-      else out.push({ dong, ma: a.ma, hoTen: a.hoTen, hangMuc: hm.ten, hangMucId: hm.id, thuHang, trichDan: thuHang === 1 ? `${hm.ten} ${month.nam}` : undefined, kiem: trong.has(`${hm.id}:${a.ma}`) ? "cap-nhat" : "hop-le" });
+      else out.push({ dong, ma: a.ma, hoTen: a.hoTen, hangMuc: hm.ten, hangMucId: hm.id, thuHang, kiem: trong.has(`${hm.id}:${a.ma}`) ? "cap-nhat" : "hop-le" });
       dong += 1 + (i % 3 === 0 ? 1 : 0);
     }
     return out;
@@ -59,8 +59,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         const cur = [...(m.hangMuc.find((h) => h.hangMucId === hmId)?.nguoiDat ?? [])];
         for (const r of hopLe.filter((x) => x.hangMucId === hmId)) {
           const i = cur.findIndex((x) => x.advisorMa === r.ma);
-          if (i >= 0) cur[i] = { ...cur[i], thuHang: r.thuHang, trichDan: r.trichDan ?? cur[i].trichDan };
-          else { cur.push({ advisorMa: r.ma, thuHang: r.thuHang, trichDan: r.trichDan, dongYCongKhai: "cho", nguon: "excel" } satisfies NguoiDat); themMoi.push({ ma: r.ma, hm: hmId }); }
+          if (i >= 0) cur[i] = { ...cur[i], thuHang: r.thuHang };
+          else { cur.push({ advisorMa: r.ma, thuHang: r.thuHang, dongYCongKhai: "cho", nguon: "excel" } satisfies NguoiDat); themMoi.push({ ma: r.ma, hm: hmId }); }
         }
         return { hangMucId: hmId, nguoiDat: cur.sort((a, b) => a.thuHang - b.thuHang).map((x, k) => ({ ...x, thuHang: k + 1 })) };
       });

@@ -66,7 +66,6 @@ function ChiTiet({ ma }: { ma: string }) {
               <div className="flex flex-wrap items-center gap-2 mb-3"><Chip tone="blue">{hm.ten} · {thangLabel(m)}</Chip><Chip tone={nd.thuHang === 1 ? "pink" : "grey"}>Hạng {nd.thuHang}/{soNguoi}</Chip></div>
               <H1>{v.hoTen}</H1>
               <Muted className="mt-2 text-[15px]">{[v.chucDanh, v.vanPhong.replace(/ — .*$/, "")].filter(Boolean).join(" · ")}</Muted>
-              {nd.trichDan && <p className="mt-3 text-[15px] text-ink2">{nd.trichDan}</p>}
               {v.coTaiKhoan && <div className="mt-5 flex flex-wrap gap-3"><XemNhanhButton ma={v.ma} size="md" /></div>}
               {/* Hàng chia sẻ nội tuyến (09/09: thay nút + popup; bỏ "Tạo thiệp chúc mừng") */}
               <div className="mt-4 flex flex-wrap items-center gap-2">
