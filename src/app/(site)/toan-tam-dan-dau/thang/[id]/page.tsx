@@ -6,6 +6,7 @@ import { R } from "@/lib/routes";
 import { fmtDate, thangLabel } from "@/lib/seed";
 import { Breadcrumb, Button, Card, EmptyState, H1, H3, ImageBox, Muted, useFlash } from "@/components/ui";
 import { ShareButtons, anhTVV, linkC02, useHonor } from "@/components/vinh-danh/honor";
+import { fmtTien } from "../../hang-muc/[id]/page";
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -44,6 +45,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     <div className="eyebrow text-[10.5px]">Người dẫn đầu</div>
                     <div className="font-bold text-[16px] text-den">{ld.hoTen}</div>
                     <div className="text-[13px] text-ink2">{`${h.ten} ${m.nam} · ${ld.vanPhong}`}</div>
+                    <div className="text-[13px] text-den mt-1">{fmtTien(ld.nd.doanhSo)} · {ld.nd.hopDong ?? "—"} hợp đồng mới · {ld.nd.khachHang ?? "—"} khách hàng mới</div>
                   </div>
                   <div className="flex gap-2">
                     <Link href={linkC02(ld.ma, m.id, h.id)} className="h-8 inline-flex items-center text-[13px] font-bold text-blue hover:underline">Chi tiết</Link>
