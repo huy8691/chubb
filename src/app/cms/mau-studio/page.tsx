@@ -80,7 +80,7 @@ export default function Page() {
           </Table>
         )}
         <div className="flex items-center justify-between mt-4 text-[13px] text-ink2 gap-4">
-          <span>{count("tat-ca")} mẫu · Lưu trữ {count("luu-tru")} · Mẫu bị gỡ xuất bản không còn hiện trong Studio, ảnh Tư vấn viên đã tạo vẫn giữ.</span>
+          <span>{count("tat-ca")} mẫu · Lưu trữ {count("luu-tru")} · Mẫu bị gỡ xuất bản không còn hiện trên Mẫu Studio, ảnh Tư vấn viên đã tạo vẫn giữ.</span>
           <Pagination page={cur} pages={pages} onChange={setPage} />
         </div>
       </CmsCard>

@@ -49,7 +49,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
   const trangThaiChuoi = a.trangThai === "cho-duyet" ? `Chờ duyệt · gửi ${fmtDateTime(a.tao)}`
     : a.trangThai === "da-duyet" ? `Đang công khai · duyệt ${fmtDateTime(a.ngayDuyet)} · hiển thị trên Bộ sưu tập Studio`
-    : a.trangThai === "bi-tu-choi" ? `Từ chối · Tư vấn viên đã thấy lý do · không gửi lại được`
+    : a.trangThai === "bi-tu-choi" ? `Từ chối · Tư vấn viên đã thấy lý do · kết thúc, không duyệt lại và không gửi lại`
     : a.trangThai === "da-ngung" ? `Đã ngừng công khai · ảnh vẫn trong Ảnh Studio của Tư vấn viên · không gửi lại được`
     : "Riêng tư · chỉ Tư vấn viên thấy trong Ảnh Studio của mình";
 
@@ -78,12 +78,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
               </div>
             )}
             <div className="flex flex-wrap gap-3 mt-6">
-              {(a.trangThai === "cho-duyet" || a.trangThai === "bi-tu-choi") && <Button onClick={() => { duyet(a); setMoTuChoi(false); flash(`Đã duyệt — ảnh hiển thị công khai trên Bộ sưu tập Studio, ${ad?.hoTen ?? "Tư vấn viên"} nhận thông báo`); }} disabled={!a.dongYCongKhai}>Duyệt</Button>}
+              {a.trangThai === "cho-duyet" && <Button onClick={() => { duyet(a); setMoTuChoi(false); flash(`Đã duyệt — ảnh hiển thị công khai trên Bộ sưu tập Studio, ${ad?.hoTen ?? "Tư vấn viên"} nhận thông báo`); }} disabled={!a.dongYCongKhai}>Duyệt</Button>}
               {a.trangThai === "cho-duyet" && <Button kind="secondary" onClick={() => setMoTuChoi(true)}>Từ chối (lý do)</Button>}
               {a.trangThai === "da-duyet" && <Button kind="danger" onClick={() => { go(a); flash("Đã ngừng hiển thị công khai — ảnh vẫn trong Ảnh Studio của Tư vấn viên, Tư vấn viên nhận thông báo"); }}>Ngừng hiển thị công khai</Button>}
               <Button kind="ghost" onClick={() => router.push(R.H07)}>Về danh sách</Button>
             </div>
-            {!a.dongYCongKhai && (a.trangThai === "cho-duyet" || a.trangThai === "bi-tu-choi") && <div className="mt-2 text-[12.5px] text-mut">Chỉ duyệt được khi Tư vấn viên đã tick đồng ý công khai.</div>}
+            {!a.dongYCongKhai && a.trangThai === "cho-duyet" && <div className="mt-2 text-[12.5px] text-mut">Chỉ duyệt được khi Tư vấn viên đã tick đồng ý công khai.</div>}
           </div>
         </div>
       </CmsCard>

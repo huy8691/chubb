@@ -51,7 +51,7 @@ function DanhSach() {
 
   return (
     <>
-      <CmsHeader title="Duyệt ảnh Studio Tư vấn viên gửi lên" desc="Ảnh Tư vấn viên tạo trong Studio và xin hiển thị công khai trên Bộ sưu tập Studio. Mỗi ảnh chỉ gửi một lần." />
+      <CmsHeader title="Duyệt ảnh Studio Tư vấn viên gửi lên" desc="Ảnh Tư vấn viên tạo trong Studio và xin hiển thị công khai trên Bộ sưu tập Studio. Mỗi ảnh chỉ gửi một lần; từ chối là kết thúc." />
       <CmsCard>
         <div className="flex flex-wrap items-center gap-3 mb-4">
           <FilterChips<Loc> value={tt} onChange={(v) => { setTt(v); setPage(1); }} options={LOC.map((s) => ({ value: s, label: nhanTT(s), count: count(s) }))} />

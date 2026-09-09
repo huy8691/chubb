@@ -97,7 +97,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     persist({ trangThai: "da-xuat-ban", phienBan: daXB ? (f.phienBan ?? 1) + 1 : (f.phienBan ?? 1) });
     flash(daXB ? `Đã xuất bản phiên bản v${(f.phienBan ?? 1) + 1} — Tư vấn viên thấy mẫu mới trong Studio` : "Đã xuất bản — mẫu hiện trong Studio");
   };
-  const luuTru = () => { persist({ trangThai: "luu-tru" }); flash("Đã lưu trữ — mẫu không còn hiện trong Studio, ảnh Tư vấn viên đã tạo vẫn giữ"); };
+  const luuTru = () => { persist({ trangThai: "luu-tru" }); flash("Đã lưu trữ — mẫu không còn hiện trên Mẫu Studio, ảnh Tư vấn viên đã tạo vẫn giữ"); };
   const chonTep = (file?: File) => { if (!file) return; set({ tenTep: file.name }); setErr({ ...err, anh: "" }); };
   const khoiPhuc = (n: number) => { setLichSu(false); flash(`Đã khôi phục bản v${n} — nội dung đang hiện là bản đó, bấm Lưu nháp để giữ`); };
 
