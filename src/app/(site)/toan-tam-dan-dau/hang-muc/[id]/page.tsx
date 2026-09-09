@@ -3,7 +3,7 @@
  * C02 · Thành tích tháng của một Tư vấn viên (chủ dự án 08/09: "thành tích thì nên là tháng đó doanh số bao nhiêu,
  * bao nhiêu khách hàng, bao nhiêu hợp đồng" — không lặp hồ sơ năng lực của danh thiếp).
  * [id] = mã TVV; ?thang=2026-08&hm=mdrt (thiếu thì lấy tháng đã công bố gần nhất có người này).
- * Khối: đầu trang (tên · hạng mục · tháng · thứ hạng) · 3 chỉ số tháng kèm so với tháng trước · TVV cùng hạng mục. (Bảng "Các tháng được vinh danh" bỏ 08/09 — chủ dự án: "không thể hiện được nhiều thông tin".)
+ * Khối: đầu trang (tên · hạng mục · bảng · thứ hạng) · 3 chỉ số (không so sánh với bảng trước — bảng có thể đột xuất, 09/09) · TVV cùng hạng mục. (Bảng "Các tháng được vinh danh" bỏ 08/09 — chủ dự án: "không thể hiện được nhiều thông tin".)
  */
 import { XemNhanhButton } from "@/components/danh-thiep/XemNhanh";
 import Link from "next/link";
@@ -15,14 +15,12 @@ import type { NguoiDat } from "@/lib/types";
 import { Avatar, Button, Card, Chip, EmptyState, H1, H2, Muted, useFlash } from "@/components/ui";
 import { LoiChucBlock, ShareButtons, TheTVV, fmtTien, useHonor } from "@/components/vinh-danh/honor";
 
-const delta = (cur?: number, prev?: number) => cur === undefined || prev === undefined || prev === 0 ? null : Math.round(((cur - prev) / prev) * 100);
 
-function ChiSo({ label, value, d, prevLabel }: { label: string; value: string; d: number | null; prevLabel: string }) {
+function ChiSo({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-xam rounded-sm px-5 py-4 min-w-[220px]">
       <div className="font-serif font-semibold text-[30px] text-blue leading-none">{value}</div>
       <div className="mt-2 text-[13px] text-den font-bold">{label}</div>
-      <div className="mt-1 text-[12.5px] text-ink2">{d === null ? "Tháng trước không được vinh danh" : <><span className={d >= 0 ? "text-green-fg font-bold" : "text-red-fg font-bold"}>{d >= 0 ? "+" : ""}{d}%</span> so với {prevLabel}</>}</div>
     </div>
   );
 }
@@ -47,10 +45,6 @@ function ChiTiet({ ma }: { ma: string }) {
   const hm = hangMucById(h.id)!;
   const nd: NguoiDat = v.nd;
   const soNguoi = congKhai(m, h.id).length;
-  // tháng liền trước (đã công bố) người này có được vinh danh không → so sánh
-  const idx = published.findIndex((x) => x.id === m.id);
-  const prevM = published[idx + 1];
-  const prevNd = prevM ? prevM.hangMuc.flatMap((x) => x.nguoiDat).find((n) => n.advisorMa === ma) : undefined;
   const cungHangMuc = congKhai(m, h.id).filter((x) => x.ma !== ma).slice(0, 3);
 
   return (
@@ -77,11 +71,11 @@ function ChiTiet({ ma }: { ma: string }) {
 
       <div className="wrap py-12">
         <H2 className="text-[22px]">Thành tích {thangLabel(m)}</H2>
-        <Muted className="mt-1">Số liệu do Chubb Life nạp khi lập bảng vinh danh tháng.</Muted>
+        <Muted className="mt-1">Số liệu do Chubb Life nạp khi lập bảng vinh danh.</Muted>
         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <ChiSo label="Doanh số · phí năm đầu" value={fmtTien(nd.doanhSo)} d={delta(nd.doanhSo, prevNd?.doanhSo)} prevLabel={prevM ? thangLabel(prevM) : ""} />
-          <ChiSo label="Hợp đồng mới" value={nd.hopDong === undefined ? "—" : fmtNum(nd.hopDong)} d={delta(nd.hopDong, prevNd?.hopDong)} prevLabel={prevM ? thangLabel(prevM) : ""} />
-          <ChiSo label="Khách hàng mới" value={nd.khachHang === undefined ? "—" : fmtNum(nd.khachHang)} d={delta(nd.khachHang, prevNd?.khachHang)} prevLabel={prevM ? thangLabel(prevM) : ""} />
+          <ChiSo label="Doanh số · phí năm đầu" value={fmtTien(nd.doanhSo)} />
+          <ChiSo label="Hợp đồng mới" value={nd.hopDong === undefined ? "—" : fmtNum(nd.hopDong)} />
+          <ChiSo label="Khách hàng mới" value={nd.khachHang === undefined ? "—" : fmtNum(nd.khachHang)} />
         </div>
 
         <H2 className="text-[22px] mt-14">Tư vấn viên cùng hạng mục</H2>
@@ -94,7 +88,7 @@ function ChiTiet({ ma }: { ma: string }) {
 
         <Card className="mt-10 p-5 flex flex-wrap items-center justify-between gap-4">
           <div className="text-[14px] text-ink2">Bảng vinh danh {thangLabel(m)} — {hm.ten}</div>
-          <Button kind="secondary" href={R.C04(m.id)}>Xem cả tháng</Button>{/* → C01 với tháng này (C04 gộp vào C01, 09/09) */}
+          <Button kind="secondary" href={R.C04(m.id)}>Xem cả bảng</Button>{/* → C01 với tháng này (C04 gộp vào C01, 09/09) */}
         </Card>
       </div>
       {node}

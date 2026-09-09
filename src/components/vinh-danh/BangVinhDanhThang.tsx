@@ -1,14 +1,14 @@
 "use client";
 /**
- * Bảng vinh danh một tháng — dùng cho C01 (/toan-tam-dan-dau: tháng đã công bố mới nhất) và tháng cũ
- * (/toan-tam-dan-dau/thang/[id]; C04 gộp vào C01 ngày 09/09 — cùng một màn, chỉ khác tháng).
+ * Một bảng vinh danh — dùng cho C01 (/toan-tam-dan-dau: bảng công bố mới nhất) và bảng khác
+ * (/toan-tam-dan-dau/bang/[id]; C04 gộp vào C01 ngày 09/09 — cùng một màn, chỉ khác bảng). 09/09: bảng có TÊN do Chubb đặt (tháng, quý, đợt riêng).
  * Khối 1: thẻ người dẫn đầu lớn + bốn người kế tiếp; khối 2–4: một hàng ngang, người dẫn đầu là thẻ rộng.
  * Chỉ hiện người đã đồng ý công khai. Hành động chia sẻ / gửi lời chúc chỉ ở C02.
  */
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { R } from "@/lib/routes";
-import { fmtNum, thangLabel } from "@/lib/seed";
+import { fmtDate, fmtNum, thangLabel, thoiGianLabel } from "@/lib/seed";
 import { Button, Card, Chip, EmptyState, H2, Hero, ImageBox, MoreLink, Muted, Table } from "@/components/ui";
 import { ChonThang, TheTVV, anhTVV, fmtTien, linkC02, useHonor } from "@/components/vinh-danh/honor";
 
@@ -24,14 +24,14 @@ export function BangVinhDanhThang({ thangId }: { thangId?: string }) {
   );
 
   if (!latest) {
-    return (<>{hero}<div className="wrap py-16"><EmptyState title="Chưa có tháng vinh danh nào được công bố" desc="Bảng vinh danh sẽ xuất hiện ở đây ngay khi Chubb Life công bố tháng đầu tiên." /></div></>);
+    return (<>{hero}<div className="wrap py-16"><EmptyState title="Chưa có bảng vinh danh nào được công bố" desc="Bảng vinh danh sẽ xuất hiện ở đây ngay khi Chubb Life công bố bảng đầu tiên." /></div></>);
   }
   if (!month) {
-    return (<>{hero}<div className="wrap py-16"><EmptyState title="Tháng này chưa được công bố" desc="Bảng vinh danh chỉ hiện sau khi Chubb Life công bố." action={<Button kind="secondary" href={R.C03}>Xem các tháng đã công bố</Button>} /></div></>);
+    return (<>{hero}<div className="wrap py-16"><EmptyState title="Bảng này chưa được công bố" desc="Bảng vinh danh chỉ hiện sau khi Chubb Life công bố." action={<Button kind="secondary" href={R.C03}>Xem các bảng đã công bố</Button>} /></div></>);
   }
 
   const hms = hangMucCoNguoi(month);
-  // Lưu trữ theo tháng: mỗi tháng một hàng (5 tháng gần nhất khác tháng đang xem) → cùng màn này với tháng đó
+  // Các bảng gần đây: mỗi bảng một hàng (5 bảng công bố gần nhất khác bảng đang xem) → cùng màn này với bảng đó
   const luuTru = published.filter((m) => m.id !== month.id).slice(0, 5);
 
   return (
@@ -40,11 +40,14 @@ export function BangVinhDanhThang({ thangId }: { thangId?: string }) {
       <div className="wrap py-10">
         {/* Tiêu đề tháng + ô chọn tháng (không có dải tab hạng mục — mỗi hạng mục một khối bên dưới) */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-vien pb-3">
-          <H2 className="text-[22px]">Bảng vinh danh {thangLabel(month).toLowerCase()}</H2>
+          <div>
+            <H2 className="text-[22px]">Bảng vinh danh {thangLabel(month)}</H2>
+            <div className="mt-1 text-[13px] text-ink2">{[thoiGianLabel(month), month.congBo ? `công bố ${fmtDate(month.congBo)}` : ""].filter(Boolean).join(" · ")}</div>
+          </div>
           <ChonThang months={published} value={month.id} onChange={(id) => { if (id !== month.id) router.push(id === latest.id ? R.C01 : R.C04(id)); }} />
         </div>
 
-        {hms.length === 0 && <div className="mt-8"><EmptyState title="Tháng này chưa có Tư vấn viên nào đồng ý công khai" /></div>}
+        {hms.length === 0 && <div className="mt-8"><EmptyState title="Bảng này chưa có Tư vấn viên nào đồng ý công khai" /></div>}
         {hms.map((h, idx) => {
           const list = congKhai(month, h.id); const leader = list[0]; const keTiep = list.slice(1, 5);
           if (!leader) return null;
@@ -61,7 +64,7 @@ export function BangVinhDanhThang({ thangId }: { thangId?: string }) {
                       <h3 className="font-serif font-semibold text-[32px] leading-tight text-den">{leader.hoTen}</h3>
                       <div className="mt-2 text-[15px] text-ink2">{h.ten} {month.nam} · {vp}</div>
                       <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-[940px]">
-                        {[[fmtTien(leader.nd.doanhSo), `Doanh số ${thangLabel(month).toLowerCase()} · phí năm đầu`], [leader.nd.hopDong === undefined ? "—" : fmtNum(leader.nd.hopDong), "Hợp đồng mới"], [leader.nd.khachHang === undefined ? "—" : fmtNum(leader.nd.khachHang), "Khách hàng mới"]].map(([v, l]) => (
+                        {[[fmtTien(leader.nd.doanhSo), "Doanh số · phí năm đầu"], [leader.nd.hopDong === undefined ? "—" : fmtNum(leader.nd.hopDong), "Hợp đồng mới"], [leader.nd.khachHang === undefined ? "—" : fmtNum(leader.nd.khachHang), "Khách hàng mới"]].map(([v, l]) => (
                           <div key={l} className="bg-xam rounded-sm px-5 py-4"><div className="font-serif font-semibold text-[26px] text-blue leading-none">{v}</div><div className="mt-2 text-[13px] text-ink2">{l}</div></div>
                         ))}
                       </div>
@@ -90,15 +93,16 @@ export function BangVinhDanhThang({ thangId }: { thangId?: string }) {
           );
         })}
 
-        {/* Lưu trữ theo tháng */}
+        {/* Các bảng gần đây (5 bảng đã công bố khác bảng đang xem) */}
         <section className="mt-14">
-          <H2 className="text-[22px]">Lưu trữ theo tháng</H2>
+          <H2 className="text-[22px]">Các bảng gần đây</H2>
           <Card className="mt-6 p-2">
-            {luuTru.length === 0 ? <EmptyState title="Chưa có tháng nào khác" /> : (
-              <Table head={["Tháng", "Hạng mục có người", "Số người được vinh danh", ""]}>
+            {luuTru.length === 0 ? <EmptyState title="Chưa có bảng nào khác" /> : (
+              <Table head={["Bảng vinh danh", "Thời gian", "Hạng mục có người", "Số người được vinh danh", ""]}>
                 {luuTru.map((m) => (
                   <tr key={m.id} className="hover:bg-xam/60">
                     <td><Link href={m.id === latest.id ? R.C01 : R.C04(m.id)} className="font-bold text-blue hover:underline">{thangLabel(m)}</Link></td>
+                    <td className="text-ink2">{thoiGianLabel(m) || "—"}</td>
                     <td>{hangMucCoNguoi(m).length} hạng mục</td>
                     <td>{tongCongKhai(m)}</td>
                     <td className="text-right"><Link href={m.id === latest.id ? R.C01 : R.C04(m.id)} className="text-[13px] font-bold text-blue hover:underline">Xem</Link></td>

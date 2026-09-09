@@ -8,7 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { R } from "@/lib/routes";
 import { useStore } from "@/lib/store";
-import { fmtDateTime } from "@/lib/seed";
+import { fmtDateTime, thangLabel } from "@/lib/seed";
 import type { LoiChuc } from "@/lib/types";
 import { Button, Chip, EmptyState, FilterChips, Modal, Pagination, SearchBox, Table, useFlash } from "@/components/ui";
 import { CmsCard, CmsHeader } from "@/components/cms/CmsShell";
@@ -35,7 +35,7 @@ function DanhSach() {
   const tvv = (ma: string) => data.advisors.find((a) => a.ma === ma);
   const ten = (ma: string) => tvv(ma)?.hoTen ?? ma;
   const hm = (id: string) => data.hangMuc.find((h) => h.id === id)?.ten ?? id;
-  const thang = (id: string) => { const m = data.honorMonths.find((x) => x.id === id); return m ? `Tháng ${m.thang}/${m.nam}` : id; };
+  const thang = (id: string) => { const m = data.honorMonths.find((x) => x.id === id); return m ? thangLabel(m) : id; };
   const all = data.loiChuc;
   const dem = (s: LoiChuc["trangThai"]) => all.filter((l) => l.trangThai === s).length;
   const k = bo(q.trim());

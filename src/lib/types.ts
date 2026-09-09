@@ -157,9 +157,18 @@ export interface NguoiDat {
   vanPhong?: string;
 }
 
+/**
+ * Bảng vinh danh (09/09): một danh sách có TÊN do Chubb đặt — tháng, quý, tuần hay đợt riêng ("Tân binh xuất sắc Quý 2/2026").
+ * Giữ tên kiểu HonorMonth để không đổi mã khắp nơi; `thang` chỉ có khi bảng là một tháng.
+ */
 export interface HonorMonth {
-  id: string; // 2026-08
-  thang: number;
+  id: string; // "2026-08" hoặc slug tự đặt ("tan-binh-q2-2026")
+  /** Tên bảng — tiêu đề trên C01, cột đầu H03 */
+  ten: string;
+  /** Khoảng thời gian tuỳ chọn (YYYY-MM-DD) — hiện dưới tiêu đề */
+  tuNgay?: string;
+  denNgay?: string;
+  thang?: number;
   nam: number;
   trangThai: "nhap" | "da-cong-bo";
   hangMuc: { hangMucId: string; nguoiDat: NguoiDat[] }[];

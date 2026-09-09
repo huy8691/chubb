@@ -19,8 +19,8 @@ export const R = {
   // Vinh danh
   C01: "/toan-tam-dan-dau",
   C02: (hangMuc: string) => `/toan-tam-dan-dau/hang-muc/${hangMuc}`,
-  C03: "/toan-tam-dan-dau/cac-thang",
-  C04: (id: string) => `/toan-tam-dan-dau/thang/${id}`, // C04 gộp vào C01 (09/09): cùng màn C01, chỉ khác tháng
+  C03: "/toan-tam-dan-dau/cac-bang", // các bảng vinh danh đã công bố (lưu trữ)
+  C04: (id: string) => `/toan-tam-dan-dau/bang/${id}`, // C04 gộp vào C01 (09/09): cùng màn C01, chỉ khác bảng vinh danh
   // Công cụ
   D01: "/toan-tam-phat-trien",
   D02: "/toan-tam-phat-trien/studio",

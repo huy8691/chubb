@@ -115,6 +115,7 @@ export const hangMuc: HangMuc[] = [
   { id: "chubb-star", ten: "Chubb Star", hien: true, thuTu: 2 },
   { id: "chubb-chien", ten: "Chubb Chiến", hien: true, thuTu: 3 },
   { id: "chubb-prime", ten: "Chubb Prime", hien: true, thuTu: 4 },
+  { id: "tan-binh", ten: "Tân binh", hien: true, thuTu: 5 }, // dùng trong bảng đột xuất "Tân binh xuất sắc Quý 2/2026"
 ];
 
 const monthOf = (nam: number, thang: number, trangThai: HonorMonth["trangThai"], shift: number): HonorMonth => {
@@ -124,7 +125,7 @@ const monthOf = (nam: number, thang: number, trangThai: HonorMonth["trangThai"],
   // tháng sau công bố ngày 03 tháng kế tiếp
   const congBoDate = new Date(nam, thang, 3, 10, 0, 0);
   return {
-    id, thang, nam, trangThai,
+    id, ten: `Tháng ${thang}/${nam}`, thang, nam, tuNgay: `${id}-01`, denNgay: `${id}-${String(new Date(nam, thang, 0).getDate()).padStart(2, "0")}`, trangThai,
     hangMuc: [
       { hangMucId: "mdrt", nguoiDat: nd([0, 1, 2, 3, 4, 5, 6, 7], (r) => r === 2 && trangThai === "nhap") },
       { hangMucId: "chubb-star", nguoiDat: nd([8, 9, 10, 11, 12, 13], () => false) },
@@ -136,10 +137,20 @@ const monthOf = (nam: number, thang: number, trangThai: HonorMonth["trangThai"],
   };
 };
 
+/** Bảng vinh danh đột xuất (09/09): tên do Chubb đặt, không theo tháng — minh hoạ mô hình "Bảng vinh danh" */
+const nguoiDot = (ks: number[], base: number, hd: number, kh: number): NguoiDat[] =>
+  ks.map((k, r) => ({ advisorMa: advisors[k % advisors.length].ma, thuHang: r + 1, dongYCongKhai: "dong-y" as const, nguon: "excel" as const, doanhSo: base - r * 60_000_000, hopDong: hd - r, khachHang: kh - r }));
+const bangTanBinh: HonorMonth = {
+  id: "tan-binh-q2-2026", ten: "Tân binh xuất sắc Quý 2/2026", nam: 2026, tuNgay: "2026-04-01", denNgay: "2026-06-30", trangThai: "da-cong-bo",
+  hangMuc: [{ hangMucId: "tan-binh", nguoiDat: nguoiDot([20, 21, 22, 23, 24, 25], 900_000_000, 9, 8) }, { hangMucId: "chubb-chien", nguoiDat: nguoiDot([26, 27, 28, 29], 1_100_000_000, 22, 19) }],
+  capNhat: "2026-07-05T09:00:00", congBo: "2026-07-05T10:00:00",
+};
+
 export const honorMonths: HonorMonth[] = [
   monthOf(2026, 9, "nhap", 3),
   monthOf(2026, 8, "da-cong-bo", 0),
   monthOf(2026, 7, "da-cong-bo", 5),
+  bangTanBinh,
   monthOf(2026, 6, "da-cong-bo", 2),
   monthOf(2026, 5, "da-cong-bo", 7),
   monthOf(2026, 4, "da-cong-bo", 1),
@@ -391,8 +402,8 @@ export const financeParams: FinanceParams = {
 
 /* ---------- Thông báo · Đã lưu (TVV demo) ---------- */
 export const notifications: Notification[] = [
-  { id: "n1", advisorMa: TVV_DEMO.ma, noiDung: "Chubb Life xin bạn đồng ý công khai danh hiệu Chubb Chiến tháng 9/2026.", ngay: "2026-09-06T09:00:00", daDoc: false, href: "/tai-khoan" },
-  { id: "n5", advisorMa: TVV_DEMO.ma, noiDung: `${advisors[1].hoTen} gửi lời chúc cho danh hiệu MDRT tháng 8/2026`, ngay: "2026-09-03T14:20:00", daDoc: false, href: `/toan-tam-dan-dau/hang-muc/${TVV_DEMO.ma}?thang=2026-08&hm=mdrt` },
+  { id: "n1", advisorMa: TVV_DEMO.ma, noiDung: "Chubb Life xin bạn đồng ý công khai danh hiệu Chubb Chiến · Tháng 9/2026.", ngay: "2026-09-06T09:00:00", daDoc: false, href: "/tai-khoan" },
+  { id: "n5", advisorMa: TVV_DEMO.ma, noiDung: `${advisors[1].hoTen} gửi lời chúc cho danh hiệu MDRT · Tháng 8/2026`, ngay: "2026-09-03T14:20:00", daDoc: false, href: `/toan-tam-dan-dau/hang-muc/${TVV_DEMO.ma}?thang=2026-08&hm=mdrt` },
   { id: "n2", advisorMa: TVV_DEMO.ma, noiDung: 'Ảnh "Ưu đãi tháng 8" bị từ chối · xem lý do', ngay: "2026-09-04T15:20:00", daDoc: false, href: "/tai-khoan/da-luu" },
   { id: "n3", advisorMa: TVV_DEMO.ma, noiDung: "Bảng xếp hạng tháng 8/2026 đã chốt: bạn xếp hạng 1.", ngay: "2026-09-01T08:00:00", daDoc: true, href: "/toan-tam-ket-noi" },
   { id: "n4", advisorMa: TVV_DEMO.ma, noiDung: "Tài liệu mới: Brochure Chubb Bảo An Toàn Diện v2.1", ngay: "2026-08-28T10:00:00", daDoc: true, href: "/tai-khoan/tai-lieu" },
@@ -419,4 +430,13 @@ export const fmtDate = (iso?: string) => (iso ? new Date(iso).toLocaleDateString
 export const fmtDateTime = (iso?: string) => (iso ? new Date(iso).toLocaleString("vi-VN", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit", year: "numeric" }) : "—");
 export const fmtVND = (n: number) => n.toLocaleString("vi-VN") + " ₫";
 export const fmtNum = (n: number) => n.toLocaleString("vi-VN");
-export const thangLabel = (m: HonorMonth) => `Tháng ${m.thang}/${m.nam}`;
+/** Tên bảng vinh danh ("Tháng 8/2026", "Tân binh xuất sắc Quý 2/2026") — giữ tên hàm cũ để không đổi mã khắp nơi */
+export const thangLabel = (m: HonorMonth) => m.ten;
+/** "1–31/8/2026" · "1/4–30/6/2026" · "" nếu bảng không ghi thời gian */
+export const thoiGianLabel = (m: HonorMonth) => {
+  if (!m.tuNgay || !m.denNgay) return "";
+  const [y1, m1, d1] = m.tuNgay.split("-").map(Number), [y2, m2, d2] = m.denNgay.split("-").map(Number);
+  if (y1 === y2 && m1 === m2) return `${d1}–${d2}/${m1}/${y1}`;
+  if (y1 === y2) return `${d1}/${m1}–${d2}/${m2}/${y1}`;
+  return `${d1}/${m1}/${y1}–${d2}/${m2}/${y2}`;
+};

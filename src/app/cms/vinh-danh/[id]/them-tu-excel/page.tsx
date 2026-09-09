@@ -68,7 +68,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     }));
     for (const t of themMoi) {
       const ten = hangMucSorted.find((h) => h.id === t.hm)?.ten ?? "";
-      actions.notify(t.ma, `Chubb Life xin bạn đồng ý công khai danh hiệu ${ten} ${thangLabel(month).toLowerCase()}.`, R.G02a);
+      actions.notify(t.ma, `Chubb Life xin bạn đồng ý công khai danh hiệu ${ten} · ${thangLabel(month)}.`, R.G02a);
     }
     router.push(R.H03b(id));
   };
@@ -104,7 +104,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                   <td>
                     {r.kiem === "loi" && <span className="text-[12.5px] font-bold text-red-fg">✗ {r.loi}</span>}
                     {r.kiem === "hop-le" && <Chip tone="green">✓ hợp lệ</Chip>}
-                    {r.kiem === "cap-nhat" && <span className="inline-flex items-center gap-2"><Chip tone="green">✓ hợp lệ</Chip><Chip tone="blue">đã có trong tháng, sẽ cập nhật</Chip></span>}
+                    {r.kiem === "cap-nhat" && <span className="inline-flex items-center gap-2"><Chip tone="green">✓ hợp lệ</Chip><Chip tone="blue">đã có trong bảng, sẽ cập nhật</Chip></span>}
                   </td>
                 </tr>
               ))}
@@ -120,7 +120,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           <CmsCard title="Bước 3 — Xác nhận">
             <p className="text-[13px] text-ink2 mb-4">{soLoi > 0 ? `${soLoi} dòng lỗi sẽ bị bỏ qua; ` : ""}{hopLe.length} người hợp lệ được thêm hoặc cập nhật vào {thangLabel(month)} với trạng thái chờ đồng ý công khai.</p>
             <div className="flex flex-wrap gap-3">
-              <Button onClick={xacNhan} disabled={hopLe.length === 0}>Thêm {hopLe.length} người hợp lệ vào tháng</Button>
+              <Button onClick={xacNhan} disabled={hopLe.length === 0}>Thêm {hopLe.length} người hợp lệ vào bảng</Button>
               <Button kind="secondary" href={R.H03b(id)}>Huỷ</Button>
             </div>
           </CmsCard>

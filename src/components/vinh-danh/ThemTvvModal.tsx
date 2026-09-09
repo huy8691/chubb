@@ -1,6 +1,6 @@
 "use client";
 /**
- * H03c · Popup thêm / sửa TVV trong một hạng mục của tháng (lớp phủ trên H03b).
+ * H03c · Popup thêm / sửa TVV trong một hạng mục của bảng vinh danh (lớp phủ trên H03b).
  * Chọn từ danh sách TVV hoặc Nhập tay; thứ tự · trích dẫn; gửi thông báo xin đồng ý công khai.
  */
 import { useMemo, useState } from "react";
@@ -77,14 +77,14 @@ export function ThemTvvModal({ open, onClose, month, hangMuc, edit, onDone }: Pr
       };
     }));
     const a = data.advisors.find((x) => x.ma === nd.advisorMa);
-    if (!edit && a && guiEmail) actions.notify(a.ma, `Chubb Life xin bạn đồng ý công khai danh hiệu ${hangMuc.ten} ${thangLabel(month).toLowerCase()}.`, R.G02a);
+    if (!edit && a && guiEmail) actions.notify(a.ma, `Chubb Life xin bạn đồng ý công khai danh hiệu ${hangMuc.ten} · ${thangLabel(month)}.`, R.G02a);
     return "";
   };
 
   const xoa = () => {
     if (!edit) return;
     actions.update("honorMonths", (ms) => ms.map((m) => m.id !== month.id ? m : { ...m, capNhat: new Date().toISOString(), hangMuc: m.hangMuc.map((h) => h.hangMucId !== hangMuc.id ? h : { ...h, nguoiDat: h.nguoiDat.filter((x) => x.advisorMa !== edit.advisorMa).map((x, i) => ({ ...x, thuHang: i + 1 })) }) }));
-    onDone("Đã xoá khỏi tháng"); onClose();
+    onDone("Đã xoá khỏi bảng"); onClose();
   };
 
   const submit = (tiep: boolean) => {
@@ -103,7 +103,7 @@ export function ThemTvvModal({ open, onClose, month, hangMuc, edit, onDone }: Pr
         <Button onClick={() => submit(false)}>{edit ? "Lưu thay đổi" : "Thêm vào hạng mục"}</Button>
         {!edit && <Button kind="secondary" onClick={() => submit(true)}>Thêm & tiếp người khác</Button>}
         <Button kind="ghost" onClick={onClose}>Huỷ</Button>
-        {edit && <Button kind="danger" size="sm" className="ml-auto" onClick={xoa}>Xoá khỏi tháng</Button>}
+        {edit && <Button kind="danger" size="sm" className="ml-auto" onClick={xoa}>Xoá khỏi bảng</Button>}
       </>
     }>
       <div className="text-[12.5px] text-ink2 mb-2">Cách thêm</div>
@@ -150,11 +150,11 @@ export function ThemTvvModal({ open, onClose, month, hangMuc, edit, onDone }: Pr
         </Field>
       </div>
       <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
-        <Field label="Doanh số tháng · phí năm đầu (₫)"><Input inputMode="numeric" value={doanhSo ? Number(doanhSo.replace(/\D/g, "")).toLocaleString("vi-VN") : ""} onChange={(e) => setDoanhSo(e.target.value.replace(/\D/g, ""))} placeholder="2.450.000.000" /></Field>
+        <Field label="Doanh số · phí năm đầu (₫)"><Input inputMode="numeric" value={doanhSo ? Number(doanhSo.replace(/\D/g, "")).toLocaleString("vi-VN") : ""} onChange={(e) => setDoanhSo(e.target.value.replace(/\D/g, ""))} placeholder="2.450.000.000" /></Field>
         <Field label="Hợp đồng mới"><Input inputMode="numeric" value={hopDong} onChange={(e) => setHopDong(e.target.value.replace(/\D/g, ""))} placeholder="18" /></Field>
         <Field label="Khách hàng mới"><Input inputMode="numeric" value={khachHang} onChange={(e) => setKhachHang(e.target.value.replace(/\D/g, ""))} placeholder="15" /></Field>
       </div>
-      <p className="mt-2 text-[12px] text-mut">Ba số này hiện công khai trên trang Thành tích tháng của Tư vấn viên.</p>
+      <p className="mt-2 text-[12px] text-mut">Ba số này hiện công khai trên trang Thành tích của Tư vấn viên; bảng đột xuất không có số liệu thì để trống.</p>
       {!edit && <div className="mt-4"><Checkbox checked={guiEmail} onChange={(e) => setGuiEmail(e.target.checked)} label="Gửi email xin đồng ý công khai khi lưu — TVV xác nhận ở trang cá nhân" /></div>}
       {err && <div className="mt-4 text-[12.5px] font-bold text-red-fg bg-red-bg rounded-sm px-3 py-2">✗ {err}</div>}
     </Modal>

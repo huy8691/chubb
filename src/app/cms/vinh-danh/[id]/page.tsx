@@ -1,6 +1,6 @@
 "use client";
 /**
- * H03b · CMS — Một tháng vinh danh: hạng mục sửa tại chỗ (tên · Ẩn/Hiện · thứ tự · + Thêm hạng mục)
+ * H03b · CMS — Một bảng vinh danh (tên · thời gian, 09/09): hạng mục sửa tại chỗ (tên · Ẩn/Hiện · thứ tự · + Thêm hạng mục)
  * và mỗi hạng mục một bảng Người đạt (+ Thêm TVV → popup H03c · Thêm từ Excel → H03d). Công bố / Gỡ công bố.
  */
 import { fmtTien } from "@/components/vinh-danh/honor";
@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { use, useState } from "react";
 import { R } from "@/lib/routes";
 import { thangLabel } from "@/lib/seed";
-import type { HangMuc, NguoiDat } from "@/lib/types";
+import type { HangMuc, NguoiDat, HonorMonth } from "@/lib/types";
 import { Button, Chip, EmptyState, Field, Input, StatusChip, Table, cx, useFlash } from "@/components/ui";
 import { CmsCard, CmsFormActions, CmsHeader } from "@/components/cms/CmsShell";
 import { ThemTvvModal } from "@/components/vinh-danh/ThemTvvModal";
@@ -33,7 +33,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const tongCho = month.hangMuc.flatMap((h) => h.nguoiDat).filter((n) => n.dongYCongKhai === "cho").length;
   const capNhatThang = () => actions.update("honorMonths", (ms) => ms.map((m) => m.id === id ? { ...m, capNhat: new Date().toISOString() } : m));
 
-  /* --- hạng mục dùng chung mọi tháng --- */
+  /* --- hạng mục dùng chung mọi bảng --- */
   const luuTenHm = () => {
     if (!suaHm) return;
     const ten = suaHm.ten.trim();
@@ -60,8 +60,11 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   /* --- người đạt --- */
   const xoaNguoi = (hm: HangMuc, nd: NguoiDat) => {
     actions.update("honorMonths", (ms) => ms.map((m) => m.id !== id ? m : { ...m, capNhat: new Date().toISOString(), hangMuc: m.hangMuc.map((h) => h.hangMucId !== hm.id ? h : { ...h, nguoiDat: h.nguoiDat.filter((x) => x.advisorMa !== nd.advisorMa).map((x, i) => ({ ...x, thuHang: i + 1 })) }) }));
-    flash("Đã xoá khỏi tháng");
+    flash("Đã xoá khỏi bảng");
   };
+
+  /* --- tên & thời gian bảng (09/09) --- */
+  const suaBang = (patch: Partial<HonorMonth>) => actions.update("honorMonths", (ms) => ms.map((m) => (m.id === id ? { ...m, ...patch, capNhat: new Date().toISOString() } : m)));
 
   /* --- công bố --- */
   const congBo = () => {
@@ -77,12 +80,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     <>
       <CmsHeader crumbs={[{ label: "Vinh danh", href: R.H03 }, { label: thangLabel(month) }]} title={
         <span className="flex flex-wrap items-center gap-3">
-          <select value={month.id} onChange={(e) => router.push(R.H03b(e.target.value))} aria-label="Chọn tháng khác" className="h-11 rounded-sm border border-vien bg-white px-3 font-bold text-[20px] text-den focus:outline-none focus:border-blue">
-            {[...data.honorMonths].sort((a, b) => b.id.localeCompare(a.id)).map((m) => <option key={m.id} value={m.id}>{thangLabel(m)}</option>)}
-          </select>
+          <Input value={month.ten} maxLength={60} onChange={(e) => suaBang({ ten: e.target.value })} aria-label="Tên bảng" className="h-11 w-[420px] font-bold text-[20px]" />
+          <Input type="date" value={month.tuNgay ?? ""} onChange={(e) => suaBang({ tuNgay: e.target.value || undefined })} aria-label="Từ ngày" className="h-11 w-[160px]" />
+          <Input type="date" value={month.denNgay ?? ""} onChange={(e) => suaBang({ denNgay: e.target.value || undefined })} aria-label="Đến ngày" className="h-11 w-[160px]" />
           <Chip tone={daCongBo ? "green" : "amber"}>{daCongBo ? "ĐÃ CÔNG BỐ" : "NHÁP — CHƯA CÔNG BỐ"}</Chip>
         </span>
-      } desc="Bấm để chọn tháng khác" right={<Button kind="secondary" href={R.H03d(month.id)}>Thêm từ Excel</Button>} />
+      } desc="Tên bảng do Chubb đặt — hiện làm tiêu đề trên trang Vinh danh. Thời gian tuỳ chọn." right={<Button kind="secondary" href={R.H03d(month.id)}>Thêm từ Excel</Button>} />
 
       <div className="space-y-5">
         {hangMucSorted.map((h, idx) => {
@@ -113,7 +116,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 </div>
               )}
               {ds.length === 0 ? (
-                <p className="text-[13px] text-ink2">Chưa có người được vinh danh ở hạng mục này trong tháng — bấm + Thêm TVV hoặc Thêm từ Excel.</p>
+                <p className="text-[13px] text-ink2">Chưa có người được vinh danh ở hạng mục này trong bảng — bấm + Thêm TVV hoặc Thêm từ Excel.</p>
               ) : (
                 <Table head={["Thứ tự", "Mã TVV", "Họ tên", "Văn phòng", "Doanh số · phí năm đầu", "Hợp đồng", "Khách hàng", "Đồng ý công khai", "Nguồn", ""]}>
                   {ds.map((v) => (
@@ -148,7 +151,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 <Button size="sm" kind="secondary" onClick={() => setThemHm(null)}>Huỷ</Button>
               </div>
             )}
-            <span className="text-[12.5px] text-ink2">Hạng mục dùng chung cho mọi tháng; tên đổi ở đây thì các tháng trước đổi theo.</span>
+            <span className="text-[12.5px] text-ink2">Hạng mục dùng chung cho mọi bảng; tên đổi ở đây thì các bảng trước đổi theo.</span>
           </div>
         </CmsCard>
 

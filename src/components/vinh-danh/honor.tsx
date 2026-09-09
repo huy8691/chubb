@@ -6,7 +6,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { R } from "@/lib/routes";
-import { fmtDateTime } from "@/lib/seed";
+import { fmtDateTime, thangLabel } from "@/lib/seed";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
 import type { Advisor, HangMuc, HonorMonth, NguoiDat } from "@/lib/types";
 import { Button, Chip, Field, H2, ImageBox, Modal, Muted, Textarea, cx } from "@/components/ui";
@@ -36,7 +36,7 @@ export const linkC02 = (ma: string, thangId: string, hangMucId: string) => `${R.
 export function useHonor() {
   const { data, actions } = useStore();
   const hangMucSorted = [...data.hangMuc].sort((a, b) => a.thuTu - b.thuTu);
-  const published = data.honorMonths.filter((m) => m.trangThai === "da-cong-bo").sort((a, b) => b.id.localeCompare(a.id));
+  const published = data.honorMonths.filter((m) => m.trangThai === "da-cong-bo").sort((a, b) => (b.congBo ?? b.capNhat).localeCompare(a.congBo ?? a.capNhat)); // bảng công bố gần nhất lên đầu
   const latest: HonorMonth | undefined = published[0];
   const hangMucById = (id: string) => data.hangMuc.find((h) => h.id === id);
   /** mọi người đạt của một hạng mục trong tháng (CMS), sắp theo thứ hạng */
@@ -88,12 +88,12 @@ export function ShareButtons({ onDone }: { onDone: (msg: string) => void }) {
   );
 }
 
-/** Ô chọn tháng đã công bố — đổi tháng thì chuyển trang */
+/** Ô chọn bảng vinh danh đã công bố — đổi bảng thì chuyển trang */
 export function ChonThang({ months, value, onChange }: { months: HonorMonth[]; value: string; onChange: (id: string) => void }) {
   const [v, setV] = useState(value);
   return (
-    <select value={v} onChange={(e) => { setV(e.target.value); onChange(e.target.value); }} aria-label="Chọn tháng vinh danh" className="h-10 rounded-sm border border-vien bg-white px-3 text-[14px] text-den focus:outline-none focus:border-blue">
-      {months.map((m) => <option key={m.id} value={m.id}>Tháng {m.thang}/{m.nam}</option>)}
+    <select value={v} onChange={(e) => { setV(e.target.value); onChange(e.target.value); }} aria-label="Chọn bảng vinh danh" className="h-10 rounded-sm border border-vien bg-white px-3 text-[14px] text-den focus:outline-none focus:border-blue">
+      {months.map((m) => <option key={m.id} value={m.id}>{thangLabel(m)}</option>)}
     </select>
   );
 }
@@ -112,7 +112,7 @@ export function GuiLoiChucButton({ nguoiNhan, thangId, hangMucId, kind = "primar
   const [text, setText] = useState("");
   const m = data.honorMonths.find((x) => x.id === thangId);
   const hm = data.hangMuc.find((h) => h.id === hangMucId)?.ten ?? hangMucId;
-  const thang = m ? `Tháng ${m.thang}/${m.nam}` : thangId;
+  const thang = m ? thangLabel(m) : thangId;
   if (!me) return <span className="inline-flex items-center gap-2"><Button kind={kind} href={R.G01}>Gửi lời chúc</Button><Chip>Cần đăng nhập</Chip></span>;
   if (me.ma === nguoiNhan.ma) return null;
   const daGui = data.loiChuc.some((l) => l.nguoiGuiMa === me.ma && l.nguoiNhanMa === nguoiNhan.ma && l.thangId === thangId && l.hangMucId === hangMucId);
@@ -121,7 +121,7 @@ export function GuiLoiChucButton({ nguoiNhan, thangId, hangMucId, kind = "primar
     const noiDung = text.trim(); if (!noiDung) return;
     const co = coLienKet(noiDung);
     actions.update("loiChuc", (ls) => [{ id: `lc${Date.now()}`, nguoiGuiMa: me.ma, nguoiNhanMa: nguoiNhan.ma, thangId, hangMucId, noiDung, ngay: new Date().toISOString(), trangThai: co ? "gan-co" : "hien", lyDoCo: co ? "Chứa liên kết ngoài" : undefined }, ...ls]);
-    actions.notify(nguoiNhan.ma, `${me.hoTen} gửi lời chúc cho danh hiệu ${hm} ${thang.toLowerCase()}`, linkC02(nguoiNhan.ma, thangId, hangMucId));
+    actions.notify(nguoiNhan.ma, `${me.hoTen} gửi lời chúc cho danh hiệu ${hm} · ${thang}`, linkC02(nguoiNhan.ma, thangId, hangMucId));
     setOpen(false); setText(""); onDone?.(co ? "Đã gửi. Lời chúc có liên kết sẽ hiện sau khi Chubb Life kiểm tra." : "Đã gửi lời chúc");
   };
   return (
