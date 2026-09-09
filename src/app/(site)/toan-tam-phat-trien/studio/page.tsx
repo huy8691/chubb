@@ -10,7 +10,7 @@ import { fmtDate } from "@/lib/seed";
 import type { StudioImage } from "@/lib/types";
 import { RequireTVV } from "@/components/site/AccountShell";
 import { Button, Card, Checkbox, Chip, Eyebrow, Field, H1, H2, ImageBox, Input, MoreLink, Muted, StatusChip, cx, useFlash } from "@/components/ui";
-import { StudioPreview, tiLeLabel } from "@/components/cong-cu/StudioPreview";
+import { StudioPreview, tiLeLabel, tiLeToRatio } from "@/components/cong-cu/StudioPreview";
 
 const GIOI_HAN = 32;
 
@@ -57,7 +57,7 @@ function Studio() {
   const gui = () => { actions.update("studioImages", (l) => [taoAnh("cho-duyet"), ...l]); flash("Đã gửi Chubb duyệt — ảnh hiển thị công khai trên Bộ sưu tập Studio sau khi duyệt"); setDongY(false); };
   const dungMau = (id: string) => { setMauId(id); topRef.current?.scrollIntoView({ behavior: "smooth" }); };
 
-  const mauKhac = mau.filter((x) => x.id !== m.id).sort((a, b) => b.soAnhDaTao - a.soAnhDaTao).slice(0, 4); // 09/09: khối cuối là mẫu khác để tham khảo, không phải ảnh TVV (D07 đi từ D08)
+  const mauKhac = mau.filter((x) => x.id !== m.id).sort((a, b) => b.soAnhDaTao - a.soAnhDaTao).slice(0, 6); // 09/09: khối cuối là mẫu khác để tham khảo, không phải ảnh TVV (D07 đi từ D08)
   const cuaToi = data.studioImages.filter((a) => a.advisorMa === tvv.ma).sort((a, b) => b.tao.localeCompare(a.tao));
   const tenMau = (id: string) => data.studioTemplates.find((t) => t.id === id)?.ten ?? "Mẫu Studio";
 
@@ -154,12 +154,15 @@ function Studio() {
       <section className="bg-xam">
         <div className="wrap py-14">
           <div className="flex items-end justify-between gap-6 mb-6"><H2>Tham khảo mẫu khác</H2><MoreLink href={R.D08} /></div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {mauKhac.map((x) => (
-              <div key={x.id} className="bg-white border border-vien rounded-sm p-3">
-                <div className="relative"><ImageBox src={x.anh} ratio="3/4" /><Button size="sm" kind="secondary" className="absolute bottom-2 right-2 bg-white" onClick={() => dungMau(x.id)}>Dùng mẫu này</Button></div>
-                <div className="mt-3 text-[14px] font-bold text-den truncate">{x.ten} · {tiLeLabel(x.tiLe)}</div>
-              </div>
+              <Card key={x.id} className="p-3 flex flex-col">
+                <ImageBox src={x.anh} ratio={tiLeToRatio(x.tiLe)} />
+                <div className="mt-3 text-[13px] font-bold text-den truncate">{x.ten}</div>
+                <div className="text-[12px] text-ink2 mt-0.5 truncate">{tiLeLabel(x.tiLe)} · phiên bản v{x.phienBan ?? 1}</div>
+                <div className="text-[12px] text-mut">Cập nhật {fmtDate(x.capNhat)}</div>
+                <Button size="sm" kind="secondary" className="mt-3 w-full" onClick={() => dungMau(x.id)}>Dùng mẫu này</Button>
+              </Card>
             ))}
           </div>
         </div>
