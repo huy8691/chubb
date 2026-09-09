@@ -120,17 +120,17 @@ export const hangMuc: HangMuc[] = [
 
 const monthOf = (nam: number, thang: number, trangThai: HonorMonth["trangThai"], shift: number): HonorMonth => {
   const id = `${nam}-${String(thang).padStart(2, "0")}`;
-  const nd = (ks: number[], cho: (r: number) => boolean) =>
-    ks.map((k, r) => ({ advisorMa: advisors[(k + shift) % advisors.length].ma, thuHang: r + 1, dongYCongKhai: (cho(r) ? "cho" : "dong-y") as NguoiDat["dongYCongKhai"], nguon: (r % 5 === 3 ? "tay" : "excel") as NguoiDat["nguon"], doanhSo: (2450 - r * 180 - (thang % 5) * 40 + (k % 3) * 25) * 1_000_000, hopDong: 18 - r + (thang % 3), khachHang: 15 - r + ((thang + k) % 3) }));
+  const nd = (ks: number[]) =>
+    ks.map((k, r) => ({ advisorMa: advisors[(k + shift) % advisors.length].ma, thuHang: r + 1, nguon: (r % 5 === 3 ? "tay" : "excel") as NguoiDat["nguon"], doanhSo: (2450 - r * 180 - (thang % 5) * 40 + (k % 3) * 25) * 1_000_000, hopDong: 18 - r + (thang % 3), khachHang: 15 - r + ((thang + k) % 3) }));
   // tháng sau công bố ngày 03 tháng kế tiếp
   const congBoDate = new Date(nam, thang, 3, 10, 0, 0);
   return {
     id, ten: `Tháng ${thang}/${nam}`, thang, nam, tuNgay: `${id}-01`, denNgay: `${id}-${String(new Date(nam, thang, 0).getDate()).padStart(2, "0")}`, trangThai,
     hangMuc: [
-      { hangMucId: "mdrt", nguoiDat: nd([0, 1, 2, 3, 4, 5, 6, 7], (r) => r === 2 && trangThai === "nhap") },
-      { hangMucId: "chubb-star", nguoiDat: nd([8, 9, 10, 11, 12, 13], () => false) },
-      { hangMucId: "chubb-chien", nguoiDat: nd([14, 15, 16, 17, 18, 19], (r) => r === 0 && trangThai === "nhap") },
-      { hangMucId: "chubb-prime", nguoiDat: nd([1, 5, 9, 13], () => false) },
+      { hangMucId: "mdrt", nguoiDat: nd([0, 1, 2, 3, 4, 5, 6, 7]) },
+      { hangMucId: "chubb-star", nguoiDat: nd([8, 9, 10, 11, 12, 13]) },
+      { hangMucId: "chubb-chien", nguoiDat: nd([14, 15, 16, 17, 18, 19]) },
+      { hangMucId: "chubb-prime", nguoiDat: nd([1, 5, 9, 13]) },
     ],
     capNhat: `${id}-05T10:00:00`,
     congBo: trangThai === "da-cong-bo" ? congBoDate.toISOString() : undefined,
@@ -139,7 +139,7 @@ const monthOf = (nam: number, thang: number, trangThai: HonorMonth["trangThai"],
 
 /** Bảng vinh danh đột xuất (09/09): tên do Chubb đặt, không theo tháng — minh hoạ mô hình "Bảng vinh danh" */
 const nguoiDot = (ks: number[], base: number, hd: number, kh: number): NguoiDat[] =>
-  ks.map((k, r) => ({ advisorMa: advisors[k % advisors.length].ma, thuHang: r + 1, dongYCongKhai: "dong-y" as const, nguon: "excel" as const, doanhSo: base - r * 60_000_000, hopDong: hd - r, khachHang: kh - r }));
+  ks.map((k, r) => ({ advisorMa: advisors[k % advisors.length].ma, thuHang: r + 1, nguon: "excel" as const, doanhSo: base - r * 60_000_000, hopDong: hd - r, khachHang: kh - r }));
 const bangTanBinh: HonorMonth = {
   id: "tan-binh-q2-2026", ten: "Tân binh xuất sắc Quý 2/2026", nam: 2026, tuNgay: "2026-04-01", denNgay: "2026-06-30", trangThai: "da-cong-bo",
   hangMuc: [{ hangMucId: "tan-binh", nguoiDat: nguoiDot([20, 21, 22, 23, 24, 25], 900_000_000, 9, 8) }, { hangMucId: "chubb-chien", nguoiDat: nguoiDot([26, 27, 28, 29], 1_100_000_000, 22, 19) }],
@@ -165,24 +165,24 @@ export const honorMonths: HonorMonth[] = [
   monthOf(2025, 7, "da-cong-bo", 15),
 ];
 
-// Danh hiệu của mọi TVV suy từ các tháng đã công bố (chỉ người đã đồng ý công khai)
+// Danh hiệu của mọi TVV suy từ các bảng đã công bố (09/09: admin quyết, không cần TVV đồng ý)
 for (const a of advisors) {
   a.danhHieu = [];
   for (const m of honorMonths) {
     if (m.trangThai !== "da-cong-bo") continue;
     for (const h of m.hangMuc) {
-      const nd = h.nguoiDat.find((n) => n.advisorMa === a.ma && n.dongYCongKhai === "dong-y");
-      if (nd) a.danhHieu.push({ id: `dh-${a.ma}-${m.id}-${h.hangMucId}`, ten: `${hangMuc.find((x) => x.id === h.hangMucId)?.ten ?? h.hangMucId} ${m.nam}`, thangId: m.id, hangMucId: h.hangMucId, thuHang: nd.thuHang, congKhai: "da-cong-khai" });
+      const nd = h.nguoiDat.find((n) => n.advisorMa === a.ma);
+      if (nd) a.danhHieu.push({ id: `dh-${a.ma}-${m.id}-${h.hangMucId}`, ten: `${hangMuc.find((x) => x.id === h.hangMucId)?.ten ?? h.hangMucId} ${m.nam}`, thangId: m.id, hangMucId: h.hangMucId, thuHang: nd.thuHang });
     }
   }
   // gọn: giữ tối đa 3 danh hiệu mới nhất, mỗi hạng mục một lần
   const seen = new Set<string>(); a.danhHieu = a.danhHieu.filter((d) => (seen.has(d.hangMucId) ? false : (seen.add(d.hangMucId), true))).slice(0, 3);
 }
-// TVV demo: bộ danh hiệu cố định theo wireframe (MDRT 2026 · Chubb Star 2025 · Chubb Chiến 9/2026 chờ đồng ý)
+// TVV demo: bộ danh hiệu cố định theo wireframe (MDRT 2026 · Chubb Star 2025 · Chubb Chiến 2026)
 advisors[0].danhHieu = [
-  { id: "dh1", ten: "MDRT 2026", thangId: "2026-08", hangMucId: "mdrt", thuHang: 1, congKhai: "da-cong-khai" },
-  { id: "dh2", ten: "Chubb Star 2025", thangId: "2026-04", hangMucId: "chubb-star", thuHang: 2, congKhai: "da-cong-khai" },
-  { id: "dh3", ten: "Chubb Chiến tháng 9/2026", thangId: "2026-09", hangMucId: "chubb-chien", thuHang: 3, congKhai: "cho-dong-y" },
+  { id: "dh1", ten: "MDRT 2026", thangId: "2026-08", hangMucId: "mdrt", thuHang: 1 },
+  { id: "dh2", ten: "Chubb Star 2025", thangId: "2026-04", hangMucId: "chubb-star", thuHang: 2 },
+  { id: "dh3", ten: "Chubb Chiến 2026", thangId: "2026-08", hangMucId: "chubb-chien", thuHang: 3 },
 ];
 
 /* ---------- Thư viện ---------- */
@@ -402,7 +402,7 @@ export const financeParams: FinanceParams = {
 
 /* ---------- Thông báo · Đã lưu (TVV demo) ---------- */
 export const notifications: Notification[] = [
-  { id: "n1", advisorMa: TVV_DEMO.ma, noiDung: "Chubb Life xin bạn đồng ý công khai danh hiệu Chubb Chiến · Tháng 9/2026.", ngay: "2026-09-06T09:00:00", daDoc: false, href: "/tai-khoan" },
+  { id: "n1", advisorMa: TVV_DEMO.ma, noiDung: "Bạn được vinh danh Chubb Chiến · Tháng 8/2026 — bảng đã công bố.", ngay: "2026-09-06T09:00:00", daDoc: false, href: "/tai-khoan" },
   { id: "n5", advisorMa: TVV_DEMO.ma, noiDung: `${advisors[1].hoTen} gửi lời chúc cho danh hiệu MDRT · Tháng 8/2026`, ngay: "2026-09-03T14:20:00", daDoc: false, href: `/toan-tam-dan-dau/hang-muc/${TVV_DEMO.ma}?thang=2026-08&hm=mdrt` },
   { id: "n2", advisorMa: TVV_DEMO.ma, noiDung: 'Ảnh "Ưu đãi tháng 8" bị từ chối · xem lý do', ngay: "2026-09-04T15:20:00", daDoc: false, href: "/tai-khoan/da-luu" },
   { id: "n3", advisorMa: TVV_DEMO.ma, noiDung: "Bảng xếp hạng tháng 8/2026 đã chốt: bạn xếp hạng 1.", ngay: "2026-09-01T08:00:00", daDoc: true, href: "/toan-tam-ket-noi" },

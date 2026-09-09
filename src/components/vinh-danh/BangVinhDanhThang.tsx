@@ -3,7 +3,7 @@
  * Một bảng vinh danh — C01 (/toan-tam-dan-dau: bảng công bố mới nhất, có hero) và C04 (/toan-tam-dan-dau/bang/[id]: bảng mở từ lưu trữ,
  * masthead gọn thay hero — trạng thái của C01, cùng thân trang; 09/09). Bảng có TÊN do Chubb đặt (tháng, quý, đợt riêng).
  * Khối 1: thẻ người dẫn đầu lớn + bốn người kế tiếp; khối 2–4: một hàng ngang, người dẫn đầu là thẻ rộng.
- * Chỉ hiện người đã đồng ý công khai. Hành động chia sẻ / gửi lời chúc chỉ ở C02.
+ * Mọi người trong bảng đều hiện khi bảng công bố (09/09: admin quyết). Hành động chia sẻ / gửi lời chúc chỉ ở C02.
  */
 import Link from "next/link";
 import { R } from "@/lib/routes";
@@ -59,7 +59,7 @@ export function BangVinhDanhThang({ thangId }: { thangId?: string }) {
           </div>
         )}
 
-        {hms.length === 0 && <div className="mt-8"><EmptyState title="Bảng này chưa có Tư vấn viên nào đồng ý công khai" /></div>}
+        {hms.length === 0 && <div className="mt-8"><EmptyState title="Bảng này chưa có người được vinh danh" /></div>}
         {hms.map((h, idx) => {
           const list = congKhai(month, h.id); const leader = list[0]; const keTiep = list.slice(1, 5);
           if (!leader) return null;

@@ -1,7 +1,7 @@
 "use client";
 /**
  * G02a · Trang cá nhân › Tổng quan — số liệu · việc cần làm · lối tắt · hoạt động gần đây · danh hiệu & vinh danh.
- * Khối Danh hiệu & vinh danh là nơi TVV bấm Đồng ý công khai / Không công khai (H03b · C01 cập nhật theo).
+ * Khối Danh hiệu & vinh danh: danh hiệu admin đã công bố (09/09: không còn bước TVV đồng ý) + Chia sẻ.
  */
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,7 +10,7 @@ import { R } from "@/lib/routes";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
 import { fmtDate, fmtDateTime, thangLabel } from "@/lib/seed";
 import type { DanhHieu } from "@/lib/types";
-import { Button, Card, Chip, H2, Muted, Stat, useFlash } from "@/components/ui";
+import { Button, Card, H2, Muted, Stat, useFlash } from "@/components/ui";
 import { linkC02 } from "@/components/vinh-danh/honor";
 
 export default function Page() {
@@ -35,9 +35,6 @@ export default function Page() {
   });
   if (!tvv.avatar) viec.push({ text: "Danh thiếp chưa có ảnh chân dung", href: R.E04, nut: "Sửa" });
   if (!tvv.hoSoNangLuc) viec.push({ text: "Hồ sơ năng lực chưa điền — khách chỉ thấy thông tin liên hệ", href: R.E04, nut: "Điền" });
-  tvv.danhHieu.filter((d) => d.congKhai === "cho-dong-y").forEach((d) => {
-    viec.push({ text: `Chubb xin đồng ý công khai thành tích ${d.ten} của bạn`, onClick: () => document.getElementById("danh-hieu")?.scrollIntoView({ behavior: "smooth", block: "start" }), nut: "Xem" });
-  });
 
   /* Hoạt động gần đây: thông báo + mục đã lưu */
   const hoatDong = (() => {
@@ -65,11 +62,6 @@ export default function Page() {
   const soNguoi = (d: DanhHieu) => data.honorMonths.find((m) => m.id === d.thangId)?.hangMuc.find((h) => h.hangMucId === d.hangMucId)?.nguoiDat.length ?? 0;
   const tenHangMuc = (id: string) => data.hangMuc.find((h) => h.id === id)?.ten ?? id;
   const thangCua = (d: DanhHieu) => { const m = data.honorMonths.find((x) => x.id === d.thangId); return m ? thangLabel(m) : d.thangId; };
-  const doiCongKhai = (d: DanhHieu, dongY: boolean) => {
-    actions.update("advisors", (list) => list.map((a) => a.ma !== tvv.ma ? a : { ...a, danhHieu: a.danhHieu.map((x) => x.id === d.id ? { ...x, congKhai: dongY ? "da-cong-khai" : "khong-cong-khai" } : x) }));
-    actions.update("honorMonths", (list) => list.map((m) => m.id !== d.thangId ? m : { ...m, hangMuc: m.hangMuc.map((h) => h.hangMucId !== d.hangMucId ? h : { ...h, nguoiDat: h.nguoiDat.map((p) => p.advisorMa === tvv.ma ? { ...p, dongYCongKhai: dongY ? "dong-y" : "khong" } : p) }) }));
-    flash(dongY ? `Đã đồng ý công khai ${d.ten} — tên bạn sẽ hiện trên trang Vinh danh` : `Đã ghi nhận: không công khai ${d.ten}`);
-  };
 
   return (
     <div className="space-y-10">
@@ -137,25 +129,15 @@ export default function Page() {
           {tvv.danhHieu.length === 0 ? <div className="px-5 py-6 text-[14px] text-ink2">Bạn chưa có danh hiệu nào được Chubb ghi nhận.</div> : (
             <ul>
               {tvv.danhHieu.map((d) => {
-                const cho = d.congKhai === "cho-dong-y";
                 return (
                   <li key={d.id} className="flex items-center gap-4 px-5 py-4 border-b border-vien2 last:border-0">
                     <div className="size-12 shrink-0 rounded-sm bg-blue-soft text-blue font-bold flex items-center justify-center text-[11px]" aria-label="Huy hiệu">{tenHangMuc(d.hangMucId).split(" ").map((s) => s[0]).join("").slice(0, 3)}</div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-bold text-[15px] text-den">{cho ? `${tenHangMuc(d.hangMucId)} — ${thangCua(d)}` : d.ten}</div>
-                      <div className="text-[13px] text-ink2 mt-0.5">
-                        {cho ? `Chubb đề nghị công khai bạn trong hạng mục ${tenHangMuc(d.hangMucId)} · thứ ${d.thuHang} trong ${soNguoi(d)} người` : `Vinh danh ${thangCua(d)} · hạng mục ${tenHangMuc(d.hangMucId)} · thứ ${d.thuHang} trong ${soNguoi(d)} người`}
-                      </div>
-                    </div>
-                    <div className="shrink-0 w-[150px]">
-                      {d.congKhai === "da-cong-khai" && <Chip tone="green">ĐÃ CÔNG KHAI</Chip>}
-                      {cho && <Chip tone="amber">CHỜ BẠN ĐỒNG Ý</Chip>}
-                      {d.congKhai === "khong-cong-khai" && <Chip tone="grey">KHÔNG CÔNG KHAI</Chip>}
+                      <div className="font-bold text-[15px] text-den">{d.ten}</div>
+                      <div className="text-[13px] text-ink2 mt-0.5">Bảng vinh danh {thangCua(d)} · {tenHangMuc(d.hangMucId)} · thứ {d.thuHang} trong {soNguoi(d)} người</div>
                     </div>
                     <div className="flex gap-2 shrink-0">
-                      {d.congKhai === "da-cong-khai" && <Button kind="secondary" size="sm" onClick={() => flash(`Đã sao chép link chia sẻ danh hiệu ${d.ten}`)}>Chia sẻ</Button>}
-                      {cho && <><Button size="sm" onClick={() => doiCongKhai(d, true)}>Đồng ý công khai</Button><Button kind="secondary" size="sm" onClick={() => doiCongKhai(d, false)}>Không công khai</Button></>}
-                      {d.congKhai === "khong-cong-khai" && <Button kind="ghost" size="sm" onClick={() => doiCongKhai(d, true)}>Đồng ý công khai</Button>}
+                      <Button kind="secondary" size="sm" onClick={() => flash(`Đã sao chép link chia sẻ danh hiệu ${d.ten}`)}>Chia sẻ</Button>
                     </div>
                   </li>
                 );

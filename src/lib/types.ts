@@ -66,7 +66,6 @@ export interface DanhHieu {
   thangId: string; // tham chiếu HonorMonth.id
   hangMucId: string;
   thuHang: number;
-  congKhai: "da-cong-khai" | "cho-dong-y" | "khong-cong-khai";
 }
 
 export interface ChuyenDe {
@@ -145,7 +144,6 @@ export interface NguoiDat {
   /** mã TVV; người nhập tay không có tài khoản dùng mã tạm "tay-<timestamp>" */
   advisorMa: string;
   thuHang: number;
-  dongYCongKhai: "cho" | "dong-y" | "khong";
   /** Thành tích tháng (C02 · H03b · H03c · H03d) — Chubb nạp cùng danh sách; chủ dự án 08/09: công khai */
   doanhSo?: number; // phí năm đầu, VND
   hopDong?: number; // hợp đồng mới trong tháng

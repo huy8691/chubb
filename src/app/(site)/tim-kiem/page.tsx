@@ -37,7 +37,7 @@ function KetQuaTim() {
     }
     for (const t of data.advisors.filter((x) => x.theCongKhai && x.trangThaiTaiKhoan === "hoat-dong")) {
       const d = Math.max(diem(k, t.hoTen), t.ma.includes(k) ? 3 : 0, diem(k, t.chucDanh)); if (!d) continue;
-      const dh = t.danhHieu.filter((x) => x.congKhai === "da-cong-khai").map((x) => x.ten).slice(0, 1).join("");
+      const dh = t.danhHieu.map((x) => x.ten).slice(0, 1).join("");
       out.push({ loai: "tu-van-vien", nhan: NHAN["tu-van-vien"], tieuDe: `${t.hoTen} — ${t.chucDanh}${dh ? ` · ${dh}` : ""}`, phu: `Mã ${t.ma} · ${t.vanPhong.split(" — ")[0]}`, href: R.E03(t.ma), ngay: t.ngayBatDau, diem: d });
     }
     for (const m of data.honorMonths.filter((x) => x.trangThai === "da-cong-bo")) {

@@ -30,7 +30,6 @@ export default function Page() {
   const hangMucChinh = thang?.hangMuc.find((h) => h.hangMucId === "mdrt") ?? thang?.hangMuc[0];
   const tenHangMuc = data.hangMuc.find((h) => h.id === hangMucChinh?.hangMucId)?.ten ?? "";
   const nguoiDat = (hangMucChinh?.nguoiDat ?? [])
-    .filter((n) => n.dongYCongKhai === "dong-y")
     .sort((a, b) => a.thuHang - b.thuHang)
     .map((n) => ({ ...n, tvv: data.advisors.find((a) => a.ma === n.advisorMa) }))
     .filter((n) => n.tvv);

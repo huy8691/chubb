@@ -51,7 +51,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const hien = loc === "loi" ? rows.filter((r) => r.kiem === "loi") : rows;
 
   const xacNhan = () => {
-    const themMoi: { ma: string; hm: string }[] = [];
     actions.update("honorMonths", (ms) => ms.map((m) => {
       if (m.id !== id) return m;
       const hmIds = new Set([...m.hangMuc.map((h) => h.hangMucId), ...hopLe.map((r) => r.hangMucId!)]);
@@ -60,16 +59,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         for (const r of hopLe.filter((x) => x.hangMucId === hmId)) {
           const i = cur.findIndex((x) => x.advisorMa === r.ma);
           if (i >= 0) cur[i] = { ...cur[i], thuHang: r.thuHang };
-          else { cur.push({ advisorMa: r.ma, thuHang: r.thuHang, dongYCongKhai: "cho", nguon: "excel" } satisfies NguoiDat); themMoi.push({ ma: r.ma, hm: hmId }); }
+          else cur.push({ advisorMa: r.ma, thuHang: r.thuHang, nguon: "excel" } satisfies NguoiDat);
         }
         return { hangMucId: hmId, nguoiDat: cur.sort((a, b) => a.thuHang - b.thuHang).map((x, k) => ({ ...x, thuHang: k + 1 })) };
       });
       return { ...m, hangMuc, capNhat: new Date().toISOString() };
     }));
-    for (const t of themMoi) {
-      const ten = hangMucSorted.find((h) => h.id === t.hm)?.ten ?? "";
-      actions.notify(t.ma, `Chubb Life xin bạn đồng ý công khai danh hiệu ${ten} · ${thangLabel(month)}.`, R.G02a);
-    }
     router.push(R.H03b(id));
   };
 

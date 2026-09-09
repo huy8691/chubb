@@ -1,14 +1,14 @@
 "use client";
 /**
  * H03c · Popup thêm / sửa TVV trong một hạng mục của bảng vinh danh (lớp phủ trên H03b).
- * Chọn từ danh sách TVV hoặc Nhập tay; thứ tự · trích dẫn; gửi thông báo xin đồng ý công khai.
+ * Chọn từ danh sách TVV hoặc Nhập tay; thứ tự · ba số. 09/09: không còn bước TVV đồng ý — người trong bảng hiện khi bảng công bố.
  */
 import { useMemo, useState } from "react";
 import { R } from "@/lib/routes";
 import { useStore } from "@/lib/store";
 import { thangLabel } from "@/lib/seed";
 import type { HangMuc, HonorMonth, NguoiDat } from "@/lib/types";
-import { Button, Checkbox, Chip, Field, Input, Modal, Radio, SearchBox, Select, cx } from "@/components/ui";
+import { Button, Chip, Field, Input, Modal, Radio, SearchBox, Select, cx } from "@/components/ui";
 
 interface Props {
   open: boolean;
@@ -36,7 +36,6 @@ export function ThemTvvModal({ open, onClose, month, hangMuc, edit, onDone }: Pr
   const [hopDong, setHopDong] = useState<string>(edit?.hopDong !== undefined ? String(edit.hopDong) : "");
   const [khachHang, setKhachHang] = useState<string>(edit?.khachHang !== undefined ? String(edit.khachHang) : "");
   const soLieu = () => ({ doanhSo: doanhSo ? Number(doanhSo.replace(/\D/g, "")) : undefined, hopDong: hopDong ? Number(hopDong) : undefined, khachHang: khachHang ? Number(khachHang) : undefined });
-  const [guiEmail, setGuiEmail] = useState(true);
   const [err, setErr] = useState("");
 
   const vanPhongs = useMemo(() => Array.from(new Set(data.advisors.map((a) => a.vanPhong))), [data.advisors]);
@@ -52,13 +51,13 @@ export function ThemTvvModal({ open, onClose, month, hangMuc, edit, onDone }: Pr
     let nd: NguoiDat;
     if (mode === "chon") {
       if (!chon) return "Chọn một Tư vấn viên trong danh sách.";
-      nd = { advisorMa: chon, thuHang, dongYCongKhai: edit?.dongYCongKhai ?? "cho", nguon: edit?.nguon ?? "tay", ...soLieu() };
+      nd = { advisorMa: chon, thuHang, nguon: edit?.nguon ?? "tay", ...soLieu() };
     } else {
       if (!hoTen.trim()) return "Họ tên là trường bắt buộc.";
       const a = maTay.trim() ? data.advisors.find((x) => x.ma === maTay.trim()) : undefined;
       nd = a
-        ? { advisorMa: a.ma, thuHang, dongYCongKhai: edit?.dongYCongKhai ?? "cho", nguon: "tay", ...soLieu() }
-        : { advisorMa: edit?.advisorMa ?? (maTay.trim() || `tay-${Date.now()}`), hoTen: hoTen.trim(), vanPhong: vanPhong || undefined, thuHang, ...soLieu(), dongYCongKhai: edit?.dongYCongKhai ?? "dong-y", nguon: "tay" };
+        ? { advisorMa: a.ma, thuHang, nguon: "tay", ...soLieu() }
+        : { advisorMa: edit?.advisorMa ?? (maTay.trim() || `tay-${Date.now()}`), hoTen: hoTen.trim(), vanPhong: vanPhong || undefined, thuHang, ...soLieu(), nguon: "tay" };
     }
     const trung = list.some((x) => x.advisorMa === nd.advisorMa && x.advisorMa !== edit?.advisorMa);
     if (trung) return `${nd.advisorMa} đã có trong ${hangMuc.ten} tháng này — không thêm trùng`;
@@ -76,8 +75,6 @@ export function ThemTvvModal({ open, onClose, month, hangMuc, edit, onDone }: Pr
         }),
       };
     }));
-    const a = data.advisors.find((x) => x.ma === nd.advisorMa);
-    if (!edit && a && guiEmail) actions.notify(a.ma, `Chubb Life xin bạn đồng ý công khai danh hiệu ${hangMuc.ten} · ${thangLabel(month)}.`, R.G02a);
     return "";
   };
 
@@ -155,7 +152,6 @@ export function ThemTvvModal({ open, onClose, month, hangMuc, edit, onDone }: Pr
         <Field label="Khách hàng mới"><Input inputMode="numeric" value={khachHang} onChange={(e) => setKhachHang(e.target.value.replace(/\D/g, ""))} placeholder="15" /></Field>
       </div>
       <p className="mt-2 text-[12px] text-mut">Ba số này hiện công khai trên trang Thành tích của Tư vấn viên; bảng đột xuất không có số liệu thì để trống.</p>
-      {!edit && <div className="mt-4"><Checkbox checked={guiEmail} onChange={(e) => setGuiEmail(e.target.checked)} label="Gửi email xin đồng ý công khai khi lưu — TVV xác nhận ở trang cá nhân" /></div>}
       {err && <div className="mt-4 text-[12.5px] font-bold text-red-fg bg-red-bg rounded-sm px-3 py-2">✗ {err}</div>}
     </Modal>
   );

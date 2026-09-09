@@ -82,7 +82,7 @@ export default function Page() {
     <div className="bg-white border border-vien rounded-sm p-6">
       <div className="aspect-[4/3] bg-xam rounded-sm overflow-hidden flex items-center justify-center text-mut text-[12px]">{form.avatar ? <img src={form.avatar} alt="Ảnh chân dung" className="w-full h-full object-cover" /> : "Ảnh chân dung"}</div>
       <div className="mt-5 font-serif font-semibold text-[22px] text-den uppercase leading-tight">{form.hoTen || "Họ và tên"}</div>
-      <div className="text-[13px] text-ink2 mt-1">{form.chucDanh}{tvv.danhHieu.find((d) => d.congKhai === "da-cong-khai") ? ` · ${tvv.danhHieu.find((d) => d.congKhai === "da-cong-khai")!.ten}` : ""}</div>
+      <div className="text-[13px] text-ink2 mt-1">{form.chucDanh}{tvv.danhHieu[0] ? ` · ${tvv.danhHieu[0]!.ten}` : ""}</div>
       <div className="mt-4 space-y-1.5 text-[13px] text-den"><div>{form.soDienThoai}</div><div>{form.email}</div><div>VP Chubb Life · {form.vanPhong}</div></div>
       {noiBat.length > 0 && <div className="mt-4 flex flex-wrap gap-2">{noiBat.map((n) => <Chip key={n} tone="blue">{n}</Chip>)}</div>}
       <div className="mt-5 flex gap-3"><Button size="sm" onClick={() => flash("Đã mở Zalo")}>Kết nối Zalo</Button><Button kind="secondary" size="sm" onClick={() => flash(`Đang gọi ${form.soDienThoai}`)}>Gọi điện</Button></div>

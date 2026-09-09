@@ -37,7 +37,7 @@ export const nhanThe = (a: Advisor) => {
 export const theXemDuoc = (a?: Advisor): a is Advisor => !!a && a.trangThaiTaiKhoan !== "da-go" && a.theCongKhai;
 
 /** Danh hiệu đã công khai, ngăn cách " · " — dòng dưới tên trên E02 · E03 · E06 */
-export const danhHieuCongKhai = (a: Advisor) => a.danhHieu.filter((d) => d.congKhai === "da-cong-khai").map((d) => d.ten);
+export const danhHieuCongKhai = (a: Advisor) => a.danhHieu.map((d) => d.ten);
 
 /** Định dạng SĐT 0901 234 567 */
 export const fmtPhone = (p: string) => p.replace(/^(\d{4})(\d{3})(\d{3,4})$/, "$1 $2 $3");

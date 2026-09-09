@@ -9,7 +9,7 @@ import { use, useState } from "react";
 import { R } from "@/lib/routes";
 import { thangLabel } from "@/lib/seed";
 import type { HangMuc, NguoiDat, HonorMonth } from "@/lib/types";
-import { Button, Chip, EmptyState, Field, Input, StatusChip, Table, cx, useFlash } from "@/components/ui";
+import { Button, Chip, EmptyState, Field, Input, Table, cx, useFlash } from "@/components/ui";
 import { CmsCard, CmsFormActions, CmsHeader } from "@/components/cms/CmsShell";
 import { ThemTvvModal } from "@/components/vinh-danh/ThemTvvModal";
 import { useHonor } from "@/components/vinh-danh/honor";
@@ -29,8 +29,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   }
 
   const daCongBo = month.trangThai === "da-cong-bo";
-  const tongDongY = month.hangMuc.flatMap((h) => h.nguoiDat).filter((n) => n.dongYCongKhai === "dong-y").length;
-  const tongCho = month.hangMuc.flatMap((h) => h.nguoiDat).filter((n) => n.dongYCongKhai === "cho").length;
   const capNhatThang = () => actions.update("honorMonths", (ms) => ms.map((m) => m.id === id ? { ...m, capNhat: new Date().toISOString() } : m));
 
   /* --- hạng mục dùng chung mọi bảng --- */
@@ -66,9 +64,13 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   /* --- tên & thời gian bảng (09/09) --- */
   const suaBang = (patch: Partial<HonorMonth>) => actions.update("honorMonths", (ms) => ms.map((m) => (m.id === id ? { ...m, ...patch, capNhat: new Date().toISOString() } : m)));
 
-  /* --- công bố --- */
+  const tongNguoi = month.hangMuc.reduce((n, h) => n + h.nguoiDat.length, 0);
+  const soHangMucCo = month.hangMuc.filter((h) => h.nguoiDat.length > 0).length;
+
+  /* --- công bố: admin quyết; người có tài khoản được báo (thông báo + email), không có bước đồng ý (09/09) --- */
   const congBo = () => {
     actions.update("honorMonths", (ms) => ms.map((m) => m.id === id ? { ...m, trangThai: "da-cong-bo", congBo: new Date().toISOString(), capNhat: new Date().toISOString() } : m));
+    for (const h of month.hangMuc) for (const n of h.nguoiDat) if (data.advisors.some((a) => a.ma === n.advisorMa)) actions.notify(n.advisorMa, `Bạn được vinh danh ${data.hangMuc.find((x) => x.id === h.hangMucId)?.ten ?? h.hangMucId} · ${thangLabel(month)} — bảng đã công bố.`, R.G02a);
     router.push(R.H03);
   };
   const goCongBo = () => {
@@ -90,9 +92,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       <div className="space-y-5">
         {hangMucSorted.map((h, idx) => {
           const ds = tatCa(month, h.id);
-          const dy = ds.filter((v) => v.nd.dongYCongKhai === "dong-y").length;
-          const cho = ds.filter((v) => v.nd.dongYCongKhai === "cho").length;
-          const tomTat = ds.length === 0 ? "chưa có người" : [`${ds.length} người`, `${dy} đồng ý`, cho > 0 ? `${cho} chờ` : null].filter(Boolean).join(" · ");
+          const tomTat = ds.length === 0 ? "chưa có người" : `${ds.length} người`;
           return (
             <CmsCard key={h.id} className={cx(!h.hien && "opacity-80")}
               title={<span className="flex items-center gap-2">
@@ -118,7 +118,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
               {ds.length === 0 ? (
                 <p className="text-[13px] text-ink2">Chưa có người được vinh danh ở hạng mục này trong bảng — bấm + Thêm TVV hoặc Thêm từ Excel.</p>
               ) : (
-                <Table head={["Thứ tự", "Mã TVV", "Họ tên", "Văn phòng", "Doanh số · phí năm đầu", "Hợp đồng", "Khách hàng", "Đồng ý công khai", "Nguồn", ""]}>
+                <Table head={["Thứ tự", "Mã TVV", "Họ tên", "Văn phòng", "Doanh số · phí năm đầu", "Hợp đồng", "Khách hàng", "Nguồn", ""]}>
                   {ds.map((v) => (
                     <tr key={v.ma}>
                       <td className="text-ink2">{v.nd.thuHang}</td>
@@ -128,7 +128,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                       <td className="text-[12.5px] text-den whitespace-nowrap">{fmtTien(v.nd.doanhSo)}</td>
                       <td className="text-[12.5px] text-den">{v.nd.hopDong ?? "—"}</td>
                       <td className="text-[12.5px] text-den">{v.nd.khachHang ?? "—"}</td>
-                      <td><StatusChip s={v.nd.dongYCongKhai} /></td>
                       <td className="text-[12.5px] text-ink2">{v.nd.nguon === "excel" ? "Excel" : "Thêm tay"}</td>
                       <td className="text-right whitespace-nowrap">
                         <button type="button" className="font-bold text-blue hover:underline" onClick={() => setModal({ hm: h, edit: v.nd })}>Sửa</button>
@@ -156,11 +155,11 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         </CmsCard>
 
         <CmsCard title="Công bố">
-          <p className="text-[12.5px] text-ink2">Đồng ý công khai: {tongDongY} ✓ · {tongCho} chờ — người chưa đồng ý không hiện khi công bố.</p>
+          <p className="text-[12.5px] text-ink2">{tongNguoi} người đạt · {soHangMucCo} hạng mục — hiện công khai trên trang Vinh danh ngay khi công bố.</p>
           <CmsFormActions>
             <Button kind="secondary" onClick={() => { capNhatThang(); flash("Đã lưu nháp"); }}>Lưu nháp</Button>
             <Button kind="secondary" onClick={() => window.open(daCongBo ? R.C04(month.id) : R.C01, "_blank")}>Xem trước</Button>
-            {daCongBo ? <Button kind="danger" onClick={goCongBo}>Gỡ công bố</Button> : <Button onClick={congBo} disabled={tongDongY === 0}>Công bố</Button>}
+            {daCongBo ? <Button kind="danger" onClick={goCongBo}>Gỡ công bố</Button> : <Button onClick={congBo} disabled={tongNguoi === 0}>Công bố</Button>}
             <Button kind="ghost" href={R.H03}>Huỷ</Button>
           </CmsFormActions>
         </CmsCard>

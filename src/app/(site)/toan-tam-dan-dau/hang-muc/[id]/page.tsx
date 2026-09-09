@@ -30,7 +30,7 @@ function ChiTiet({ ma }: { ma: string }) {
   const { flash, node } = useFlash();
   const { published, hangMucById, congKhai, hangMucCoNguoi } = useHonor();
 
-  // mọi lần người này được vinh danh (tháng đã công bố, đã đồng ý công khai), mới → cũ
+  // mọi lần người này được vinh danh (bảng đã công bố), mới → cũ
   const hits = published.flatMap((m) => hangMucCoNguoi(m).flatMap((h) => congKhai(m, h.id).filter((v) => v.ma === ma).map((v) => ({ m, h, v }))));
   const hit = hits.find((x) => x.m.id === sp.get("thang") && x.h.id === sp.get("hm")) ?? hits.find((x) => x.m.id === sp.get("thang")) ?? hits[0];
 

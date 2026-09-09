@@ -41,8 +41,8 @@ export function useHonor() {
   const hangMucById = (id: string) => data.hangMuc.find((h) => h.id === id);
   /** mọi người đạt của một hạng mục trong tháng (CMS), sắp theo thứ hạng */
   const tatCa = (m: HonorMonth, hmId: string) => [...(m.hangMuc.find((h) => h.hangMucId === hmId)?.nguoiDat ?? [])].sort((a, b) => a.thuHang - b.thuHang).map((n) => resolveNguoiDat(n, data.advisors));
-  /** người đạt ĐÃ ĐỒNG Ý công khai của một hạng mục trong tháng (trang công khai) */
-  const congKhai = (m: HonorMonth, hmId: string) => tatCa(m, hmId).filter((v) => v.nd.dongYCongKhai === "dong-y");
+  /** người đạt hiện công khai của một hạng mục trong bảng = toàn bộ danh sách (09/09: admin quyết, không cần TVV đồng ý) */
+  const congKhai = (m: HonorMonth, hmId: string) => tatCa(m, hmId);
   /** hạng mục đang hiện và có ít nhất một người công khai */
   const hangMucCoNguoi = (m: HonorMonth): HangMuc[] => hangMucSorted.filter((h) => h.hien && congKhai(m, h.id).length > 0);
   const tongCongKhai = (m: HonorMonth) => hangMucCoNguoi(m).reduce((s, h) => s + congKhai(m, h.id).length, 0);

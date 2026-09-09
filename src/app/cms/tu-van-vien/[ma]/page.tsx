@@ -46,7 +46,7 @@ function ChiTiet({ ma }: { ma: string }) {
   const rank = data.ranking.find((r) => r.advisorMa === a.ma);
   const anh = data.studioImages.filter((s) => s.advisorMa === a.ma);
   const anhCho = anh.filter((s) => s.trangThai === "cho-duyet").length;
-  const dh = a.danhHieu.filter((d) => d.congKhai === "da-cong-khai").map((d) => d.ten);
+  const dh = a.danhHieu.map((d) => d.ten);
   const daGo = a.trangThaiTaiKhoan === "da-go";
   const duongDan = `${SITE_HOST}/${a.ma}`;
 
