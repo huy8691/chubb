@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable react-hooks/set-state-in-effect -- đọc sessionStorage / tham số URL sau mount là chủ ý (tránh lệch hydration) */
-/** D02 · Studio (cần đăng nhập TVV) — 3 bước: chọn Mẫu Studio → tải ảnh chân dung → thông tin hiển thị; xem trước; Tải ảnh / Lưu vào Ảnh Studio của tôi (không duyệt) / Hiển thị công khai trên Bộ sưu tập Studio (Chubb duyệt, gửi một lần); khối Bộ sưu tập Studio + Ảnh Studio của tôi. */
+/** D02 · Studio (cần đăng nhập TVV) — 3 bước: chọn Mẫu Studio → tải ảnh chân dung → thông tin hiển thị; xem trước; Tải ảnh / Lưu vào Ảnh Studio của tôi (không duyệt) / Hiển thị công khai trong Ảnh thực tế từ Tư vấn viên (Chubb duyệt, gửi một lần); khối cuối Tham khảo mẫu khác. (Danh sách "Ảnh Studio của tôi" ở G02, không ở D02 — bám Figma D02.) */
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
@@ -9,7 +9,7 @@ import { useCurrentAdvisor, useStore } from "@/lib/store";
 import { fmtDate } from "@/lib/seed";
 import type { StudioImage } from "@/lib/types";
 import { RequireTVV } from "@/components/site/AccountShell";
-import { Button, Card, Checkbox, Chip, Eyebrow, Field, H1, H2, ImageBox, Input, MoreLink, Muted, StatusChip, cx, useFlash } from "@/components/ui";
+import { Button, Card, Checkbox, Chip, Eyebrow, Field, H1, H2, ImageBox, Input, MoreLink, Muted, cx, useFlash } from "@/components/ui";
 import { StudioPreview, tiLeLabel, tiLeToRatio } from "@/components/cong-cu/StudioPreview";
 
 const GIOI_HAN = 32;
@@ -54,12 +54,10 @@ function Studio() {
   };
   const taoAnh = (trangThai: StudioImage["trangThai"]): StudioImage => ({ id: `as${Date.now()}`, templateId: m.id, advisorMa: tvv.ma, anh: anh ?? m.anh, tao: new Date().toISOString(), trangThai, dongYCongKhai: trangThai === "cho-duyet", phienBanMau: m.phienBan });
   const luu = () => { actions.update("studioImages", (l) => [taoAnh("rieng-tu"), ...l]); flash("Đã lưu vào Ảnh Studio của tôi"); };
-  const gui = () => { actions.update("studioImages", (l) => [taoAnh("cho-duyet"), ...l]); flash("Đã gửi Chubb duyệt — ảnh hiển thị công khai trên Bộ sưu tập Studio sau khi duyệt"); setDongY(false); };
+  const gui = () => { actions.update("studioImages", (l) => [taoAnh("cho-duyet"), ...l]); flash("Đã gửi Chubb duyệt — ảnh hiển thị công khai sau khi duyệt"); setDongY(false); };
   const dungMau = (id: string) => { setMauId(id); topRef.current?.scrollIntoView({ behavior: "smooth" }); };
 
   const mauKhac = mau.filter((x) => x.id !== m.id).sort((a, b) => b.soAnhDaTao - a.soAnhDaTao).slice(0, 6); // 09/09: khối cuối là mẫu khác để tham khảo, không phải ảnh TVV (D07 đi từ D08)
-  const cuaToi = data.studioImages.filter((a) => a.advisorMa === tvv.ma).sort((a, b) => b.tao.localeCompare(a.tao));
-  const tenMau = (id: string) => data.studioTemplates.find((t) => t.id === id)?.ten ?? "Mẫu Studio";
 
   if (!m) return <div className="wrap py-16"><Card className="p-8 text-center"><H2>Studio chưa có Mẫu Studio nào</H2><Muted className="mt-2">Chubb Life đang chuẩn bị mẫu. Bạn quay lại sau nhé.</Muted></Card></div>;
 
@@ -128,27 +126,11 @@ function Studio() {
           </div>
           <div className="mt-5 pt-5 border-t border-vien2">
             <div className="text-[11.5px] font-bold tracking-wider text-mut">HIỂN THỊ CÔNG KHAI</div>
-            <div className="mt-2"><Checkbox checked={dongY} onChange={(e) => setDongY(e.target.checked)} label={<span className="text-[13px]">Tôi đồng ý cho ảnh này hiển thị công khai trên Bộ sưu tập Studio, kèm tên của tôi</span>} /></div>
-            <Button className="mt-3" kind="secondary" disabled={!dongY} onClick={gui}>Lưu và hiển thị công khai trên Bộ sưu tập Studio</Button>
+            <div className="mt-2"><Checkbox checked={dongY} onChange={(e) => setDongY(e.target.checked)} label={<span className="text-[13px]">Tôi đồng ý cho ảnh này hiển thị công khai trong <b>Ảnh thực tế từ Tư vấn viên</b>, kèm tên của tôi</span>} /></div>
+            <Button className="mt-3" kind="secondary" disabled={!dongY} onClick={gui}>Lưu và hiển thị công khai</Button>
             <Muted className="mt-2 text-[12px]">Ảnh được lưu vào Ảnh Studio của tôi và gửi Chubb duyệt. Chỉ hiện sau khi duyệt, mỗi ảnh gửi một lần.</Muted>
           </div>
         </Card>
-      </section>
-
-      <section className="wrap py-10">
-        <div className="flex items-end justify-between gap-6 mb-6"><H2>Ảnh Studio của tôi</H2><Link href={R.G02} className="link-more">Xem trong Đã lưu</Link></div>
-        {cuaToi.length === 0 ? <Muted>Bạn chưa lưu ảnh nào. Bấm “Lưu vào Ảnh Studio của tôi” ở khung xem trước.</Muted> : (
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {cuaToi.slice(0, 6).map((a) => (
-              <div key={a.id} className="border border-vien rounded-sm p-2">
-                <ImageBox src={a.anh} ratio="3/4" />
-                <div className="mt-2 text-[12px] font-bold text-den truncate">{tenMau(a.templateId)}</div>
-                <div className="mt-1 flex items-center justify-between gap-2"><span className="text-[11px] text-mut">{fmtDate(a.tao)}</span><StatusChip s={a.trangThai} /></div>
-                {a.trangThai === "bi-tu-choi" && a.lyDoTuChoi && <div className="mt-1 text-[11px] text-red-fg">{a.lyDoTuChoi}</div>}
-              </div>
-            ))}
-          </div>
-        )}
       </section>
 
       <section className="bg-xam">

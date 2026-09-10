@@ -20,7 +20,6 @@ const VAN_PHONG = ["TP. Hồ Chí Minh — Q.1", "Hà Nội — Cầu Giấy", "
 const MAX_GIOI_THIEU = 280;
 
 type Moc = { nam: string; tieuDe: string; moTa: string };
-type CamNhan = { ten: string; khuVuc: string; trichDan: string };
 
 function formTu(a: Advisor) {
   const hs = a.hoSoNangLuc;
@@ -29,7 +28,6 @@ function formTu(a: Advisor) {
     vaiTro: hs?.vaiTro ?? "", gioiThieu: hs?.gioiThieu ?? "",
     theManh: hs?.theManh ?? [], namKinhNghiem: hs?.namKinhNghiem?.toString() ?? "", namMDRT: hs?.namMDRT?.toString() ?? "", chungChi: hs?.chungChi ?? [],
     hanhTrinh: (hs?.hanhTrinh ?? []) as Moc[],
-    camNhan: (hs?.chungMinh ?? []).map((c) => { const [ten, ...kv] = c.ten.split(", "); return { ten, khuVuc: kv.join(", "), trichDan: c.trichDan }; }) as CamNhan[],
     hienPhan: hs?.hienPhan ?? { hanhTrinh: true, nhanXet: true, linhVuc: true, google: false },
   };
 }
@@ -68,7 +66,7 @@ export default function Page() {
         ...a.hoSoNangLuc, gioiThieu: form.gioiThieu, theManh: form.theManh, chungChi: form.chungChi, vaiTro: form.vaiTro || undefined,
         namKinhNghiem: form.namKinhNghiem ? Number(form.namKinhNghiem) : undefined, namMDRT: form.namMDRT ? Number(form.namMDRT) : undefined,
         noiBat: [form.namKinhNghiem && `${form.namKinhNghiem} năm kinh nghiệm`, form.namMDRT && `${form.namMDRT} năm liên tiếp MDRT`, form.chungChi[0]].filter(Boolean) as string[],
-        hanhTrinh: form.hanhTrinh.filter((m) => m.nam || m.tieuDe), chungMinh: form.camNhan.filter((c) => c.trichDan).map((c) => ({ trichDan: c.trichDan, ten: [c.ten, c.khuVuc].filter(Boolean).join(", ") })),
+        hanhTrinh: form.hanhTrinh.filter((m) => m.nam || m.tieuDe),
         hienPhan: form.hienPhan, capNhat: new Date().toISOString(),
       },
     }));
@@ -168,26 +166,11 @@ export default function Page() {
                 {form.hanhTrinh.length < 4 && <Button kind="secondary" size="sm" className="mt-3" onClick={() => set("hanhTrinh", [...form.hanhTrinh, { nam: "", tieuDe: "", moTa: "" }])}>+ Thêm mốc</Button>}
               </div>
 
-              <div>
-                <div className="text-[12.5px] text-ink2 mb-2">Cảm nhận khách hàng · tối đa 3 · tên viết tắt · khu vực · trích dẫn</div>
-                <div className="space-y-2">
-                  {form.camNhan.map((c, i) => (
-                    <div key={i} className="grid grid-cols-[100px_120px_1fr_auto] gap-2">
-                      <Input value={c.ten} placeholder="Chị H." onChange={(e) => set("camNhan", form.camNhan.map((x, k) => k === i ? { ...x, ten: e.target.value } : x))} />
-                      <Input value={c.khuVuc} placeholder="Quận 7" onChange={(e) => set("camNhan", form.camNhan.map((x, k) => k === i ? { ...x, khuVuc: e.target.value } : x))} />
-                      <Input value={c.trichDan} placeholder="Trích dẫn…" onChange={(e) => set("camNhan", form.camNhan.map((x, k) => k === i ? { ...x, trichDan: e.target.value } : x))} />
-                      <button type="button" aria-label="Xoá cảm nhận" onClick={() => set("camNhan", form.camNhan.filter((_, k) => k !== i))} className="text-mut hover:text-red-fg px-2">✕</button>
-                    </div>
-                  ))}
-                </div>
-                {form.camNhan.length < 3 && <Button kind="secondary" size="sm" className="mt-3" onClick={() => set("camNhan", [...form.camNhan, { ten: "", khuVuc: "", trichDan: "" }])}>+ Thêm cảm nhận</Button>}
-              </div>
-
               <Card className="p-5">
                 <div className="font-bold text-[14px] text-den mb-3">Hiện từng phần trên trang công khai</div>
                 <div className="space-y-3">
                   <Checkbox label="Hành trình nghề nghiệp" checked={form.hienPhan.hanhTrinh} onChange={(e) => set("hienPhan", { ...form.hienPhan, hanhTrinh: e.target.checked })} />
-                  <Checkbox label="Nhận xét khách hàng" checked={form.hienPhan.nhanXet} onChange={(e) => set("hienPhan", { ...form.hienPhan, nhanXet: e.target.checked })} />
+                  <Checkbox label="Bình luận" checked={form.hienPhan.nhanXet} onChange={(e) => set("hienPhan", { ...form.hienPhan, nhanXet: e.target.checked })} />
                   <Checkbox label="Lĩnh vực chuyên môn" checked={form.hienPhan.linhVuc} onChange={(e) => set("hienPhan", { ...form.hienPhan, linhVuc: e.target.checked })} />
                   <Checkbox label="Cho phép trang xuất hiện trên Google (mặc định tắt)" checked={form.hienPhan.google} onChange={(e) => set("hienPhan", { ...form.hienPhan, google: e.target.checked })} />
                 </div>

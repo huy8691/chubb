@@ -12,7 +12,7 @@ import { Breadcrumb, EmptyState, H1, H3, Muted, Pagination, SearchBox, Select, c
 import { ArticleRow, TopList } from "@/components/thu-vien/ArticleCard";
 import { chuyenDeHien, daXuatBan, sapXep, type SapXep } from "@/components/thu-vien/helpers";
 
-const PER_PAGE = 6;
+const PER_PAGE = 12;
 
 export default function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
@@ -21,14 +21,17 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
   const [sort, setSort] = useState<SapXep>("moi-nhat");
   const [page, setPage] = useState(1);
 
-  const cd = data.chuyenDe.find((c) => c.slug === slug);
+  const isAll = slug === "tat-ca";
+  const cd = isAll ? null : data.chuyenDe.find((c) => c.slug === slug);
   const cds = chuyenDeHien(data.chuyenDe);
+  const cdOf = (id: string) => data.chuyenDe.find((c) => c.id === id);
   const published = useMemo(() => data.articles.filter(daXuatBan), [data.articles]);
-  const inCd = useMemo(() => (cd ? published.filter((a) => a.chuyenDeId === cd.id) : []), [published, cd]);
+  const inCd = useMemo(() => (isAll ? published : cd ? published.filter((a) => a.chuyenDeId === cd.id) : []), [published, cd, isAll]);
   const filtered = useMemo(() => sapXep(inCd.filter((a) => !q.trim() || a.tieuDe.toLowerCase().includes(q.trim().toLowerCase())), sort), [inCd, q, sort]);
 
-  if (ready && (!cd || !cd.hien)) notFound();
-  if (!cd) return null;
+  if (ready && !isAll && (!cd || !cd.hien)) notFound();
+  if (!isAll && !cd) return null;
+  const tenTrang = isAll ? "Tất cả bài viết" : cd!.ten;
 
   const pages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const cur = Math.min(page, pages);
@@ -40,21 +43,16 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
     <>
       <div className="bg-xam">
         <div className="wrap py-8">
-          <Breadcrumb items={[{ label: "Trang chủ", href: R.A01 }, { label: "Toàn Tâm Chia Sẻ", href: R.F01 }, { label: cd.ten }]} />
-          <H1 className="mt-3 uppercase text-[34px]">{cd.ten}</H1>
-          <Muted className="mt-2 text-[16px]">{cd.moTa} — chuyên đề của Thư viện Toàn Tâm Chia Sẻ.</Muted>
-          <div className="mt-5 flex flex-wrap gap-2">
-            {cds.map((c) => (
-              <Link key={c.id} href={R.F03(c.slug)} className={cx("h-8 px-3 inline-flex items-center rounded-sm text-[13px] font-bold border", c.id === cd.id ? "bg-blue text-white border-blue" : "bg-white text-ink2 border-vien hover:border-blue hover:text-blue")}>{c.ten}</Link>
-            ))}
-          </div>
+          <Breadcrumb items={[{ label: "Trang chủ", href: R.A01 }, { label: "Toàn Tâm Chia Sẻ", href: R.F01 }, { label: tenTrang }]} />
+          <H1 className="mt-3 uppercase text-[34px]">{tenTrang}</H1>
+          <Muted className="mt-2 text-[16px]">{isAll ? "Toàn bộ bài viết trong Thư viện Toàn Tâm Chia Sẻ." : `${cd!.moTa} — chuyên đề của Thư viện Toàn Tâm Chia Sẻ.`}</Muted>
         </div>
       </div>
 
       <div className="wrap py-10 grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-12 items-start">
         <div>
           <div className="flex items-center justify-between gap-4">
-            <span className="text-[13px] text-ink2">{filtered.length} bài viết trong chuyên đề này</span>
+            <span className="text-[13px] text-ink2">{q.trim() ? `${filtered.length} kết quả cho “${q.trim()}”` : `${filtered.length} bài viết${isAll ? "" : " trong chuyên đề này"}`}</span>
             <label className="flex items-center gap-2 text-[13px] text-ink2">Sắp xếp:
               <Select value={sort} onChange={(e) => { setSort(e.target.value as SapXep); setPage(1); }} className="w-auto h-8">
                 <option value="moi-nhat">Mới nhất</option>
@@ -65,22 +63,26 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
           {shown.length === 0 ? (
             <div className="mt-6"><EmptyState title="Không có bài viết phù hợp" desc={q ? `Không tìm thấy bài nào có “${q}” trong chuyên đề này.` : "Chuyên đề này chưa có bài viết."} /></div>
           ) : (
-            <div className="mt-2">{shown.map((a) => <ArticleRow key={a.id} a={a} cd={cd} />)}</div>
+            <div className="mt-2">{shown.map((a) => <ArticleRow key={a.id} a={a} cd={cdOf(a.chuyenDeId)} />)}</div>
           )}
           <Pagination page={cur} pages={pages} onChange={setPage} />
         </div>
 
         <aside className="space-y-8 lg:sticky lg:top-24">
           <div className="bg-white border border-vien rounded-sm p-5">
-            <H3 className="mb-3">Tìm trong chuyên đề</H3>
+            <H3 className="mb-3">{isAll ? "Tìm bài viết" : "Tìm trong chuyên đề"}</H3>
             <SearchBox value={q} onChange={(v) => { setQ(v); setPage(1); }} placeholder="Tìm theo tiêu đề bài viết" />
           </div>
           <div className="bg-white border border-vien rounded-sm p-5">
             <H3 className="mb-3">Chuyên đề</H3>
             <ul className="divide-y divide-vien2">
+              <li className="flex items-center justify-between py-2.5 text-[14px]">
+                <Link href={R.F03("tat-ca")} className={cx("hover:text-blue", isAll ? "font-bold text-blue" : "text-den")}>Tất cả{isAll && <span className="ml-2 text-[12px] font-normal text-mut">(đang xem)</span>}</Link>
+                <span className="text-[13px] text-mut">{published.length} bài</span>
+              </li>
               {cds.map((c) => (
                 <li key={c.id} className="flex items-center justify-between py-2.5 text-[14px]">
-                  <Link href={R.F03(c.slug)} className={cx("hover:text-blue", c.id === cd.id ? "font-bold text-blue" : "text-den")}>{c.ten}{c.id === cd.id && <span className="ml-2 text-[12px] font-normal text-mut">(đang xem)</span>}</Link>
+                  <Link href={R.F03(c.slug)} className={cx("hover:text-blue", c.id === cd?.id ? "font-bold text-blue" : "text-den")}>{c.ten}{c.id === cd?.id && <span className="ml-2 text-[12px] font-normal text-mut">(đang xem)</span>}</Link>
                   <span className="text-[13px] text-mut">{countOf(c.id)} bài</span>
                 </li>
               ))}

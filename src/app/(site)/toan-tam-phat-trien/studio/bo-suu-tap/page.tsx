@@ -1,10 +1,11 @@
 "use client";
-/** D07 · Bộ sưu tập Studio (archive, công khai): lọc theo Mẫu Studio · sắp xếp · đếm · lưới 4×2 · phân trang · sidebar tìm / xem nhiều / cách tham gia. */
+/** D07 · Ảnh thực tế từ Tư vấn viên (archive, công khai; đổi tên từ "Bộ sưu tập Studio" 10/09 để tách khỏi Mẫu Studio):
+ *  ảnh TVV ĐÃ tạo & công khai — xem để lấy cảm hứng. Thẻ = ảnh thật + avatar/tên TVV + "Tạo ảnh tương tự" (không phải "Dùng mẫu này"). */
 import { useMemo, useState } from "react";
 import { R } from "@/lib/routes";
 import { useStore } from "@/lib/store";
 import { fmtDate } from "@/lib/seed";
-import { Breadcrumb, Button, Card, EmptyState, FilterChips, H1, H3, ImageBox, Muted, Pagination, SearchBox, Select } from "@/components/ui";
+import { Avatar, Breadcrumb, Button, Card, EmptyState, FilterChips, H1, H3, ImageBox, Muted, Pagination, SearchBox, Select } from "@/components/ui";
 
 const MOI_TRANG = 8;
 type Sap = "moi" | "cu" | "ten";
@@ -35,9 +36,9 @@ export default function Page() {
     <>
       <section className="bg-xam">
         <div className="wrap py-10">
-          <Breadcrumb items={[{ label: "Trang chủ", href: R.A01 }, { label: "Toàn Tâm Phát Triển", href: R.D01 }, { label: "Mẫu Studio", href: R.D08 }, { label: "Bộ sưu tập Studio" }]} />
-          <H1 className="mt-3">Bộ sưu tập Studio</H1>
-          <Muted className="mt-3 text-[16px]">{tatCa.length} ảnh do Tư vấn viên tạo trong Studio, Chubb đã duyệt và Tư vấn viên đồng ý công khai.</Muted>
+          <Breadcrumb items={[{ label: "Trang chủ", href: R.A01 }, { label: "Toàn Tâm Phát Triển", href: R.D01 }, { label: "Ảnh thực tế từ Tư vấn viên" }]} />
+          <H1 className="mt-3">Ảnh thực tế từ Tư vấn viên</H1>
+          <Muted className="mt-3 text-[16px]">Ảnh Tư vấn viên <b>đã tạo</b> trong Studio và công khai — xem để lấy cảm hứng. Muốn tự làm? Vào <a href={R.D08} className="text-blue font-bold hover:underline">Mẫu Studio</a> để chọn mẫu. ({tatCa.length} ảnh đã duyệt)</Muted>
         </div>
       </section>
 
@@ -53,10 +54,13 @@ export default function Page() {
               {hien.map((a) => { const t = tvv(a.advisorMa); return (
                 <Card key={a.id} className="p-3">
                   <ImageBox src={a.anh} ratio="3/4" />
-                  <div className="mt-3 text-[13px] font-bold text-den truncate">{t?.hoTen ?? "Tư vấn viên"} · {a.advisorMa}</div>
-                  <div className="text-[12px] text-ink2 mt-0.5 truncate">{tenMau(a.templateId)} · v{a.phienBanMau ?? 1}</div>
-                  <div className="text-[12px] text-mut">Duyệt {fmtDate(a.ngayDuyet ?? a.tao)}</div>
-                  <Button size="sm" kind="secondary" className="mt-3 w-full" href={hrefStudio(a.templateId)}>Dùng mẫu này</Button>
+                  <div className="mt-3 flex items-center gap-2 min-w-0">
+                    <Avatar name={t?.hoTen ?? "Tư vấn viên"} size={28} src={t?.avatar} />
+                    <div className="min-w-0"><div className="text-[13px] font-bold text-den truncate">{t?.hoTen ?? "Tư vấn viên"}</div><div className="text-[11px] text-mut truncate">Mã {a.advisorMa}</div></div>
+                  </div>
+                  <div className="text-[12px] text-ink2 mt-2 truncate">Mẫu: {tenMau(a.templateId)} · v{a.phienBanMau ?? 1}</div>
+                  <div className="text-[12px] text-mut">Đăng {fmtDate(a.ngayDuyet ?? a.tao)}</div>
+                  <Button size="sm" kind="secondary" className="mt-3 w-full" href={hrefStudio(a.templateId)}>Tạo ảnh tương tự</Button>
                 </Card>); })}
             </div>
           )}
@@ -66,7 +70,7 @@ export default function Page() {
 
         <aside className="space-y-6">
           <Card className="p-5">
-            <H3>Tìm trong bộ sưu tập</H3>
+            <H3>Tìm ảnh</H3>
             <SearchBox className="mt-3" value={q} onChange={(v) => { setQ(v); setTrang(1); }} placeholder="Tên Tư vấn viên, mã, tên mẫu…" />
           </Card>
           <Card className="p-5">
@@ -74,9 +78,9 @@ export default function Page() {
             <ol className="mt-3 space-y-2 text-[13px] text-ink2">{xemNhieu.map((a, i) => <li key={a.id}>{i + 1}. {tenMau(a.templateId)} — {tvv(a.advisorMa)?.hoTen}</li>)}</ol>
           </Card>
           <Card className="p-5">
-            <H3>Cách tham gia bộ sưu tập</H3>
+            <H3>Góp ảnh của bạn</H3>
             <div className="mt-3 font-bold text-[15px] text-den">Bạn là Tư vấn viên Chubb Life?</div>
-            <Muted className="mt-1 text-[13px]">Tạo ảnh của bạn trong Studio rồi bấm “Hiển thị công khai” để đồng nghiệp tham khảo.</Muted>
+            <Muted className="mt-1 text-[13px]">Chọn một Mẫu Studio, tạo ảnh của bạn, rồi bấm “Hiển thị công khai” để ảnh xuất hiện tại đây cho đồng nghiệp tham khảo.</Muted>
             <Button className="mt-4" href={session.role === "tvv" ? hrefStudio() : `${R.G01}?next=${encodeURIComponent(R.D02)}`}>Mở Studio</Button>
           </Card>
         </aside>

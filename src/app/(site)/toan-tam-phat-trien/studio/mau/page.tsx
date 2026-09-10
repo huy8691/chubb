@@ -1,13 +1,13 @@
 "use client";
 /** D08 · Mẫu Studio (archive, công khai) — 09/09: Chubb có nhiều mẫu nên tách trang danh sách; D01 → D08 → D02 (chọn mẫu rồi tạo ảnh).
- *  Lọc theo tỉ lệ · sắp xếp · đếm · lưới 4×2 · phân trang · sidebar tìm / dùng nhiều nhất / Bộ sưu tập Studio / đăng nhập. "Dùng mẫu này" → D02?mau= (khách → G01). */
+ *  Lọc theo tỉ lệ · sắp xếp · đếm · lưới 4×2 · phân trang · sidebar tìm / dùng nhiều nhất / Ảnh thực tế từ Tư vấn viên / đăng nhập. "Dùng mẫu này" → D02?mau= (khách → G01). */
 import { useMemo, useState } from "react";
 import { R } from "@/lib/routes";
 import { useStore } from "@/lib/store";
-import { fmtDate, fmtNum } from "@/lib/seed";
+import { fmtNum } from "@/lib/seed";
 import type { StudioTemplate } from "@/lib/types";
-import { tiLeLabel, tiLeToRatio } from "@/components/cong-cu/StudioPreview";
-import { Breadcrumb, Button, Card, EmptyState, FilterChips, H1, H3, ImageBox, Muted, Pagination, SearchBox, Select } from "@/components/ui";
+import { MauStudioCard } from "@/components/cong-cu/MauStudioCard";
+import { Breadcrumb, Button, Card, EmptyState, FilterChips, H1, H3, Muted, Pagination, SearchBox, Select } from "@/components/ui";
 
 const MOI_TRANG = 8;
 type Sap = "moi" | "cu" | "dung-nhieu";
@@ -33,7 +33,6 @@ export default function Page() {
   const hien = list.slice((p - 1) * MOI_TRANG, p * MOI_TRANG);
   const dungNhieu = [...tatCa].sort((a, b) => b.soAnhDaTao - a.soAnhDaTao).slice(0, 3);
   const daDangNhap = session.role === "tvv";
-  const hrefDung = (id: string) => daDangNhap ? `${R.D02}?mau=${id}` : `${R.G01}?next=${encodeURIComponent(`${R.D02}?mau=${id}`)}`;
 
   return (
     <>
@@ -41,7 +40,7 @@ export default function Page() {
         <div className="wrap py-10">
           <Breadcrumb items={[{ label: "Trang chủ", href: R.A01 }, { label: "Toàn Tâm Phát Triển", href: R.D01 }, { label: "Mẫu Studio" }]} />
           <H1 className="mt-3">Mẫu Studio</H1>
-          <Muted className="mt-3 text-[16px]">{tatCa.length} mẫu do Chubb thiết kế. Chọn một mẫu, tải ảnh chân dung của bạn và nhận ảnh hoàn chỉnh mang nhận diện Chubb Life.</Muted>
+          <Muted className="mt-3 text-[16px]"><b>Khung mẫu Chubb thiết kế</b> — chọn một mẫu để tạo ảnh của bạn. Muốn xem ảnh thật đồng nghiệp đã làm? Vào <a href={R.D07} className="text-blue font-bold hover:underline">Ảnh thực tế từ Tư vấn viên</a>. ({tatCa.length} mẫu)</Muted>
         </div>
       </section>
 
@@ -54,15 +53,7 @@ export default function Page() {
           <Muted className="mt-4 text-[13px]">Hiện {list.length === 0 ? 0 : (p - 1) * MOI_TRANG + 1}–{Math.min(p * MOI_TRANG, list.length)} / {list.length} mẫu</Muted>
           {hien.length === 0 ? <div className="mt-4"><EmptyState title="Không có mẫu khớp" desc="Thử từ khoá khác hoặc bỏ bộ lọc tỉ lệ." action={<Button kind="secondary" onClick={() => { setQ(""); setLoc("tat-ca"); }}>Bỏ bộ lọc</Button>} /></div> : (
             <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-5">
-              {hien.map((m) => (
-                <Card key={m.id} className="p-3 flex flex-col">
-                  <ImageBox src={m.anh} ratio={tiLeToRatio(m.tiLe)} />
-                  <div className="mt-3 text-[13px] font-bold text-den truncate">{m.ten}</div>
-                  <div className="text-[12px] text-ink2 mt-0.5 truncate">{tiLeLabel(m.tiLe)} · phiên bản v{m.phienBan ?? 1}</div>
-                  <div className="text-[12px] text-mut">Cập nhật {fmtDate(m.capNhat)}</div>
-                  <Button size="sm" kind="secondary" className="mt-3 w-full" href={hrefDung(m.id)}>Dùng mẫu này</Button>
-                </Card>
-              ))}
+              {hien.map((m) => <MauStudioCard key={m.id} m={m} />)}
             </div>
           )}
           <Pagination page={p} pages={pages} onChange={setTrang} />
@@ -79,9 +70,9 @@ export default function Page() {
             <ol className="mt-3 space-y-2 text-[13px] text-ink2">{dungNhieu.map((m, i) => <li key={m.id}>{i + 1}. {m.ten} · {fmtNum(m.soAnhDaTao)} ảnh</li>)}</ol>
           </Card>
           <Card className="p-5">
-            <H3>Bộ sưu tập Studio</H3>
-            <Muted className="mt-1 text-[13px]">Ảnh đồng nghiệp đã tạo từ các mẫu này và hiển thị công khai.</Muted>
-            <Button className="mt-4" kind="secondary" href={R.D07}>Xem Bộ sưu tập Studio</Button>
+            <H3>Ảnh thực tế từ Tư vấn viên</H3>
+            <Muted className="mt-1 text-[13px]">Ảnh <b>đã hoàn thành</b> của đồng nghiệp, tạo từ các mẫu này — xem để lấy cảm hứng.</Muted>
+            <Button className="mt-4" kind="secondary" href={R.D07}>Xem ảnh thực tế</Button>
           </Card>
           {!daDangNhap && (
             <Card className="p-5">

@@ -5,15 +5,13 @@
  */
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { Avatar, Button, Chip, H1, H2, ImageBox, Muted, useFlash } from "@/components/ui";
+import { Avatar, Button, Chip, Field, H1, H2, Input, Modal, Muted, Textarea, useFlash } from "@/components/ui";
 import { R } from "@/lib/routes";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
 import type { Advisor } from "@/lib/types";
 import { QrBox } from "./QrBox";
 import { SharePopup, useChiaSe } from "./SharePopup";
 import { danhHieuCongKhai, fmtPhone, linkDanhThiep, taiVCard, theXemDuoc } from "./lib";
-
-const ANH_KHACH = ["/img/p-nu-1.jpg", "/img/p-nam-2.jpg", "/img/p-nu-2.jpg"];
 
 export function DanhThiepDayDu({ ma }: { ma: string }) {
   const { data, ready } = useStore();
@@ -129,20 +127,7 @@ function TheDayDu({ a }: { a: Advisor }) {
           </section>
         )}
 
-        {hs?.chungMinh && hs.chungMinh.length > 0 && (
-          <section>
-            <H2 className="text-[22px]">Chứng minh thực tế</H2>
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-5">
-              {hs.chungMinh.map((c, i) => (
-                <figure key={c.ten} className="bg-white border border-vien rounded-sm p-6 flex flex-col">
-                  <blockquote className="text-[14px] text-den leading-relaxed flex-1">“{c.trichDan}”</blockquote>
-                  <figcaption className="mt-5 flex items-center gap-3"><Avatar name={c.ten} size={32} /><span className="font-bold text-[13px] text-den">{c.ten}</span></figcaption>
-                  <ImageBox src={ANH_KHACH[i % ANH_KHACH.length]} alt="Ảnh" ratio="16/9" className="mt-5" />
-                </figure>
-              ))}
-            </div>
-          </section>
-        )}
+        {(hs?.hienPhan?.nhanXet ?? true) && <KhoiBinhLuan advisorMa={a.ma} />}
 
         {/* CTA kết nối + chia sẻ */}
         <section className="bg-xam rounded-sm p-8 flex flex-col lg:flex-row gap-8 items-start">
@@ -169,5 +154,63 @@ function TheDayDu({ a }: { a: Advisor }) {
       <SharePopup a={a} open={shareOpen} onClose={() => setShareOpen(false)} />
       {flashNode}{node}
     </>
+  );
+}
+
+/** Khối "Bình luận" trên E03 — chỉ hiện bình luận đã TVV duyệt (dang-hien); khách gửi qua popup E08 (chờ duyệt) */
+function KhoiBinhLuan({ advisorMa }: { advisorMa: string }) {
+  const { data, actions } = useStore();
+  const { flash, node } = useFlash();
+  const [open, setOpen] = useState(false);
+  const [ten, setTen] = useState("");
+  const [sdt, setSdt] = useState("");
+  const [noi, setNoi] = useState("");
+  const [loi, setLoi] = useState<Record<string, string>>({});
+  const list = data.binhLuan.filter((b) => b.advisorMa === advisorMa && b.trangThai === "dang-hien");
+
+  const gui = () => {
+    const e: Record<string, string> = {};
+    if (!ten.trim()) e.ten = "Nhập tên của bạn";
+    if (!/^0\d{8,10}$/.test(sdt.replace(/\s/g, ""))) e.sdt = "Số điện thoại chưa hợp lệ";
+    if (noi.trim().length < 5) e.noi = "Nội dung quá ngắn";
+    setLoi(e);
+    if (Object.keys(e).length) return;
+    actions.update("binhLuan", (arr) => [
+      { id: "bl" + Date.now(), advisorMa, tenKhach: ten.trim(), sdt: sdt.trim(), noiDung: noi.trim(), ngay: new Date().toISOString(), trangThai: "cho-duyet" as const },
+      ...arr,
+    ]);
+    setOpen(false); setTen(""); setSdt(""); setNoi(""); setLoi({});
+    flash("Đã gửi — bình luận sẽ hiển thị sau khi Tư vấn viên duyệt.");
+  };
+
+  return (
+    <section>
+      {node}
+      <div className="flex items-center justify-between gap-4">
+        <H2 className="text-[22px]">Bình luận</H2>
+        <Button onClick={() => setOpen(true)}>Gửi bình luận</Button>
+      </div>
+      {list.length === 0 ? (
+        <Muted className="mt-6">Chưa có bình luận nào. Hãy là người đầu tiên.</Muted>
+      ) : (
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-5">
+          {list.map((c) => (
+            <figure key={c.id} className="bg-white border border-vien rounded-sm p-6 flex flex-col">
+              <blockquote className="text-[14px] text-den leading-relaxed flex-1">“{c.noiDung}”</blockquote>
+              <figcaption className="mt-5 flex items-center gap-3"><Avatar name={c.tenKhach} size={32} /><span className="font-bold text-[13px] text-den">{c.tenKhach}</span></figcaption>
+            </figure>
+          ))}
+        </div>
+      )}
+      <Modal open={open} onClose={() => setOpen(false)} title="Gửi bình luận"
+        footer={<><Button onClick={gui}>Gửi</Button><Button kind="secondary" onClick={() => setOpen(false)}>Huỷ</Button></>}>
+        <Muted className="mb-4">Bình luận của bạn sẽ hiển thị sau khi Tư vấn viên duyệt.</Muted>
+        <div className="space-y-4">
+          <Field label="Tên" error={loi.ten}><Input value={ten} onChange={(e) => setTen(e.target.value)} placeholder="Nhập tên của bạn" /></Field>
+          <Field label="Số điện thoại" hint="Chỉ Tư vấn viên thấy — không hiển thị công khai" error={loi.sdt}><Input value={sdt} onChange={(e) => setSdt(e.target.value)} placeholder="Số điện thoại" /></Field>
+          <Field label="Nội dung" error={loi.noi}><Textarea value={noi} onChange={(e) => setNoi(e.target.value)} placeholder="Viết bình luận…" /></Field>
+        </div>
+      </Modal>
+    </section>
   );
 }

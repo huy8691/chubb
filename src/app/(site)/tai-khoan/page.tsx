@@ -1,24 +1,22 @@
 "use client";
 /**
- * G02a · Trang cá nhân › Tổng quan — số liệu · việc cần làm · lối tắt · hoạt động gần đây · danh hiệu & vinh danh.
+ * G02a · Trang cá nhân › Tổng quan — số liệu · việc cần làm · danh hiệu & vinh danh · lời chúc.
+ * (10/09: bỏ "Lối tắt" và "Hoạt động gần đây" — trùng dải tab / tab Đã lưu / Studio / chuông G07.)
  * Khối Danh hiệu & vinh danh: danh hiệu admin đã công bố (09/09: không còn bước TVV đồng ý) + Chia sẻ.
  */
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { R } from "@/lib/routes";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
-import { fmtDate, fmtDateTime, thangLabel } from "@/lib/seed";
+import { fmtDateTime, thangLabel } from "@/lib/seed";
 import type { DanhHieu } from "@/lib/types";
-import { Button, Card, H2, Muted, Stat, useFlash } from "@/components/ui";
-import { linkC02 } from "@/components/vinh-danh/honor";
+import { Button, Card, H2, Stat, useFlash } from "@/components/ui";
 
 export default function Page() {
-  const router = useRouter();
   const { data, actions } = useStore();
   const tvv = useCurrentAdvisor();
   const { flash, node } = useFlash();
-  const [moRong, setMoRong] = useState(false);
+  const [moRongLC, setMoRongLC] = useState(false);
   if (!tvv) return null;
 
   const anhStudio = data.studioImages.filter((a) => a.advisorMa === tvv.ma);
@@ -35,27 +33,12 @@ export default function Page() {
   });
   if (!tvv.avatar) viec.push({ text: "Danh thiếp chưa có ảnh chân dung", href: R.E04, nut: "Sửa" });
   if (!tvv.hoSoNangLuc) viec.push({ text: "Hồ sơ năng lực chưa điền — khách chỉ thấy thông tin liên hệ", href: R.E04, nut: "Điền" });
+  const blCho = data.binhLuan.filter((b) => b.advisorMa === tvv.ma && b.trangThai === "cho-duyet").length;
+  if (blCho) viec.push({ text: `${blCho} bình luận mới trên danh thiếp — xem & duyệt`, href: R.G12, nut: "Xem" });
 
-  /* Hoạt động gần đây: thông báo + mục đã lưu */
-  const hoatDong = (() => {
-    const rows: { ngay: string; text: string; href?: string }[] = [];
-    data.notifications.filter((n) => n.advisorMa === tvv.ma).forEach((n) => rows.push({ ngay: n.ngay, text: n.noiDung, href: n.href }));
-    daLuu.forEach((s) => {
-      if (s.loai === "bai-viet") { const b = data.articles.find((a) => a.id === s.refId); if (b) rows.push({ ngay: s.ngay, text: `Bạn đã lưu bài "${b.tieuDe}"`, href: R.F02(b.slug) }); }
-      if (s.loai === "tai-lieu") { const t = data.documents.find((a) => a.id === s.refId); if (t) rows.push({ ngay: s.ngay, text: `Bạn đã lưu tài liệu "${t.ten}"`, href: R.G10 }); }
-      if (s.loai === "danh-thiep") { const a = data.advisors.find((x) => x.ma === s.refId); if (a) rows.push({ ngay: s.ngay, text: `Bạn đã lưu danh thiếp của ${a.hoTen}`, href: R.E03(a.ma) }); }
-    });
-    anhStudio.filter((a) => a.trangThai === "cho-duyet" || a.trangThai === "da-duyet").forEach((a) => {
-      const mau = data.studioTemplates.find((m) => m.id === a.templateId)?.ten ?? "Ảnh Studio";
-      rows.push({ ngay: a.tao, text: a.trangThai === "cho-duyet" ? `Bạn đã yêu cầu hiển thị công khai ảnh "${mau}"` : `Ảnh "${mau}" đang hiển thị công khai trên Bộ sưu tập Studio`, href: R.G02 });
-    });
-    return rows.sort((a, b) => b.ngay.localeCompare(a.ngay));
-  })();
-  const hienHoatDong = moRong ? hoatDong : hoatDong.slice(0, 4);
-
-  /* Lời chúc từ đồng nghiệp (09/09): 3 mới nhất, người nhận có thể Ẩn; xem đủ trên trang Thành tích (C02) */
+  /* Lời chúc từ đồng nghiệp (09/09): mặc định 3 mới nhất, "Xem tất cả" bung tại chỗ (10/09); người nhận có thể Ẩn từng dòng */
   const loiChuc = data.loiChuc.filter((l) => l.nguoiNhanMa === tvv.ma && l.trangThai === "hien").sort((a, b) => b.ngay.localeCompare(a.ngay));
-  const anLoiChuc = (id: string) => { actions.update("loiChuc", (ls) => ls.map((l) => l.id === id ? { ...l, trangThai: "da-an", lyDoCo: "Người nhận ẩn" } : l)); flash("Đã ẩn lời chúc khỏi trang Thành tích của bạn"); };
+  const anLoiChuc = (id: string) => { actions.update("loiChuc", (ls) => ls.map((l) => l.id === id ? { ...l, trangThai: "da-an", lyDoCo: "Người nhận ẩn" } : l)); flash("Đã ẩn lời chúc này"); };
   const tenGui = (ma: string) => { const a = data.advisors.find((x) => x.ma === ma); return a ? `${a.hoTen} — ${a.vanPhong.replace(/ — .*$/, "")}` : ma; };
 
   /* Danh hiệu & vinh danh */
@@ -76,48 +59,20 @@ export default function Page() {
         <Stat value={baiDaLuu} label="bài viết đã lưu" href={R.G02} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_620px] gap-8">
-        <section>
-          <H2 className="mb-4">Việc cần làm</H2>
-          <Card>
-            {viec.length === 0 ? <div className="px-5 py-6 text-[14px] text-ink2">Không có việc nào cần làm — mọi thứ đã xong.</div> : (
-              <ul>
-                {viec.map((v, i) => (
-                  <li key={i} className="flex items-center justify-between gap-4 px-5 py-4 border-b border-vien2 last:border-0 text-[14px] text-den">
-                    <span>{v.text}</span>
-                    {v.href ? <Link href={v.href} className="text-blue font-bold text-[13px] shrink-0">{v.nut}</Link> : <button type="button" onClick={v.onClick} className="text-blue font-bold text-[13px] shrink-0">{v.nut}</button>}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Card>
-        </section>
-        <section>
-          <H2 className="mb-4">Lối tắt</H2>
-          <div className="grid grid-cols-2 gap-3">
-            <Button kind="secondary" href={R.E04}>Sửa danh thiếp</Button>
-            <Button kind="secondary" href={R.D08}>Studio của tôi</Button>
-            <Button kind="secondary" href={R.G02}>Đã lưu</Button>
-            <Button kind="secondary" href={R.G06}>Tài khoản & cài đặt</Button>
-            <Button kind="secondary" href={R.G10}>Tài liệu</Button>
-            <Button kind="secondary" onClick={() => { actions.logout(); router.push(R.A01); }}>Đăng xuất</Button>
-          </div>
-        </section>
-      </div>
-
       <section>
-        <H2 className="mb-4">Hoạt động gần đây</H2>
-        {hoatDong.length === 0 ? <Muted>Chưa có hoạt động nào.</Muted> : (
-          <ul className="divide-y divide-vien2">
-            {hienHoatDong.map((h, i) => (
-              <li key={i} className="flex gap-6 py-3 text-[14px]">
-                <span className="w-[96px] shrink-0 text-[13px] text-mut">{fmtDate(h.ngay)}</span>
-                {h.href ? <Link href={h.href} className="text-den hover:text-blue">{h.text}</Link> : <span className="text-den">{h.text}</span>}
-              </li>
-            ))}
-          </ul>
-        )}
-        {hoatDong.length > 4 && <button type="button" onClick={() => setMoRong(!moRong)} className="mt-3 text-[13px] font-bold text-blue">{moRong ? "Thu gọn" : "Xem thêm hoạt động trước"}</button>}
+        <H2 className="mb-4">Việc cần làm</H2>
+        <Card>
+          {viec.length === 0 ? <div className="px-5 py-6 text-[14px] text-ink2">Không có việc nào cần làm — mọi thứ đã xong.</div> : (
+            <ul>
+              {viec.map((v, i) => (
+                <li key={i} className="flex items-center justify-between gap-4 px-5 py-4 border-b border-vien2 last:border-0 text-[14px] text-den">
+                  <span>{v.text}</span>
+                  {v.href ? <Link href={v.href} className="text-blue font-bold text-[13px] shrink-0">{v.nut}</Link> : <button type="button" onClick={v.onClick} className="text-blue font-bold text-[13px] shrink-0">{v.nut}</button>}
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
       </section>
 
       <section id="danh-hieu" className="scroll-mt-24">
@@ -148,14 +103,11 @@ export default function Page() {
       </section>
 
       <section>
-        <div className="flex items-end justify-between gap-4 mb-4">
-          <H2>Lời chúc từ đồng nghiệp</H2>
-          {loiChuc[0] && <Link href={linkC02(tvv.ma, loiChuc[0].thangId, loiChuc[0].hangMucId)} className="text-[14px] font-bold text-blue hover:underline">Xem tất cả trên trang Thành tích</Link>}
-        </div>
+        <H2 className="mb-4">Lời chúc từ đồng nghiệp</H2>
         <Card>
           {loiChuc.length === 0 ? <div className="px-5 py-6 text-[14px] text-ink2">Chưa có lời chúc nào.</div> : (
             <ul>
-              {loiChuc.slice(0, 3).map((l) => (
+              {(moRongLC ? loiChuc : loiChuc.slice(0, 3)).map((l) => (
                 <li key={l.id} className="flex items-start gap-4 px-5 py-4 border-b border-vien2 last:border-0">
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-baseline gap-3"><span className="font-bold text-[15px] text-den">{tenGui(l.nguoiGuiMa)}</span><span className="text-[12.5px] text-mut">{fmtDateTime(l.ngay)}</span></div>
@@ -167,6 +119,7 @@ export default function Page() {
             </ul>
           )}
         </Card>
+        {loiChuc.length > 3 && <button type="button" onClick={() => setMoRongLC(!moRongLC)} className="mt-3 text-[13px] font-bold text-blue">{moRongLC ? "Thu gọn" : `Xem tất cả lời chúc (${loiChuc.length})`}</button>}
       </section>
     </div>
   );

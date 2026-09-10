@@ -1,7 +1,7 @@
 import type {
   Advisor, Article, Candidate, ChuyenDe, CmsUser, ContactMessage, DocType, Document, FAQ,
   FinanceParams, FlaggedRow, HangMuc, HonorMonth, NguoiDat, Notification, QuizQuestion, QuizResultType,
-  RankingRow, SavedItem, StudioImage, StudioTemplate, LoiChuc, Office } from "./types";
+  RankingRow, SavedItem, StudioImage, StudioTemplate, LoiChuc, BinhLuan, Office } from "./types";
 
 /* ---------- Tư vấn viên ---------- */
 const HO_TEN = [
@@ -31,13 +31,6 @@ const LOI_NHAN = [
   "Làm nghề bằng sự tử tế, khách hàng sẽ ở lại với bạn rất lâu.",
   "Đừng bán sản phẩm, hãy giải một bài toán cho gia đình họ.",
 ];
-const KHACH = ["Chị H., Quận 7", "Anh T., Bình Thạnh", "Cô L., Thủ Đức", "Anh P., Hà Đông", "Chị M., Hải Châu", "Gia đình anh K., Ninh Kiều"];
-const TRICH = [
-  "Giải thích rất rõ ràng, không giục tôi quyết định. Ba năm sau tôi vẫn thấy đó là lựa chọn đúng.",
-  "Điều tôi yên tâm nhất là mỗi lần cần hỏi gì, gọi là có người nghe máy.",
-  "Hồ sơ của gia đình tôi được hỗ trợ đến khi xong, không phải tự mò mẫm.",
-  "Tư vấn đúng nhu cầu, không ép mua thêm. Rất trân trọng.",
-];
 function hoSoMau(i: number, hoTen: string): NonNullable<Advisor["hoSoNangLuc"]> {
   const nam = 3 + (i % 12);
   const batDau = 2026 - nam;
@@ -54,7 +47,6 @@ function hoSoMau(i: number, hoTen: string): NonNullable<Advisor["hoSoNangLuc"]> 
       { nam: "2026", tieuDe: "ĐỒNG HÀNH", moTa: `Tiếp tục đồng hành cùng hơn ${40 + i * 15} gia đình đã tin tưởng.` },
     ],
     loiNhan: LOI_NHAN[i % LOI_NHAN.length],
-    chungMinh: [0, 1, 2].map((k) => ({ trichDan: TRICH[(i + k) % TRICH.length], ten: KHACH[(i + k) % KHACH.length] })),
     vaiTro: VAI_TRO[i % VAI_TRO.length],
     namKinhNghiem: nam,
     namMDRT: mdrt || undefined,
@@ -105,11 +97,6 @@ advisors[0].hoSoNangLuc = {
     { nam: "2026", tieuDe: "TRỌN ĐỜI", moTa: "10 năm liên tiếp đạt MDRT." },
   ],
   loiNhan: "Đừng đo hành trình của mình bằng tốc độ của người khác. Hãy đo bằng số gia đình đã an tâm hơn vì có bạn đồng hành.",
-  chungMinh: [
-    { trichDan: "Chị An giải thích rất rõ ràng, không giục tôi quyết định. Ba năm sau tôi vẫn thấy đó là lựa chọn đúng.", ten: "Chị H., Quận 7" },
-    { trichDan: "Điều tôi yên tâm nhất là mỗi lần cần hỏi gì, gọi là có người nghe máy.", ten: "Anh T., Bình Thạnh" },
-    { trichDan: "Hồ sơ của gia đình tôi được hỗ trợ đến khi xong, không phải tự mò mẫm.", ten: "Cô L., Thủ Đức" },
-  ],
   vaiTro: "Người đồng hành cùng gia đình trẻ",
   namKinhNghiem: 15,
   namMDRT: 10,
@@ -202,37 +189,67 @@ export const chuyenDe: ChuyenDe[] = [
   { id: "minh-chung", ten: "Minh Chứng Toàn Tâm", moTa: "Câu chuyện khách hàng và quyền lợi thực tế.", slug: "minh-chung-toan-tam", thuTu: 5, hien: true },
 ];
 
-const TIEU_DE = [
-  "5 câu hỏi nên đặt ra trước khi mua bảo hiểm nhân thọ", "Hành trình từ nhân viên văn phòng đến MDRT",
-  "Một ngày làm việc của Tư vấn tài chính Chubb Life", "Chubb Life trồng 5.000 cây xanh tại Cần Giờ",
-  "Khách hàng nhận quyền lợi 1,2 tỷ đồng sau 3 năm tham gia", "Lập quỹ giáo dục cho con: bắt đầu từ đâu?",
-  "Kỹ năng lắng nghe trong tư vấn tài chính", "Đội ngũ Hà Nội chinh phục Fansipan", "Ngày hội gia đình Chubb Life 2026",
-  "Bảo hiểm sức khoẻ: hiểu đúng về thời gian chờ", "Từ kỹ sư đến Trưởng nhóm kinh doanh sau 2 năm", "Câu chuyện chị Lan: bảo vệ thu nhập khi ốm bệnh",
-  "Chương trình học bổng Toàn Tâm 2026", "Hưu trí sớm: bài toán 20 năm", "Vì sao khách hàng chọn tư vấn viên có chứng chỉ MDRT",
-  "Tham gia bảo hiểm khi đã có bệnh nền", "Tuần lễ sức khoẻ cộng đồng tại Đà Nẵng", "Bí quyết giữ liên lạc với 300 khách hàng",
+// 6 bài mỗi chuyên đề (30 bài đã xuất bản) — tiêu đề khớp chủ đề chuyên đề
+const BAI_THEO_CD: Record<string, string[]> = {
+  "bao-ve": [
+    "5 câu hỏi nên đặt ra trước khi mua bảo hiểm nhân thọ", "Lập quỹ giáo dục cho con: bắt đầu từ đâu?",
+    "Bảo hiểm sức khoẻ: hiểu đúng về thời gian chờ", "Hưu trí sớm: bài toán 20 năm",
+    "Bảo vệ thu nhập trước, tích luỹ sau", "Quỹ dự phòng khẩn cấp nên có bao nhiêu tháng?",
+  ],
+  "but-pha": [
+    "Hành trình từ nhân viên văn phòng đến MDRT", "Kỹ năng lắng nghe trong tư vấn tài chính",
+    "Từ kỹ sư đến Trưởng nhóm kinh doanh sau 2 năm", "Bí quyết giữ liên lạc với 300 khách hàng",
+    "Nghệ thuật đặt câu hỏi trong buổi tư vấn đầu tiên", "Thói quen làm việc của Tư vấn viên top đầu",
+  ],
+  "the-hien": [
+    "Một ngày làm việc của Tư vấn tài chính Chubb Life", "Đội ngũ Hà Nội chinh phục Fansipan",
+    "Ngày hội gia đình Chubb Life 2026", "Chương trình học bổng Toàn Tâm 2026",
+    "Xây dựng thương hiệu cá nhân trên mạng xã hội", "Câu chuyện nghề của bạn — tài sản đáng kể",
+  ],
+  "lan-toa": [
+    "Chubb Life trồng 5.000 cây xanh tại Cần Giờ", "Tuần lễ sức khoẻ cộng đồng tại Đà Nẵng",
+    "Đứng dậy sau mất mát — hành trình một gia đình", "Nghỉ ngơi không phải là lười biếng",
+    "Hiến máu nhân đạo cùng đồng nghiệp Toàn Tâm", "Lớp học tài chính miễn phí cho sinh viên",
+  ],
+  "minh-chung": [
+    "Khách hàng nhận quyền lợi 1,2 tỷ đồng sau 3 năm tham gia", "Vì sao khách hàng chọn tư vấn viên có chứng chỉ MDRT",
+    "Câu chuyện chị Lan: bảo vệ thu nhập khi ốm bệnh", "Tham gia bảo hiểm khi đã có bệnh nền",
+    "Chi trả viện phí trong 48 giờ — trải nghiệm thật", "Hợp đồng nhân thọ giúp gia đình vượt biến cố",
+  ],
+};
+type BaiSeed = { ten: string; cd: string; trangThai: Article["trangThai"] };
+// round-robin theo vòng để "Bài mới nhất" trộn nhiều chuyên đề
+const baiXuatBan: BaiSeed[] = [];
+for (let r = 0; r < 6; r++) for (const c of chuyenDe) baiXuatBan.push({ ten: BAI_THEO_CD[c.id][r], cd: c.id, trangThai: "da-xuat-ban" });
+// 3 bài trạng thái khác cho CMS (không hiện công khai)
+const baiKhac: BaiSeed[] = [
+  { ten: "Hướng dẫn đọc bảng minh hoạ quyền lợi", cd: "bao-ve", trangThai: "nhap" },
+  { ten: "Tổng kết quý 3/2026 của đội Toàn Tâm", cd: "the-hien", trangThai: "da-len-lich" },
+  { ten: "Thông báo lịch nghỉ lễ 2/9", cd: "lan-toa", trangThai: "da-go" },
 ];
+const BAI: BaiSeed[] = [...baiXuatBan, ...baiKhac];
 const slugify = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 const ARTICLE_IMGS = ["/img/bai-1.jpg", "/img/bai-2.jpg", "/img/bai-3.jpg", "/img/bai-4.jpg", "/img/f01-bai-1.jpg", "/img/f01-bai-3.jpg", "/img/f01-bai-4.jpg", "/img/f01-bai-5.jpg", "/img/f01-bai-6.jpg", "/img/f01-bai-7.jpg", "/img/f01-bai-8.jpg", "/img/bai-lon.jpg"];
 
-export const articles: Article[] = TIEU_DE.map((tieuDe, i) => {
-  const cd = chuyenDe[i % 5];
-  const trangThai: Article["trangThai"] = i === 16 ? "nhap" : i === 17 ? "da-len-lich" : i === 15 ? "da-go" : "da-xuat-ban";
+export const articles: Article[] = BAI.map((b, i) => {
+  const d = new Date(2026, 8, 30); d.setDate(d.getDate() - i * 3);
+  const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   return {
     id: `bv${i + 1}`,
-    slug: slugify(tieuDe),
-    tieuDe,
+    slug: slugify(b.ten),
+    tieuDe: b.ten,
     sapo: "Bài viết chia sẻ góc nhìn thực tế từ đội ngũ Chubb Life, giúp bạn hiểu rõ hơn về bảo vệ tài chính và nghề tư vấn.",
     thanBai: "## Mở đầu\n\nĐây là nội dung mẫu của bài viết trong bản demo. Đoạn văn được lặp lại để thể hiện độ dài thân bài, mục lục dính và các khối trích dẫn.\n\n> Trích dẫn: \"Toàn tâm với khách hàng là cách bền vững nhất để đi xa trong nghề.\"\n\n## Nội dung chính\n\nMỗi phần của bài viết có tiêu đề H2, đoạn văn, hình ảnh kèm alt và danh sách gạch đầu dòng.\n\n- Điểm thứ nhất\n- Điểm thứ hai\n- Điểm thứ ba\n\n## Kết luận\n\nHãy trao đổi với Tư vấn viên Chubb Life để được hoạch định phù hợp.",
-    chuyenDeId: cd.id,
+    chuyenDeId: b.cd,
     tacGia: ["Ban biên tập Toàn Tâm", "Trần Thu Hà", "P2P Content"][i % 3],
     anh: ARTICLE_IMGS[i % ARTICLE_IMGS.length],
-    altAnh: tieuDe,
-    ngayXuatBan: trangThai === "da-xuat-ban" ? `2026-0${1 + (i % 8)}-${String(3 + i).padStart(2, "0")}` : undefined,
-    ngayLenLich: trangThai === "da-len-lich" ? "2026-09-15" : undefined,
-    trangThai,
-    seo: { tieuDe: tieuDe.slice(0, 58), moTa: "Chubb Life Toàn Tâm — " + tieuDe, duongDan: `/toan-tam-chia-se/${slugify(tieuDe)}`, choGoogle: true },
-    capNhat: `2026-08-${String(3 + i).padStart(2, "0")}T14:00:00`,
-    luotXem: 1200 - i * 47,
+    altAnh: b.ten,
+    ngayXuatBan: b.trangThai === "da-xuat-ban" ? iso : undefined,
+    ngayLenLich: b.trangThai === "da-len-lich" ? "2026-09-25" : undefined,
+    trangThai: b.trangThai,
+    seo: { tieuDe: b.ten.slice(0, 58), moTa: "Chubb Life Toàn Tâm — " + b.ten, duongDan: `/toan-tam-chia-se/${slugify(b.ten)}`, choGoogle: true },
+    capNhat: `${iso}T14:00:00`,
+    luotXem: 1400 - i * 37,
   };
 });
 
@@ -305,7 +322,7 @@ export const faqs: FAQ[] = [
   { id: "f8", trang: "lien-he", doiTuong: "ung-vien", cauHoi: "Tôi muốn bắt đầu nghề Tư vấn viên thì làm gì?", traLoi: "Gửi thông tin ở Toàn Tâm Tuyển Dụng, đội Tuyển dụng sẽ liên hệ.", thuTu: 3, trangThai: "da-xuat-ban", capNhat: "2026-08-15" },
   { id: "f9", trang: "lien-he", doiTuong: "tu-van-vien", cauHoi: "Không nhận được mã đăng nhập?", traLoi: "Kiểm tra thư rác; sau 3 lần sai hệ thống khoá 15 phút. Bấm Gửi lại mã hoặc gọi hotline TVV.", thuTu: 4, trangThai: "da-xuat-ban", capNhat: "2026-08-15" },
   { id: "f10", trang: "lien-he", doiTuong: "tu-van-vien", cauHoi: "Thứ hạng chia sẻ được tính thế nào?", traLoi: "1 lượt = 1 lần bấm nút Chia sẻ trên danh thiếp; cùng thiết bị, cùng nút trong 30 phút tính 1.", thuTu: 5, trangThai: "da-xuat-ban", capNhat: "2026-08-15" },
-  { id: "f11", trang: "lien-he", doiTuong: "tu-van-vien", cauHoi: "Ảnh Studio của tôi bao lâu được duyệt vào Bộ sưu tập?", traLoi: "Quản trị duyệt trong 2 ngày làm việc; kết quả báo ở Thông báo.", thuTu: 6, trangThai: "da-xuat-ban", capNhat: "2026-08-15" },
+  { id: "f11", trang: "lien-he", doiTuong: "tu-van-vien", cauHoi: "Ảnh Studio của tôi bao lâu được duyệt để hiển thị công khai?", traLoi: "Quản trị duyệt trong 2 ngày làm việc; ảnh vào mục Ảnh thực tế từ Tư vấn viên, kết quả báo ở Thông báo.", thuTu: 6, trangThai: "da-xuat-ban", capNhat: "2026-08-15" },
 ];
 
 /* ---------- Ứng viên · Liên hệ ---------- */
@@ -421,6 +438,7 @@ export const financeParams: FinanceParams = {
 /* ---------- Thông báo · Đã lưu (TVV demo) ---------- */
 export const notifications: Notification[] = [
   { id: "n1", advisorMa: TVV_DEMO.ma, noiDung: "Bạn được vinh danh Chubb Chiến · Tháng 8/2026 — bảng đã công bố.", ngay: "2026-09-06T09:00:00", daDoc: false, href: "/tai-khoan" },
+  { id: "n6", advisorMa: TVV_DEMO.ma, noiDung: "3 bình luận mới trên danh thiếp — chờ bạn duyệt", ngay: "2026-08-12T10:20:00", daDoc: false, href: "/tai-khoan/binh-luan" },
   { id: "n5", advisorMa: TVV_DEMO.ma, noiDung: `${advisors[1].hoTen} gửi lời chúc cho danh hiệu MDRT · Tháng 8/2026`, ngay: "2026-09-03T14:20:00", daDoc: false, href: `/toan-tam-dan-dau/hang-muc/${TVV_DEMO.ma}?thang=2026-08&hm=mdrt` },
   { id: "n2", advisorMa: TVV_DEMO.ma, noiDung: 'Ảnh "Ưu đãi tháng 8" bị từ chối · xem lý do', ngay: "2026-09-04T15:20:00", daDoc: false, href: "/tai-khoan/da-luu" },
   { id: "n3", advisorMa: TVV_DEMO.ma, noiDung: "Bảng xếp hạng tháng 8/2026 đã chốt: bạn xếp hạng 1.", ngay: "2026-09-01T08:00:00", daDoc: true, href: "/toan-tam-ket-noi" },
@@ -439,8 +457,22 @@ export const loiChuc: LoiChuc[] = [
   { id: "lc1", nguoiGuiMa: advisors[1].ma, nguoiNhanMa: TVV_DEMO.ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: `Chúc mừng ${TVV_DEMO.hoTen} đạt MDRT tháng 8! Cả văn phòng tự hào về bạn.`, ngay: "2026-09-03T14:20:00", trangThai: "hien" },
   { id: "lc2", nguoiGuiMa: advisors[2].ma, nguoiNhanMa: TVV_DEMO.ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: "10 năm liên tiếp, quá nể. Chúc bạn giữ vững phong độ!", ngay: "2026-09-03T09:05:00", trangThai: "hien" },
   { id: "lc3", nguoiGuiMa: advisors[3].ma, nguoiNhanMa: TVV_DEMO.ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: "Cảm ơn bạn đã truyền cảm hứng cho cả đội. Chúc mừng!", ngay: "2026-09-02T17:40:00", trangThai: "hien" },
+  { id: "lc3b", nguoiGuiMa: advisors[6].ma, nguoiNhanMa: TVV_DEMO.ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: "Đàn anh đi trước luôn tận tình chỉ bảo. Chúc mừng chị!", ngay: "2026-09-02T10:15:00", trangThai: "hien" },
+  { id: "lc3c", nguoiGuiMa: advisors[7].ma, nguoiNhanMa: TVV_DEMO.ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: "Tháng nào cũng thấy tên chị trên bảng, quá đỉnh.", ngay: "2026-08-05T08:40:00", trangThai: "hien" },
+  { id: "lc3d", nguoiGuiMa: advisors[8].ma, nguoiNhanMa: TVV_DEMO.ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: "Chúc chị tháng mới bùng nổ hơn nữa nhé!", ngay: "2026-08-04T14:00:00", trangThai: "hien" },
   { id: "lc4", nguoiGuiMa: advisors[4].ma, nguoiNhanMa: advisors[1].ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: "Chúc mừng bạn! Xem thêm tại bit.ly/xyz để nhận ưu đãi từ đội mình nhé.", ngay: "2026-09-02T11:12:00", trangThai: "gan-co", lyDoCo: "Chứa liên kết ngoài (bit.ly)" },
   { id: "lc5", nguoiGuiMa: advisors[5].ma, nguoiNhanMa: advisors[2].ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: "Chúc mừng em!", ngay: "2026-09-01T08:30:00", trangThai: "da-an", lyDoCo: "Người nhận ẩn" },
+];
+
+/* ---------- Bình luận khách trên danh thiếp (10/09) ---------- */
+export const binhLuan: BinhLuan[] = [
+  { id: "bl1", advisorMa: TVV_DEMO.ma, tenKhach: "Chị Hồng", sdt: "0901 234 567", noiDung: "Chị An tư vấn rất tận tình, không giục tôi quyết định. Ba năm sau tôi vẫn thấy đó là lựa chọn đúng.", ngay: "2026-08-12T10:20:00", trangThai: "cho-duyet" },
+  { id: "bl2", advisorMa: TVV_DEMO.ma, tenKhach: "Anh Tuấn", sdt: "0912 888 777", noiDung: "Cảm ơn em đã hỗ trợ hồ sơ nhanh gọn, chu đáo.", ngay: "2026-08-11T16:05:00", trangThai: "cho-duyet" },
+  { id: "bl3", advisorMa: TVV_DEMO.ma, tenKhach: "Chị H., Quận 7", sdt: "0987 111 222", noiDung: "Điều tôi yên tâm nhất là mỗi lần cần hỏi gì, gọi là có người nghe máy.", ngay: "2026-08-05T09:12:00", trangThai: "dang-hien" },
+  { id: "bl4", advisorMa: TVV_DEMO.ma, tenKhach: "Cô L., Thủ Đức", sdt: "0933 444 555", noiDung: "Hồ sơ của gia đình tôi được hỗ trợ đến khi xong, không phải tự mò mẫm.", ngay: "2026-07-28T14:40:00", trangThai: "dang-hien" },
+  { id: "bl5", advisorMa: TVV_DEMO.ma, tenKhach: "Anh M.", sdt: "0900 000 000", noiDung: "Nội dung đã được ẩn.", ngay: "2026-07-20T08:30:00", trangThai: "da-an", lyDoCo: "Tư vấn viên ẩn" },
+  { id: "bl6", advisorMa: TVV_DEMO.ma, tenKhach: "(khách)", sdt: "0900 111 111", noiDung: "Mua ngay kẻo lỡ! Xem bit.ly/xyz để nhận ưu đãi.", ngay: "2026-08-02T11:12:00", trangThai: "cho-duyet", ganCo: true, lyDoCo: "Chứa liên kết ngoài (bit.ly)" },
+  { id: "bl7", advisorMa: advisors[1].ma, tenKhach: "Chị Vân", sdt: "0908 222 333", noiDung: "Bạn tư vấn dễ hiểu, cảm ơn nhiều.", ngay: "2026-08-09T10:00:00", trangThai: "dang-hien" },
 ];
 
 /* ---------- Tiện ích ---------- */

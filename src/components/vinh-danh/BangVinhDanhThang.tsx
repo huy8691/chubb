@@ -70,9 +70,9 @@ export function BangVinhDanhThang({ thangId }: { thangId?: string }) {
               <H2 className="text-[22px] uppercase">{h.ten} <span className="normal-case font-normal text-[16px] text-ink2">· {list.length} người được vinh danh</span></H2>
               {idx === 0 ? (
                 <>
-                  <Card className="mt-5 grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-8 p-6">
-                    <ImageBox src={anhTVV(leader.ma)} alt={leader.hoTen} ratio="1/1" />
-                    <div className="flex flex-col">
+                  <Card className="mt-5 grid grid-cols-1 lg:grid-cols-[360px_1fr] overflow-hidden">
+                    <div className="lg:h-full min-h-full"><ImageBox src={anhTVV(leader.ma)} alt={leader.hoTen} ratio="1/1" className="h-full" /></div>
+                    <div className="flex flex-col p-6 lg:p-8">
                       <h3 className="font-serif font-semibold text-[32px] leading-tight text-den">{leader.hoTen}</h3>
                       <div className="mt-2 text-[15px] text-ink2">{h.ten} {month.nam} · {vp}</div>
                       <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-[940px]">
@@ -91,12 +91,14 @@ export function BangVinhDanhThang({ thangId }: { thangId?: string }) {
                 </>
               ) : (
                 <div className="mt-5 grid grid-cols-2 lg:grid-cols-[minmax(0,2.4fr)_repeat(4,minmax(0,1fr))] gap-4 items-stretch">
-                  <Card className="p-4 flex flex-col col-span-2 lg:col-span-1">
+                  <Card className="overflow-hidden flex flex-col col-span-2 lg:col-span-1">
                     <div className="relative"><ImageBox src={anhTVV(leader.ma)} alt={leader.hoTen} ratio="16/9" /><Chip tone="blue" className="absolute top-3 left-3">NGƯỜI DẪN ĐẦU</Chip></div>
-                    <div className="mt-3 font-bold text-[18px] text-den"><Link href={linkC02(leader.ma, month.id, h.id)} className="hover:text-blue">{leader.hoTen}</Link></div>
-                    <div className="text-[13px] text-ink2 mt-0.5">{h.ten} {month.nam} · {vp}</div>
-                    <div className="mt-2 text-[13px] text-den">{soLine}</div>
-                    <div className="mt-auto pt-4"><Link href={linkC02(leader.ma, month.id, h.id)} className="text-[13px] font-bold text-blue hover:underline">Xem chi tiết thành tích</Link></div>
+                    <div className="p-4 flex flex-col flex-1">
+                      <div className="font-bold text-[18px] text-den"><Link href={linkC02(leader.ma, month.id, h.id)} className="hover:text-blue">{leader.hoTen}</Link></div>
+                      <div className="text-[13px] text-ink2 mt-0.5">{h.ten} {month.nam} · {vp}</div>
+                      <div className="mt-2 text-[13px] text-den">{soLine}</div>
+                      <div className="mt-auto pt-4"><Link href={linkC02(leader.ma, month.id, h.id)} className="text-[13px] font-bold text-blue hover:underline">Xem chi tiết thành tích</Link></div>
+                    </div>
                   </Card>
                   {keTiep.map((v) => <TheTVV key={v.ma} v={v} sub={`${h.ten} ${month.nam} · ${v.vanPhong.replace(/ — .*$/, "")}`} thangId={month.id} hangMucId={h.id} />)}
                 </div>

@@ -95,9 +95,8 @@ export default function Page() {
           {anh.length === 0 ? <EmptyState title="Bạn chưa tạo ảnh nào trong Studio" action={<Button kind="secondary" href={R.D08}>Mở Studio</Button>} /> : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {anh.map((a) => (
-                <Card key={a.id} className="p-4 flex flex-col gap-3">
-                  <StatusChip s={a.trangThai} />
-                  <ImageBox src={a.anh} alt={tenMau(a.templateId)} ratio="3/4" />
+                <Card key={a.id} className="p-3 flex flex-col gap-3">
+                  <div className="relative"><ImageBox src={a.anh} alt={tenMau(a.templateId)} ratio="3/4" /><span className="absolute top-2 left-2"><StatusChip s={a.trangThai} /></span></div>
                   <div>
                     <div className="font-bold text-[13.5px] text-den">{tenMau(a.templateId)}</div>
                     <div className="text-[11.5px] text-ink2 mt-0.5">Từ mẫu v{a.phienBanMau ?? 1} · lưu {fmtDate(a.tao).slice(0, 5)}</div>
@@ -107,7 +106,7 @@ export default function Page() {
                     <Link href={`${R.D02}?mau=${a.templateId}`} className="text-blue">Mở</Link>
                     <button type="button" className="text-blue" onClick={() => flash(`Đã tải ảnh "${tenMau(a.templateId)}" về máy`)}>Tải ảnh</button>
                     <button type="button" className="text-ink2 hover:text-red-fg" onClick={() => setXoa(a)}>Xoá</button>
-                    {a.trangThai === "rieng-tu" && <button type="button" className="text-blue basis-full text-left" onClick={() => { actions.update("studioImages", (l) => l.map((x) => x.id === a.id ? { ...x, trangThai: "cho-duyet", dongYCongKhai: true } : x)); flash("Đã gửi Chubb duyệt — ảnh hiển thị công khai trên Bộ sưu tập Studio sau khi duyệt"); }}>Hiển thị công khai</button>}
+                    {a.trangThai === "rieng-tu" && <button type="button" className="text-blue basis-full text-left" onClick={() => { actions.update("studioImages", (l) => l.map((x) => x.id === a.id ? { ...x, trangThai: "cho-duyet", dongYCongKhai: true } : x)); flash("Đã gửi Chubb duyệt — ảnh hiển thị công khai sau khi duyệt"); }}>Hiển thị công khai</button>}
                     {a.trangThai === "da-duyet" && <button type="button" className="text-blue basis-full text-left" onClick={() => { actions.update("studioImages", (l) => l.map((x) => x.id === a.id ? { ...x, trangThai: "da-ngung" } : x)); flash("Đã ngừng hiển thị công khai — ảnh vẫn còn trong Ảnh Studio của tôi"); }}>Ngừng hiển thị công khai</button>}
                   </div>
                 </Card>
@@ -119,7 +118,7 @@ export default function Page() {
 
       <Modal open={!!xoa} onClose={() => setXoa(null)} title={`Xoá ảnh "${xoa ? tenMau(xoa.templateId) : ""}"?`} width={520}
         footer={<><Button kind="secondary" onClick={() => setXoa(null)}>Huỷ</Button><Button onClick={() => { if (xoa) actions.update("studioImages", (l) => l.filter((x) => x.id !== xoa.id)); setXoa(null); flash("Đã xoá ảnh"); }}>Xoá</Button></>}>
-        <p className="text-[14px] text-ink2">Ảnh sẽ bị xoá khỏi Ảnh Studio của tôi. Nếu ảnh đang hiển thị công khai, ảnh cũng bị gỡ khỏi Bộ sưu tập Studio. Không khôi phục được.</p>
+        <p className="text-[14px] text-ink2">Ảnh sẽ bị xoá khỏi Ảnh Studio của tôi. Nếu ảnh đang hiển thị công khai, ảnh cũng bị gỡ khỏi Ảnh thực tế từ Tư vấn viên. Không khôi phục được.</p>
       </Modal>
     </div>
   );

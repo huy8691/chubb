@@ -59,13 +59,13 @@ export function DanhBa({ vanPhongLoc }: { vanPhongLoc?: string[] | null }) {
       </form>
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <FilterChips<KV> options={KHU_VUC.map((k) => ({ value: k, label: k === "tat-ca" ? "Tất cả" : k, count: demKv(k) }))} value={kv} onChange={(v) => { setKv(v); setVp(""); setPage(1); }} />
-        <Select value={vp} onChange={(e) => { setVp(e.target.value); setPage(1); }} className="h-8 text-[13px] w-[200px]"><option value="">Văn phòng</option>{vanPhongs.filter((v) => kv === "tat-ca" || mien(v) === kv).map((v) => <option key={v} value={v}>{v}</option>)}</Select>
-        <Select value={cd} onChange={(e) => { setCd(e.target.value); setPage(1); }} className="h-8 text-[13px] w-[190px]"><option value="">Chức danh</option>{chucDanhs.map((v) => <option key={v} value={v}>{v}</option>)}</Select>
-        <Select value={dh} onChange={(e) => { setDh(e.target.value); setPage(1); }} className="h-8 text-[13px] w-[160px]"><option value="">Danh hiệu</option>{danhHieus.map((v) => <option key={v} value={v}>{v}</option>)}</Select>
+        <Select value={vp} onChange={(e) => { setVp(e.target.value); setPage(1); }} className="w-[200px] h-8 text-[13px]"><option value="">Văn phòng</option>{vanPhongs.filter((v) => kv === "tat-ca" || mien(v) === kv).map((v) => <option key={v} value={v}>{v}</option>)}</Select>
+        <Select value={cd} onChange={(e) => { setCd(e.target.value); setPage(1); }} className="w-[180px] h-8 text-[13px]"><option value="">Chức danh</option>{chucDanhs.map((v) => <option key={v} value={v}>{v}</option>)}</Select>
+        <Select value={dh} onChange={(e) => { setDh(e.target.value); setPage(1); }} className="w-[160px] h-8 text-[13px]"><option value="">Danh hiệu</option>{danhHieus.map((v) => <option key={v} value={v}>{v}</option>)}</Select>
       </div>
       <div className="mt-6 flex items-center justify-between gap-4 flex-wrap">
         <div className="text-[13px] text-ink2">Hiện {list.length === 0 ? 0 : (p - 1) * PAGE + 1}–{Math.min(p * PAGE, list.length)} / {fmtNum(list.length)} Tư vấn viên</div>
-        <label className="flex items-center gap-2 text-[13px] text-ink2">Sắp xếp:
+        <label className="flex items-center gap-2 text-[13px] text-ink2 shrink-0">Sắp xếp:
           <Select value={sort} onChange={(e) => setSort(e.target.value as typeof sort)} className="w-[170px] h-8 text-[13px]"><option value="ten">Họ tên A–Z</option><option value="kinh-nghiem">Kinh nghiệm</option></Select>
         </label>
       </div>

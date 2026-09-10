@@ -3,7 +3,7 @@
  * H07a · CMS — Ảnh Studio — xem & duyệt.
  * Ảnh lớn (ImageBox theo tỉ lệ mẫu) · thông tin (Tư vấn viên · Mẫu dùng · Trường TVV điền · Đồng ý công khai · Trạng thái)
  * Nút: Duyệt · Từ chối (lý do) → khối TỪ CHỐI ẢNH cùng trang · Gỡ khỏi bộ sưu tập (ảnh đã duyệt) · Về danh sách → H07.
- * Khối "Đã duyệt (N)" liệt kê ảnh khác đang trong Bộ sưu tập Studio với nút Gỡ khỏi bộ sưu tập.
+ * Khối "Đã duyệt (N)" liệt kê ảnh khác đang công khai trong Ảnh thực tế từ Tư vấn viên với nút Ngừng hiển thị công khai.
  */
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -48,7 +48,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const tongDaDuyet = data.studioImages.filter((x) => x.trangThai === "da-duyet").length;
 
   const trangThaiChuoi = a.trangThai === "cho-duyet" ? `Chờ duyệt · gửi ${fmtDateTime(a.tao)}`
-    : a.trangThai === "da-duyet" ? `Đang công khai · duyệt ${fmtDateTime(a.ngayDuyet)} · hiển thị trên Bộ sưu tập Studio`
+    : a.trangThai === "da-duyet" ? `Đang công khai · duyệt ${fmtDateTime(a.ngayDuyet)} · hiển thị trong Ảnh thực tế từ Tư vấn viên`
     : a.trangThai === "bi-tu-choi" ? `Từ chối · Tư vấn viên đã thấy lý do · kết thúc, không duyệt lại và không gửi lại`
     : a.trangThai === "da-ngung" ? `Đã ngừng công khai · ảnh vẫn trong Ảnh Studio của Tư vấn viên · không gửi lại được`
     : "Riêng tư · chỉ Tư vấn viên thấy trong Ảnh Studio của mình";
@@ -69,7 +69,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
             <Row l="Tư vấn viên" v={ad ? <Link href={R.H11a(ad.ma)} className="hover:text-blue">{ad.hoTen} · {ad.ma} · {khuVuc(ad.vanPhong)}</Link> : a.advisorMa} />
             <Row l="Mẫu dùng" v={m ? <Link href={R.H02a(m.id)} className="hover:text-blue">{tenMau} · v{pb}</Link> : tenMau} />
             <Row l="Trường TVV điền" v={truong} />
-            <Row l="Đồng ý công khai" v={a.dongYCongKhai ? "✓ đã tick khi gửi" : <span className="text-amber-fg">Chưa tick — không đưa vào Bộ sưu tập khi chưa có đồng ý</span>} />
+            <Row l="Đồng ý công khai" v={a.dongYCongKhai ? "✓ đã tick khi gửi" : <span className="text-amber-fg">Chưa tick — không hiển thị công khai khi chưa có đồng ý</span>} />
             <Row l="Trạng thái" v={trangThaiChuoi} />
             {a.trangThai === "bi-tu-choi" && a.lyDoTuChoi && (
               <div className="mt-4 bg-red-bg border border-red-fg/30 rounded-sm p-4 text-[14px]">
@@ -78,7 +78,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
               </div>
             )}
             <div className="flex flex-wrap gap-3 mt-6">
-              {a.trangThai === "cho-duyet" && <Button onClick={() => { duyet(a); setMoTuChoi(false); flash(`Đã duyệt — ảnh hiển thị công khai trên Bộ sưu tập Studio, ${ad?.hoTen ?? "Tư vấn viên"} nhận thông báo`); }} disabled={!a.dongYCongKhai}>Duyệt</Button>}
+              {a.trangThai === "cho-duyet" && <Button onClick={() => { duyet(a); setMoTuChoi(false); flash(`Đã duyệt — ảnh hiển thị công khai, ${ad?.hoTen ?? "Tư vấn viên"} nhận thông báo`); }} disabled={!a.dongYCongKhai}>Duyệt</Button>}
               {a.trangThai === "cho-duyet" && <Button kind="secondary" onClick={() => setMoTuChoi(true)}>Từ chối (lý do)</Button>}
               {a.trangThai === "da-duyet" && <Button kind="danger" onClick={() => { go(a); flash("Đã ngừng hiển thị công khai — ảnh vẫn trong Ảnh Studio của Tư vấn viên, Tư vấn viên nhận thông báo"); }}>Ngừng hiển thị công khai</Button>}
               <Button kind="ghost" onClick={() => router.push(R.H07)}>Về danh sách</Button>
@@ -94,8 +94,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         </CmsCard>
       )}
 
-      <CmsCard className="mt-6" title={`Đang công khai (${tongDaDuyet})`} desc="Ảnh đang hiển thị trên Bộ sưu tập Studio — ngừng hiển thị khi cần." right={<Link href={`${R.H07}?tt=da-duyet`} className="text-[13px] font-bold text-blue hover:underline">Xem tất cả</Link>}>
-        {daDuyetKhac.length === 0 ? <div className="text-[14px] text-ink2">Chưa có ảnh nào khác trong Bộ sưu tập Studio.</div> : (
+      <CmsCard className="mt-6" title={`Đang công khai (${tongDaDuyet})`} desc="Ảnh đang hiển thị trong Ảnh thực tế từ Tư vấn viên — ngừng hiển thị khi cần." right={<Link href={`${R.H07}?tt=da-duyet`} className="text-[13px] font-bold text-blue hover:underline">Xem tất cả</Link>}>
+        {daDuyetKhac.length === 0 ? <div className="text-[14px] text-ink2">Chưa có ảnh nào khác đang công khai.</div> : (
           <ul className="divide-y divide-vien2 text-[13.5px]">
             {daDuyetKhac.map((x) => {
               const xa = data.advisors.find((v) => v.ma === x.advisorMa); const xm = data.studioTemplates.find((t) => t.id === x.templateId);

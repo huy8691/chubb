@@ -1,6 +1,6 @@
 "use client";
 /**
- * H07 · CMS — Duyệt ảnh Studio Tư vấn viên gửi lên (Bộ sưu tập Studio).
+ * H07 · CMS — Duyệt ảnh Studio Tư vấn viên gửi lên (mục công khai Ảnh thực tế từ Tư vấn viên).
  * Chip lọc Chờ duyệt (N) · Đã duyệt · Từ chối · Riêng tư · bảng Ảnh · Tư vấn viên · Mẫu · Ngày gửi · Đồng ý · Hành động (Duyệt / Từ chối nhanh trên hàng chờ duyệt · Xem → H07a) · phân trang.
  * Nhận ?tt=cho-duyet (từ H01 · H02) và ?tvv=<mã> (từ H11a) để lọc sẵn.
  */
@@ -51,7 +51,7 @@ function DanhSach() {
 
   return (
     <>
-      <CmsHeader title="Duyệt ảnh Studio Tư vấn viên gửi lên" desc="Ảnh Tư vấn viên tạo trong Studio và xin hiển thị công khai trên Bộ sưu tập Studio. Mỗi ảnh chỉ gửi một lần; từ chối là kết thúc." />
+      <CmsHeader title="Duyệt ảnh Studio Tư vấn viên gửi lên" desc="Ảnh Tư vấn viên tạo trong Studio và xin hiển thị công khai trong mục Ảnh thực tế từ Tư vấn viên. Mỗi ảnh chỉ gửi một lần; từ chối là kết thúc." />
       <CmsCard>
         <div className="flex flex-wrap items-center gap-3 mb-4">
           <FilterChips<Loc> value={tt} onChange={(v) => { setTt(v); setPage(1); }} options={LOC.map((s) => ({ value: s, label: nhanTT(s), count: count(s) }))} />
@@ -76,7 +76,7 @@ function DanhSach() {
                   <td className="whitespace-nowrap">
                     <div className="flex items-center gap-2">
                       {a.trangThai === "cho-duyet" && <>
-                        <Button size="sm" onClick={() => { duyet(a); flash(`Đã duyệt — ảnh của ${ad?.hoTen ?? a.advisorMa} đang hiển thị công khai trên Bộ sưu tập Studio`); }}>Duyệt</Button>
+                        <Button size="sm" onClick={() => { duyet(a); flash(`Đã duyệt — ảnh của ${ad?.hoTen ?? a.advisorMa} đang hiển thị công khai`); }}>Duyệt</Button>
                         <Button size="sm" kind="secondary" onClick={() => setTuChoiAnh(a)}>Từ chối</Button>
                       </>}
                       <Link href={R.H07a(a.id)} className="text-blue font-bold text-[13px] px-1">Xem</Link>

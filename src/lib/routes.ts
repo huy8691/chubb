@@ -39,11 +39,13 @@ export const R = {
   F01: "/toan-tam-chia-se",
   F03: (slug: string) => `/toan-tam-chia-se/chuyen-de/${slug}`,
   F02: (slug: string) => `/toan-tam-chia-se/${slug}`,
+  F04: (q?: string) => `/toan-tam-chia-se/tim-kiem${q ? `?q=${encodeURIComponent(q)}` : ""}`,
   // Tài khoản TVV
   G01: "/dang-nhap",
   G02a: "/tai-khoan",
   G02: "/tai-khoan/da-luu",
   E04: "/tai-khoan/danh-thiep",
+  G12: "/tai-khoan/binh-luan",
   G10: "/tai-khoan/tai-lieu",
   G06: "/tai-khoan/cai-dat",
   // CMS
@@ -63,6 +65,7 @@ export const R = {
   H03b: (id: string) => `/cms/vinh-danh/${id}`,
   H03d: (id: string) => `/cms/vinh-danh/${id}/them-tu-excel`,
   H19: "/cms/loi-chuc",
+  H20: "/cms/binh-luan",
   H09: "/cms/tai-lieu",
   H09a: (id: string) => `/cms/tai-lieu/${id}`,
   H09new: "/cms/tai-lieu/moi",
@@ -94,6 +97,7 @@ export const ACCOUNT_TABS = [
   { code: "G02a", label: "Tổng quan", href: R.G02a },
   { code: "G02", label: "Đã lưu", href: R.G02 },
   { code: "E04", label: "Danh thiếp của tôi", href: R.E04 },
+  { code: "G12", label: "Bình luận", href: R.G12 },
   { code: "G10", label: "Tài liệu", href: R.G10 },
   { code: "G06", label: "Tài khoản & cài đặt", href: R.G06 },
 ] as const;
@@ -108,6 +112,7 @@ export const CMS_MENU = [
   { code: "H18", label: "Trắc nghiệm", href: R.H18, editor: true },
   { code: "H03", label: "Vinh danh", href: R.H03, editor: false },
   { code: "H19", label: "Lời chúc", href: R.H19, editor: false },
+  { code: "H20", label: "Bình luận", href: R.H20, editor: false },
   { code: "H09", label: "Tài liệu", href: R.H09, editor: true },
   { code: "H11", label: "Tư vấn viên", href: R.H11, editor: false },
   { code: "H12", label: "Ứng viên", href: R.H12, editor: false },

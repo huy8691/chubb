@@ -51,8 +51,6 @@ export interface Advisor {
     hanhTrinh?: { nam: string; tieuDe: string; moTa: string }[];
     /** "Một điều tôi muốn nhắn người mới vào nghề" (E03) */
     loiNhan?: string;
-    /** Chứng minh thực tế — lời khách hàng (E03) */
-    chungMinh?: { trichDan: string; ten: string }[];
     capNhat?: string; // ISO — H11a "Đã điền · cập nhật dd/mm/yyyy"
     /** E04 bước 2 — "Tôi muốn được nhớ đến với vai trò gì?" */
     vaiTro?: string;
@@ -133,7 +131,7 @@ export interface StudioImage {
   advisorMa: string;
   anh: string;
   tao: string;
-  /** Vòng đời một ảnh (09/09): Riêng tư → (Hiển thị công khai, gửi MỘT lần) → Chờ duyệt → Đang công khai | Từ chối → Đã ngừng công khai (TVV hoặc admin ngừng; không gửi lại). Xoá = mất cả Ảnh Studio của tôi và Bộ sưu tập. */
+  /** Vòng đời một ảnh (09/09): Riêng tư → (Hiển thị công khai, gửi MỘT lần) → Chờ duyệt → Đang công khai | Từ chối → Đã ngừng công khai (TVV hoặc admin ngừng; không gửi lại). Xoá = mất cả Ảnh Studio của tôi và mục công khai Ảnh thực tế từ Tư vấn viên. */
   trangThai: "rieng-tu" | "cho-duyet" | "da-duyet" | "bi-tu-choi" | "da-ngung";
   lyDoTuChoi?: string;
   /** Thêm cho D02/D07/H07 (cụm Công cụ) */
@@ -342,6 +340,22 @@ export interface LoiChuc {
   ngay: string;
   trangThai: TrangThaiLoiChuc;
   /** lý do gắn cờ (tự động) hoặc lý do ẩn (Quản trị / người nhận) */
+  lyDoCo?: string;
+}
+
+/** Bình luận khách để lại trên danh thiếp TVV (10/09): khách nhập tên+SĐT không OTP,
+ *  TVV duyệt trước mới hiện công khai, Quản trị gắn cờ/ẩn. SĐT chỉ TVV/Quản trị thấy. */
+export type TrangThaiBinhLuan = "cho-duyet" | "dang-hien" | "da-an";
+export interface BinhLuan {
+  id: string;
+  advisorMa: string; // danh thiếp nào
+  tenKhach: string;
+  sdt: string; // chỉ Quản trị (CMS) thấy — KHÔNG hiện cho TVV (PII do Chubb giữ)
+  noiDung: string;
+  ngay: string;
+  trangThai: TrangThaiBinhLuan;
+  /** Quản trị / bộ lọc gắn cờ (chỉ hiện phía CMS) */
+  ganCo?: boolean;
   lyDoCo?: string;
 }
 

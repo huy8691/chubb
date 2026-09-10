@@ -170,18 +170,18 @@ function TuyenDung() {
         <div className="wrap">
           <H2 className="text-[22px]">Môi trường làm việc</H2>
           <Muted className="mt-3 text-[15px]">Văn phòng Chubb Life trên toàn quốc — không gian làm việc chuyên nghiệp dành cho Tư vấn viên.</Muted>
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-4 mt-8">
-            <div className="relative">
-              <ImageBox src={VAN_PHONG[anh]} alt="Văn phòng Chubb Life" ratio="16/9" />
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4 mt-8 lg:h-[480px]">
+            <div className="relative min-h-[240px] lg:min-h-0 lg:h-full rounded-sm overflow-hidden bg-vien2 border border-[#D6D6D6] flex items-center justify-center text-mut text-[13px]">
+              <span>Ảnh</span>
               <div className="absolute bottom-4 left-4 flex gap-2">
                 <button type="button" aria-label="Ảnh trước" onClick={() => setAnh((anh + VAN_PHONG.length - 1) % VAN_PHONG.length)} className="size-9 rounded-sm bg-white/90 text-den hover:bg-white">←</button>
                 <button type="button" aria-label="Ảnh sau" onClick={() => setAnh((anh + 1) % VAN_PHONG.length)} className="size-9 rounded-sm bg-white/90 text-den hover:bg-white">→</button>
               </div>
               <div className="absolute bottom-4 right-4 bg-den/70 text-white text-[12px] px-2 py-1 rounded-sm">{anh + 1} / {VAN_PHONG.length}</div>
             </div>
-            <div className="grid grid-cols-3 lg:grid-cols-1 gap-4">
+            <div className="grid grid-cols-3 gap-4 lg:grid-cols-1 lg:grid-rows-3 lg:h-full">
               {VAN_PHONG.filter((_, i) => i !== anh).slice(0, 3).map((src) => (
-                <button key={src} type="button" onClick={() => setAnh(VAN_PHONG.indexOf(src))} className="rounded-sm overflow-hidden border border-transparent hover:border-blue"><ImageBox src={src} alt="Văn phòng Chubb Life" ratio="16/9" /></button>
+                <button key={src} type="button" onClick={() => setAnh(VAN_PHONG.indexOf(src))} className="rounded-sm overflow-hidden border border-[#D6D6D6] hover:border-blue bg-vien2 flex items-center justify-center text-mut text-[13px] min-h-[90px] lg:min-h-0"><span>Ảnh</span></button>
               ))}
             </div>
           </div>

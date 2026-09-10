@@ -26,23 +26,12 @@ export default function Page() {
 
   return (
     <>
-      <Hero eyebrow="Toàn Tâm Chia Sẻ" title="Thư viện tri thức của người Toàn Tâm" desc="Không phải ai bắt đầu cũng biết mình sẽ đi bao xa. Nhưng qua từng trải nghiệm, từng giá trị tạo ra, từng cột mốc đạt được, họ tìm thấy lý do để tiếp tục — và chia sẻ lại cho những người đi sau.">
-        <div className="mt-6 inline-flex items-center gap-2 text-[13px] text-ink2 bg-white border border-vien rounded-sm px-3 h-9"><span className="size-2 rounded-full bg-blue" aria-hidden />3 bài viết mới mỗi tháng</div>
-      </Hero>
+      <Hero eyebrow="Toàn Tâm Chia Sẻ" title="Thư viện tri thức của người Toàn Tâm" desc="Không phải ai bắt đầu cũng biết mình sẽ đi bao xa. Nhưng qua từng trải nghiệm, từng giá trị tạo ra, từng cột mốc đạt được, họ tìm thấy lý do để tiếp tục — và chia sẻ lại cho những người đi sau." />
 
       <section className="wrap pt-10">
-        <form onSubmit={(e) => { e.preventDefault(); if (q.trim()) router.push(R.S01(q.trim())); }} className="max-w-[720px]">
+        <form onSubmit={(e) => { e.preventDefault(); if (q.trim()) router.push(R.F04(q.trim())); }} className="max-w-[720px]">
           <SearchBox value={q} onChange={setQ} placeholder="Tìm kiếm bài viết theo tiêu đề hoặc chuyên đề" />
         </form>
-        <div className="mt-5 flex flex-wrap items-center gap-4">
-          <span className="text-[13px] text-ink2">{all.length} bài viết</span>
-          <div className="flex flex-wrap gap-2">
-            <span className="h-8 px-3 inline-flex items-center rounded-sm text-[13px] font-bold bg-blue text-white">Tất cả</span>
-            {cds.map((c) => (
-              <Link key={c.id} href={R.F03(c.slug)} className="h-8 px-3 inline-flex items-center rounded-sm text-[13px] font-bold border border-vien text-ink2 hover:border-blue hover:text-blue">{c.ten}</Link>
-            ))}
-          </div>
-        </div>
       </section>
 
       {first && (
@@ -64,11 +53,11 @@ export default function Page() {
         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-8">
           {latest.map((a) => <ArticleCard key={a.id} a={a} cd={cdOf(a.chuyenDeId)} />)}
         </div>
-        {cds[0] && <div className="mt-8 flex justify-center"><Button kind="secondary" href={R.F03(cds[0].slug)}>Xem thêm bài viết</Button></div>}
+        <div className="mt-8 flex justify-center"><Button kind="secondary" href={R.F03("tat-ca")}>Xem tất cả bài viết</Button></div>
       </section>
 
       {cds.map((c, i) => {
-        const list = all.filter((a) => a.chuyenDeId === c.id).slice(0, 3);
+        const list = all.filter((a) => a.chuyenDeId === c.id).slice(0, 6);
         return (
           <section key={c.id} className={cx("wrap pt-16", i === cds.length - 1 && "pb-16")}>
             <div className="flex items-end justify-between gap-6 border-t border-vien2 pt-10">

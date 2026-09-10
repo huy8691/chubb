@@ -160,7 +160,10 @@ export function Textarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement
   return <textarea {...props} className={cx(inputCls, "h-auto min-h-[96px] py-2", props.className)} />;
 }
 export function Select({ children, ...props }: React.SelectHTMLAttributes<HTMLSelectElement>) {
-  return <select {...props} className={cx(inputCls, "pr-8", props.className)}>{children}</select>;
+  // Nếu caller truyền width (w-… / max-w-…) thì bỏ "w-full" mặc định để width truyền vào không bị đè
+  // (cx chỉ nối chuỗi, không tailwind-merge). Không truyền width → giữ w-full như cũ.
+  const base = props.className && /(^|\s)(w-|max-w-)/.test(props.className) ? inputCls.replace("w-full", "") : inputCls;
+  return <select {...props} className={cx(base, "pr-8", props.className)}>{children}</select>;
 }
 export function Checkbox({ label, ...props }: { label: React.ReactNode } & React.InputHTMLAttributes<HTMLInputElement>) {
   return <label className="inline-flex items-center gap-2 text-[14px] text-den"><input type="checkbox" className="size-4 accent-blue" {...props} />{label}</label>;
@@ -218,7 +221,7 @@ export function Table({ head, children, className }: { head: React.ReactNode[]; 
 export function Pagination({ page, pages, onChange }: { page: number; pages: number; onChange: (p: number) => void }) {
   if (pages <= 1) return null;
   return (
-    <div className="flex items-center justify-center gap-1 mt-6">
+    <div className="flex items-center justify-end gap-1 mt-6">
       <Button kind="secondary" size="sm" disabled={page <= 1} onClick={() => onChange(page - 1)}>Trước</Button>
       {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
         <button key={p} type="button" onClick={() => onChange(p)} className={cx("h-8 min-w-8 px-2 rounded-sm text-[13px] font-bold border", p === page ? "bg-blue text-white border-blue" : "bg-white text-blue border-blue hover:bg-blue-soft")}>{p}</button>

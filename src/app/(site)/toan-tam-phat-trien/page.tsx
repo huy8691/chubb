@@ -4,12 +4,13 @@ import Link from "next/link";
 import { R } from "@/lib/routes";
 import { useStore } from "@/lib/store";
 import { fmtDate } from "@/lib/seed";
-import { Button, Card, Chip, Eyebrow, H2, H3, Hero, ImageBox, Muted } from "@/components/ui";
+import { Button, Card, Chip, Eyebrow, H2, H3, Hero, Muted } from "@/components/ui";
+import { MauStudioCard } from "@/components/cong-cu/MauStudioCard";
 
 export default function Page() {
   const { data, session } = useStore();
   const daDangNhap = session.role === "tvv";
-  const mauMoi = data.studioTemplates.filter((m) => m.trangThai === "da-xuat-ban").sort((a, b) => b.capNhat.localeCompare(a.capNhat)).slice(0, 2);
+  const mauMoi = data.studioTemplates.filter((m) => m.trangThai === "da-xuat-ban").sort((a, b) => b.capNhat.localeCompare(a.capNhat)).slice(0, 4);
   const taiLieuMoi = data.documents.filter((d) => d.phan === "cong-khai" && d.trangThai === "da-xuat-ban").sort((a, b) => b.capNhat.localeCompare(a.capNhat)).slice(0, 2);
 
   const congCu = [
@@ -53,31 +54,30 @@ export default function Page() {
             <div className="mt-5"><Button href={R.G04} kind="secondary">Xem tài liệu</Button></div>
           </Card>
           <Card className="p-6 flex flex-col">
-            <H3>Bộ sưu tập Studio</H3>
-            <Muted className="mt-2 flex-1">Ảnh Tư vấn viên tạo trong Studio, Chubb đã duyệt.</Muted>
-            <div className="mt-5"><Button href={R.D07} kind="secondary">Xem bộ sưu tập</Button></div>
+            <H3>Ảnh thực tế từ Tư vấn viên</H3>
+            <Muted className="mt-2 flex-1">Ảnh đồng nghiệp đã tạo trong Studio và công khai — xem để lấy cảm hứng.</Muted>
+            <div className="mt-5"><Button href={R.D07} kind="secondary">Xem ảnh thực tế</Button></div>
           </Card>
         </div>
       </section>
 
       <section className="bg-xam">
         <div className="wrap py-14">
-          <H2>Mới cập nhật</H2>
+          <H2>Mẫu Studio mới</H2>
           <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-6">
-            {mauMoi.map((m) => (
-              <Link key={m.id} href={`${R.D02}?mau=${m.id}`} className="block bg-white border border-vien rounded-sm p-3 hover:border-blue">
-                <ImageBox src={m.anh} ratio="4/3" />
-                <Eyebrow className="mt-3 text-[10px]">Mẫu mới</Eyebrow>
-                <div className="font-bold text-[14px] mt-1 text-den">{m.ten}</div>
-                <div className="text-[12px] text-mut mt-1">Cập nhật {fmtDate(m.capNhat)}</div>
-              </Link>
-            ))}
+            {mauMoi.map((m) => <MauStudioCard key={m.id} m={m} />)}
+          </div>
+
+          <H2 className="mt-12">Tài liệu mới</H2>
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
             {taiLieuMoi.map((d) => (
-              <Link key={d.id} href={R.G04} className="block bg-white border border-vien rounded-sm p-3 hover:border-blue">
-                <ImageBox ratio="4/3" />
-                <Eyebrow className="mt-3 text-[10px]">Tài liệu</Eyebrow>
-                <div className="font-bold text-[14px] mt-1 text-den">{d.ten}</div>
-                <div className="text-[12px] text-mut mt-1">{d.dinhDang} · {d.phienBan} · {fmtDate(d.capNhat)}</div>
+              <Link key={d.id} href={R.G04} className="flex items-center gap-4 bg-white border border-vien rounded-sm p-4 hover:border-blue">
+                <span className="shrink-0 size-12 rounded-sm bg-blue-soft text-blue font-bold text-[12px] flex items-center justify-center">{d.dinhDang}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="font-bold text-[14px] text-den truncate">{d.ten}</div>
+                  <div className="text-[12px] text-mut mt-0.5">{d.phienBan} · Cập nhật {fmtDate(d.capNhat)}</div>
+                </div>
+                <span className="text-blue font-bold text-[13px] shrink-0">Xem</span>
               </Link>
             ))}
           </div>

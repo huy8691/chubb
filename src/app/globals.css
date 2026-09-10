@@ -37,7 +37,7 @@
   --radius-lg: 4px;
   --radius-xl: 4px;
 
-  --container-wrap: 1280px;
+  --container-wrap: 1440px;
 }
 
 :root {
@@ -58,9 +58,9 @@ h1, h2, h3, .font-serif {
 /* Lớp tiện ích dùng chung */
 @utility wrap {
   width: 100%;
-  max-width: 1280px;
+  max-width: 1440px; /* khớp frame Figma 1440 */
   margin-inline: auto;
-  padding-inline: 24px;
+  padding-inline: 64px; /* nội dung 1312 = Figma (padding 64 mỗi bên) */
 }
 
 @utility eyebrow {

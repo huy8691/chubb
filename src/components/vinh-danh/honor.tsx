@@ -10,6 +10,7 @@ import { fmtDateTime, thangLabel } from "@/lib/seed";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
 import type { Advisor, HangMuc, HonorMonth, NguoiDat } from "@/lib/types";
 import { Button, Chip, Field, H2, ImageBox, Modal, Muted, Textarea, cx } from "@/components/ui";
+import { XemNhanhButton } from "@/components/danh-thiep/XemNhanh";
 
 export interface NguoiDatView {
   nd: NguoiDat;
@@ -62,19 +63,21 @@ export function ShareModal({ open, onClose, title, onDone }: { open: boolean; on
   );
 }
 
-/** Thẻ Tư vấn viên (ảnh 3:4 · tên · dòng phụ · Chi tiết → C02). Không có "Xem danh thiếp" trong danh sách tháng — chỉ có trên trang Thành tích (chủ dự án 08/09). */
-export function TheTVV({ v, sub, thangId, hangMucId, size = "md", chiTiet = true }: { v: NguoiDatView; sub: string; thangId: string; hangMucId: string; size?: "md" | "sm"; chiTiet?: boolean }) {
+/**
+ * Thẻ Tư vấn viên (ảnh 3:4 · tên · dòng phụ · Chi tiết → C02). Không có "Xem danh thiếp" trong danh sách tháng — chỉ có trên trang Thành tích (chủ dự án 08/09).
+ * `danhThiep`: dùng trên C02 "Tư vấn viên cùng hạng mục" — action "Xem danh thiếp" mở popup E02 (như nut-dich), thay cho "Chi tiết" → C02.
+ */
+export function TheTVV({ v, sub, thangId, hangMucId, size = "md", chiTiet = true, danhThiep = false }: { v: NguoiDatView; sub: string; thangId: string; hangMucId: string; size?: "md" | "sm"; chiTiet?: boolean; danhThiep?: boolean }) {
   const sm = size === "sm";
+  const dt = danhThiep && v.coTaiKhoan;
   return (
-    <div className="bg-white border border-vien rounded-sm p-4 flex flex-col">
+    <div className="bg-white border border-vien rounded-sm overflow-hidden flex flex-col">
       <ImageBox src={anhTVV(v.ma)} alt={v.hoTen} ratio={sm ? "1/1" : "3/4"} />
-      <div className={cx("mt-3 font-bold text-den", sm ? "text-[14px]" : "text-[16px]")}>{chiTiet ? <Link href={linkC02(v.ma, thangId, hangMucId)} className="hover:text-blue">{v.hoTen}</Link> : v.hoTen}</div>
-      <div className={cx("text-ink2", sm ? "text-[12px]" : "text-[13px] mt-0.5")}>{sub.replace(/ — .*$/, "")}</div>
-      {!sm && (
-        <div className="mt-4 flex flex-wrap gap-2">
-                    {chiTiet && <Link href={linkC02(v.ma, thangId, hangMucId)} className="h-8 inline-flex items-center text-[13px] font-bold text-blue hover:underline">Chi tiết</Link>}
-        </div>
-      )}
+      <div className="p-4 flex flex-col flex-1">
+        <div className={cx("font-bold text-den", sm ? "text-[14px]" : "text-[16px]")}>{chiTiet && !dt ? <Link href={linkC02(v.ma, thangId, hangMucId)} className="hover:text-blue">{v.hoTen}</Link> : v.hoTen}</div>
+        <div className={cx("text-ink2", sm ? "text-[12px]" : "text-[13px] mt-0.5")}>{sub.replace(/ — .*$/, "")}</div>
+        {!sm && chiTiet && <div className="mt-auto pt-3">{dt ? <XemNhanhButton ma={v.ma} label="Xem danh thiếp" kind="ghost" size="sm" /> : <Link href={linkC02(v.ma, thangId, hangMucId)} className="text-[13px] font-bold text-blue hover:underline">Chi tiết</Link>}</div>}
+      </div>
     </div>
   );
 }

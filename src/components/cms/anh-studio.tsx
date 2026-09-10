@@ -1,6 +1,6 @@
 "use client";
 /**
- * Dùng chung cho H07 (danh sách) và H07a (chi tiết) — Ảnh Studio Tư vấn viên xin hiển thị công khai trên Bộ sưu tập Studio.
+ * Dùng chung cho H07 (danh sách) và H07a (chi tiết) — Ảnh Studio Tư vấn viên xin hiển thị công khai trong Ảnh thực tế từ Tư vấn viên.
  * Khối "Từ chối ảnh" (lý do bắt buộc, TVV sẽ thấy) + các hành động Duyệt / Từ chối / Ngừng hiển thị công khai ghi store và gửi thông báo cho TVV.
  */
 import { useState } from "react";
@@ -20,7 +20,7 @@ export function useDuyetAnh() {
     tenMau,
     duyet: (a: StudioImage) => {
       capNhat(a.id, { trangThai: "da-duyet", ngayDuyet: new Date().toISOString(), lyDoTuChoi: undefined });
-      actions.notify(a.advisorMa, `Ảnh "${tenMau(a)}" đã được duyệt — đang hiển thị công khai trên Bộ sưu tập Studio.`, R.G02);
+      actions.notify(a.advisorMa, `Ảnh "${tenMau(a)}" đã được duyệt — đang hiển thị công khai trong Ảnh thực tế từ Tư vấn viên.`, R.G02);
     },
     tuChoi: (a: StudioImage, lyDo: string) => {
       capNhat(a.id, { trangThai: "bi-tu-choi", lyDoTuChoi: lyDo, ngayDuyet: undefined });
@@ -28,7 +28,7 @@ export function useDuyetAnh() {
     },
     go: (a: StudioImage) => {
       capNhat(a.id, { trangThai: "da-ngung" });
-      actions.notify(a.advisorMa, `Ảnh "${tenMau(a)}" đã ngừng hiển thị công khai trên Bộ sưu tập Studio, ảnh vẫn giữ trong Ảnh Studio của bạn.`, R.G02);
+      actions.notify(a.advisorMa, `Ảnh "${tenMau(a)}" đã ngừng hiển thị công khai, ảnh vẫn giữ trong Ảnh Studio của bạn.`, R.G02);
     },
   };
 }

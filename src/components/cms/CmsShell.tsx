@@ -32,7 +32,7 @@ export function CmsShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-xam">
-      <div className="h-14 bg-navy text-white flex items-center px-6 gap-4 text-[13px]">
+      <div className="h-14 bg-navy text-white flex items-center px-6 gap-4 text-[13px] sticky top-0 z-40">
         <span className="font-bold tracking-[0.3em] text-[15px]">CHUBB</span>
         <span className="bg-blue px-2.5 py-1 rounded-sm text-[11px] font-bold tracking-wider">KHU VỰC QUẢN TRỊ</span>
         <span className="ml-auto text-white/80">{user.email} · {user.vai === "admin" ? "Quản trị" : "Biên tập"}</span>
@@ -40,7 +40,7 @@ export function CmsShell({ children }: { children: React.ReactNode }) {
         <Link href={R.A01} target="_blank" className="h-8 px-3 inline-flex items-center rounded-sm border border-white/60 hover:bg-white/10 font-bold">Cổng công khai</Link>
       </div>
       <div className="flex">
-        <aside className="w-[240px] shrink-0 bg-white border-r border-vien2 min-h-[calc(100vh-56px)] py-4">
+        <aside className="w-[240px] shrink-0 bg-white border-r border-vien2 sticky top-14 self-start h-[calc(100vh-3.5rem)] overflow-y-auto py-4">
           <nav className="flex flex-col" aria-label="Điều hướng CMS">
             {menu.map((m) => (
               <Link key={m.code} href={m.href} className={cx("mx-3 px-3 py-2 rounded-sm text-[13px]", active === m.code ? "bg-blue-soft text-blue font-bold" : "text-ink2 hover:bg-xam hover:text-blue")}>{m.label}</Link>
