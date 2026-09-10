@@ -19,7 +19,7 @@ import { LoiChucBlock, ShareButtons, TheTVV, anhTVV, fmtTien, useHonor } from "@
 
 function ChiSo({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-xam rounded-sm px-5 py-4">
+    <div className="bg-xam rounded-sm px-4 py-3 sm:px-5 sm:py-4">
       <div className="font-serif font-semibold text-[30px] text-blue leading-none">{value}</div>
       <div className="mt-2 text-[13px] text-den font-bold">{label}</div>
     </div>
@@ -37,7 +37,7 @@ function ChiTiet({ ma }: { ma: string }) {
 
   if (!hit) {
     return (
-      <div className="wrap py-16">
+      <div className="wrap py-10 sm:py-16">
         <EmptyState title="Không tìm thấy thành tích được công khai" desc="Tư vấn viên này chưa có danh hiệu được công khai trên trang Vinh danh." action={<Button kind="secondary" href={R.C01}>Về Toàn Tâm Dẫn Đầu</Button>} />
       </div>
     );
@@ -59,7 +59,7 @@ function ChiTiet({ ma }: { ma: string }) {
             <div className="lg:w-[360px] shrink-0 bg-vien2">
               <ImageBox src={anhTVV(v.ma)} alt={`Ảnh chân dung ${v.hoTen}`} ratio="4/5" className="h-full border-0 rounded-none" />
             </div>
-            <div className="flex-1 p-8">
+            <div className="flex-1 p-5 sm:p-8">
               <Chip tone="blue">{hm.ten} {m.nam}</Chip>
               <H1 className="mt-3 text-[36px]">{v.hoTen}</H1>
               <p className="mt-3 text-[15px] text-ink2">{dongThongTin}</p>

@@ -17,7 +17,7 @@ export default function Page() {
   const [ans, setAns] = useState<QuizAnswers>({});
   useEffect(() => { const a = docDapAn(); setAns(a); const k = cau.findIndex((q) => !a[q.id]); setI(k < 0 ? 0 : k); }, [cau]);
 
-  if (cau.length === 0) return <div className="wrap py-16"><EmptyState title="Bộ đề chưa có câu hỏi" desc="Chubb Life đang cập nhật nội dung trắc nghiệm." action={<Button href={R.D01} kind="secondary">Về Toàn Tâm Phát Triển</Button>} /></div>;
+  if (cau.length === 0) return <div className="wrap py-10 sm:py-16"><EmptyState title="Bộ đề chưa có câu hỏi" desc="Chubb Life đang cập nhật nội dung trắc nghiệm." action={<Button href={R.D01} kind="secondary">Về Toàn Tâm Phát Triển</Button>} /></div>;
 
   const q = cau[Math.min(i, cau.length - 1)];
   const chon = (kieuId: string) => { const a = { ...ans, [q.id]: kieuId }; setAns(a); ghiDapAn(a); };
@@ -31,7 +31,7 @@ export default function Page() {
         <span className="text-[13px] font-bold text-blue whitespace-nowrap">Câu {i + 1}/{cau.length}</span>
         <div className="h-1.5 flex-1 bg-vien2 rounded-sm overflow-hidden"><div className="h-full bg-blue transition-all" style={{ width: `${((i + 1) / cau.length) * 100}%` }} /></div>
       </div>
-      <Card className="mt-6 p-8">
+      <Card className="mt-6 p-5 sm:p-8">
         <h3 className="font-serif font-semibold text-[26px] leading-snug text-den">{q.cauHoi}</h3>
         <div className="mt-6 space-y-3" role="radiogroup" aria-label="Đáp án">
           {q.dapAn.map((d, k) => {

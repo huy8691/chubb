@@ -52,7 +52,7 @@ function LoginForm() {
   };
 
   return (
-    <div className="wrap py-16 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10 items-start">
+    <div className="wrap py-10 sm:py-16 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10 items-start">
       <div className="max-w-[560px]">
         <div className="eyebrow mb-3">Dành cho Tư vấn viên</div>
         <H1>Đăng nhập Trang cá nhân</H1>
@@ -60,7 +60,7 @@ function LoginForm() {
 
         {/* 1 · Email + mật khẩu (mặc định) */}
         {mode === "mat-khau" && (
-          <Card className="mt-8 p-6">
+          <Card className="mt-8 p-4 sm:p-6">
             <Field label="Email đã đăng ký"><Input type="email" value={email} onChange={(e) => { setEmail(e.target.value); setErr(""); }} placeholder="ten.ho@chubblife.vn" /></Field>
             <Field label="Mật khẩu" error={err} className="mt-4">
               <div className="relative">
@@ -79,7 +79,7 @@ function LoginForm() {
 
         {/* 2 · Mã 6 số qua email (cách cũ) */}
         {mode === "ma" && (
-          <Card className="mt-8 p-6">
+          <Card className="mt-8 p-4 sm:p-6">
             {step === 1 ? (
               <>
                 <Field label="Email đã đăng ký" error={err}><Input type="email" value={email} onChange={(e) => { setEmail(e.target.value); setErr(""); }} placeholder="ten.ho@chubblife.vn" /></Field>
@@ -98,7 +98,7 @@ function LoginForm() {
 
         {/* Quên / đặt mật khẩu lần đầu */}
         {mode === "quen" && (
-          <Card className="mt-8 p-6">
+          <Card className="mt-8 p-4 sm:p-6">
             {daGuiLink ? (
               <>
                 <div className="text-[15px] font-bold text-den">Đã gửi liên kết đặt mật khẩu</div>
@@ -119,7 +119,7 @@ function LoginForm() {
         <p className="mt-4 text-[13px] text-mut">Không vào được? <Link href={R.S03} className="text-blue font-bold">Xem Liên hệ & trợ giúp</Link></p>
       </div>
 
-      <aside className="bg-blue-soft border border-blue/20 rounded-sm p-5 text-[13.5px] text-den">
+      <aside className="bg-blue-soft border border-blue/20 rounded-sm p-4 sm:p-5 text-[13.5px] text-den">
         <div className="font-bold mb-2">Bản demo — dữ liệu mẫu</div>
         <p>Email mẫu: <b>{TVV_DEMO.email}</b> ({TVV_DEMO.hoTen}).</p>
         <p className="mt-1">Mật khẩu demo: <b>{MK_DEMO}</b>.</p>

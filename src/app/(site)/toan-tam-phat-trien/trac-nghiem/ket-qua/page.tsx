@@ -21,8 +21,8 @@ function KetQua() {
     setKq(kieuKetQua(docDapAn(), data.quizResultTypes));
   }, [sp, data.quizResultTypes]);
 
-  if (kq === null) return <div className="wrap py-16 text-mut">Đang tính kết quả…</div>;
-  if (!kq) return <div className="wrap py-16"><EmptyState title="Bạn chưa làm trắc nghiệm" desc="Trả lời 12 câu hỏi ngắn để nhận kết quả định hướng nghề." action={<Button href={R.D04}>Bắt đầu trắc nghiệm</Button>} /></div>;
+  if (kq === null) return <div className="wrap py-10 sm:py-16 text-mut">Đang tính kết quả…</div>;
+  if (!kq) return <div className="wrap py-10 sm:py-16"><EmptyState title="Bạn chưa làm trắc nghiệm" desc="Trả lời 12 câu hỏi ngắn để nhận kết quả định hướng nghề." action={<Button href={R.D04}>Bắt đầu trắc nghiệm</Button>} /></div>;
 
   const linkChiaSe = `${SITE_ORIGIN}${R.D06}?kieu=${kq.id}`;
   const chiaSe = (kenh: string) => { flash(`Đã mở ${kenh} với liên kết kết quả`); setTimeout(() => router.push(`${R.D06}?kieu=${kq.id}`), 900); };
@@ -32,7 +32,7 @@ function KetQua() {
   return (
     <section className="wrap py-12 max-w-[1000px]">
       <H2>Kết quả của bạn</H2>
-      <Card className="mt-6 p-8">
+      <Card className="mt-6 p-5 sm:p-8">
         <div className="flex items-center gap-6">
           <div className="size-24 shrink-0 rounded-full bg-blue-soft flex items-center justify-center text-[44px]" aria-label="Huy hiệu">{kq.huyHieu.startsWith("/") ? <img src={kq.huyHieu} alt="" className="size-24 rounded-full object-cover" /> : kq.huyHieu}</div>
           <div>
@@ -42,7 +42,7 @@ function KetQua() {
         </div>
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
           {[["Điểm mạnh", kq.diemManh], ["Phong cách tư vấn", kq.phongCach], ["Phù hợp với", kq.phuHopVoi]].map(([t, v]) => (
-            <div key={t} className="bg-xam rounded-sm p-5"><div className="font-bold text-[14px] text-den">{t}</div><p className="mt-2 text-[13px] text-ink2 leading-relaxed">{v}</p></div>
+            <div key={t} className="bg-xam rounded-sm p-4 sm:p-5"><div className="font-bold text-[14px] text-den">{t}</div><p className="mt-2 text-[13px] text-ink2 leading-relaxed">{v}</p></div>
           ))}
         </div>
         <p className="mt-6 text-[15px] text-den leading-relaxed">{kq.dinhHuong}</p>

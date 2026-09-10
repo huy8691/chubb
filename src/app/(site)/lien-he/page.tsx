@@ -88,7 +88,7 @@ export default function Page() {
 
         {/* Cột phải */}
         <div className="space-y-6">
-          <Card className="p-5">
+          <Card className="p-4 sm:p-5">
             <div className="font-bold text-[15px] text-den">Liên hệ Chubb Life</div>
             <dl className="mt-4 space-y-4 text-[14px]">
               <div><dt className="text-[12px] text-ink2">Hotline</dt><dd><button type="button" className="font-bold text-den hover:text-blue text-left" onClick={() => flash(`Đang gọi ${HOTLINE}…`)}>{HOTLINE}  (8h–17h30, thứ Hai – thứ Sáu)</button></dd></div>
@@ -98,7 +98,7 @@ export default function Page() {
             </dl>
           </Card>
 
-          <Card className="p-5">
+          <Card className="p-4 sm:p-5">
             <div className="font-bold text-[15px] text-den">Gửi tin nhắn cho Chubb Life</div>
             <div className="mt-4 space-y-4">
               <Field label="Bạn là"><Select value={banLa} onChange={(e) => setBanLa(e.target.value as ContactMessage["banLa"])}>{BAN_LA.map((b) => <option key={b.value} value={b.value}>{b.label}</option>)}</Select></Field>
@@ -123,7 +123,7 @@ export default function Page() {
             </div>
           </Card>
 
-          <Card className="p-5">
+          <Card className="p-4 sm:p-5">
             <div className="font-bold text-[15px] text-den">Bạn là Tư vấn viên Chubb Life?</div>
             <Muted className="mt-2 text-[13px]">Hotline TVV {HOTLINE} · {EMAIL_TVV}</Muted>
             <div className="mt-4">

@@ -55,7 +55,7 @@ export default function Page() {
         </section>
 
         {/* CTA Tư vấn viên */}
-        <section className="bg-xam rounded-sm p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+        <section className="bg-xam rounded-sm p-5 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
             <H2 className="text-[22px]">Bạn là Tư vấn viên Chubb Life?</H2>
             <p className="text-[15px] text-ink2 mt-2">Tạo danh thiếp điện tử của bạn, tải mã QR để in lên thẻ giấy, theo dõi lượt xem.</p>

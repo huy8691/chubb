@@ -74,16 +74,18 @@ export function DanhBa({ vanPhongLoc }: { vanPhongLoc?: string[] | null }) {
       ) : (
         <div className="mt-5 space-y-4">
           {rows.map((a) => (
-            <Card key={a.ma} className="p-4 flex items-center gap-5">
-              <Avatar name={a.hoTen} size={88} src={a.avatar} />
-              <div className="flex-1 min-w-0">
-                <div className="text-[12px] font-bold text-blue uppercase">Mã {a.ma} · {tinhThanh(a.vanPhong)}</div>
-                <div className="font-bold text-[17px] text-den mt-1">{a.hoTen}</div>
-                <div className="text-[13.5px] text-ink2 mt-1">{[a.chucDanh, ...danhHieuCongKhai(a), `${namKinhNghiem(a)} năm kinh nghiệm`].join(" · ")}</div>
+            <Card key={a.ma} className="p-4 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5">
+              <div className="flex items-center gap-4 sm:gap-5 min-w-0 flex-1">
+                <Avatar name={a.hoTen} size={88} src={a.avatar} />
+                <div className="min-w-0">
+                  <div className="text-[12px] font-bold text-blue uppercase">Mã {a.ma} · {tinhThanh(a.vanPhong)}</div>
+                  <div className="font-bold text-[17px] text-den mt-1">{a.hoTen}</div>
+                  <div className="text-[13.5px] text-ink2 mt-1">{[a.chucDanh, ...danhHieuCongKhai(a), `${namKinhNghiem(a)} năm kinh nghiệm`].join(" · ")}</div>
+                </div>
               </div>
-              <div className="flex items-center gap-3 shrink-0">
-                <Button size="sm" kind="secondary" className="w-[150px]" onClick={() => setXemNhanh(a.ma)}>Xem nhanh</Button>
-                <Button size="sm" className="w-[150px]" href={R.E03(a.ma)}>Xem đầy đủ</Button>
+              <div className="flex items-center gap-3 shrink-0 max-sm:w-full">
+                <Button size="sm" kind="secondary" className="flex-1 sm:w-[150px]" onClick={() => setXemNhanh(a.ma)}>Xem nhanh</Button>
+                <Button size="sm" className="flex-1 sm:w-[150px]" href={R.E03(a.ma)}>Xem đầy đủ</Button>
               </div>
             </Card>
           ))}

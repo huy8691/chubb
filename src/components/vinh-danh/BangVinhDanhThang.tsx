@@ -22,10 +22,10 @@ export function BangVinhDanhThang({ thangId }: { thangId?: string }) {
   );
 
   if (!latest) {
-    return (<>{hero}<div className="wrap py-16"><EmptyState title="Chưa có bảng vinh danh nào được công bố" desc="Bảng vinh danh sẽ xuất hiện ở đây ngay khi Chubb Life công bố bảng đầu tiên." /></div></>);
+    return (<>{hero}<div className="wrap py-10 sm:py-16"><EmptyState title="Chưa có bảng vinh danh nào được công bố" desc="Bảng vinh danh sẽ xuất hiện ở đây ngay khi Chubb Life công bố bảng đầu tiên." /></div></>);
   }
   if (!month) {
-    return (<>{hero}<div className="wrap py-16"><EmptyState title="Bảng này chưa được công bố" desc="Bảng vinh danh chỉ hiện sau khi Chubb Life công bố." action={<Button kind="secondary" href={R.C03}>Xem các bảng đã công bố</Button>} /></div></>);
+    return (<>{hero}<div className="wrap py-10 sm:py-16"><EmptyState title="Bảng này chưa được công bố" desc="Bảng vinh danh chỉ hiện sau khi Chubb Life công bố." action={<Button kind="secondary" href={R.C03}>Xem các bảng đã công bố</Button>} /></div></>);
   }
 
   const hms = hangMucCoNguoi(month);
@@ -71,13 +71,13 @@ export function BangVinhDanhThang({ thangId }: { thangId?: string }) {
               {idx === 0 ? (
                 <>
                   <Card className="mt-5 grid grid-cols-1 lg:grid-cols-[360px_1fr] overflow-hidden">
-                    <div className="lg:h-full min-h-full"><ImageBox src={anhTVV(leader.ma)} alt={leader.hoTen} ratio="1/1" className="h-full" /></div>
-                    <div className="flex flex-col p-6 lg:p-8">
+                    <div className="lg:h-full min-h-full"><ImageBox src={anhTVV(leader.ma)} alt={leader.hoTen} ratio="1/1" className="h-full" bordered={false} /></div>
+                    <div className="flex flex-col p-4 sm:p-6 lg:p-8">
                       <h3 className="font-serif font-semibold text-[32px] leading-tight text-den">{leader.hoTen}</h3>
                       <div className="mt-2 text-[15px] text-ink2">{h.ten} {month.nam} · {vp}</div>
                       <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-[940px]">
                         {[[fmtTien(leader.nd.doanhSo), "Doanh số · phí năm đầu"], [leader.nd.hopDong === undefined ? "—" : fmtNum(leader.nd.hopDong), "Hợp đồng mới"], [leader.nd.khachHang === undefined ? "—" : fmtNum(leader.nd.khachHang), "Khách hàng mới"]].map(([v, l]) => (
-                          <div key={l} className="bg-xam rounded-sm px-5 py-4"><div className="font-serif font-semibold text-[26px] text-blue leading-none">{v}</div><div className="mt-2 text-[13px] text-ink2">{l}</div></div>
+                          <div key={l} className="bg-xam rounded-sm px-4 py-3 sm:px-5 sm:py-4"><div className="font-serif font-semibold text-[26px] text-blue leading-none">{v}</div><div className="mt-2 text-[13px] text-ink2">{l}</div></div>
                         ))}
                       </div>
                       <div className="mt-6"><MoreLink href={linkC02(leader.ma, month.id, h.id)}>Xem chi tiết thành tích</MoreLink></div>
@@ -92,7 +92,7 @@ export function BangVinhDanhThang({ thangId }: { thangId?: string }) {
               ) : (
                 <div className="mt-5 grid grid-cols-2 lg:grid-cols-[minmax(0,2.4fr)_repeat(4,minmax(0,1fr))] gap-4 items-stretch">
                   <Card className="overflow-hidden flex flex-col col-span-2 lg:col-span-1">
-                    <div className="relative"><ImageBox src={anhTVV(leader.ma)} alt={leader.hoTen} ratio="16/9" /><Chip tone="blue" className="absolute top-3 left-3">NGƯỜI DẪN ĐẦU</Chip></div>
+                    <div className="relative"><ImageBox src={anhTVV(leader.ma)} alt={leader.hoTen} ratio="16/9" bordered={false} /><Chip tone="blue" className="absolute top-3 left-3">NGƯỜI DẪN ĐẦU</Chip></div>
                     <div className="p-4 flex flex-col flex-1">
                       <div className="font-bold text-[18px] text-den"><Link href={linkC02(leader.ma, month.id, h.id)} className="hover:text-blue">{leader.hoTen}</Link></div>
                       <div className="text-[13px] text-ink2 mt-0.5">{h.ten} {month.nam} · {vp}</div>
@@ -129,7 +129,7 @@ export function BangVinhDanhThang({ thangId }: { thangId?: string }) {
         </section>
 
         {/* CTA cuối trang (chuyển từ C04 khi gộp) */}
-        <Card className="mt-12 p-6 flex flex-wrap items-center justify-between gap-6">
+        <Card className="mt-12 p-4 sm:p-6 flex flex-wrap items-center justify-between gap-6">
           <div>
             <div className="font-bold text-[18px] text-den">Bạn muốn có tên ở đây?</div>
             <Muted className="mt-1 text-[15px]">Tìm hiểu lộ trình trở thành Tư vấn viên Chubb Life và cách các danh hiệu được ghi nhận.</Muted>

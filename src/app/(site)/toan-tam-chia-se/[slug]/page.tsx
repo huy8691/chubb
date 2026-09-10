@@ -93,7 +93,7 @@ function ArticlePage({ slug }: { slug: string }) {
         <div className="mt-10 grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-12 items-start">
           <div className="max-w-[760px]">
             <Markdown md={a.thanBai} />
-            <div className="mt-12 bg-xam rounded-sm p-8 flex flex-wrap items-center justify-between gap-6">
+            <div className="mt-12 bg-xam rounded-sm p-5 sm:p-8 flex flex-wrap items-center justify-between gap-6">
               <div>
                 <H2 className="text-[22px]">Bạn cần một Tư vấn viên đồng hành?</H2>
                 <Muted className="mt-1">Tìm người phù hợp gần bạn và trò chuyện trực tiếp.</Muted>
@@ -108,7 +108,7 @@ function ArticlePage({ slug }: { slug: string }) {
 
           <aside className="space-y-8 lg:sticky lg:top-24">
             {toc.length > 0 && (
-              <div className="bg-white border border-vien rounded-sm p-5">
+              <div className="bg-white border border-vien rounded-sm p-4 sm:p-5">
                 <H3 className="mb-3">Mục lục bài viết</H3>
                 <ul className="space-y-2 text-[14px]">
                   {toc.map((t) => <li key={t.id}><a href={`#${t.id}`} className={cx("block hover:text-blue", activeH2 === t.id ? "text-blue font-bold" : "text-den")}>{t.text}</a></li>)}
@@ -116,14 +116,14 @@ function ArticlePage({ slug }: { slug: string }) {
               </div>
             )}
             {cd && (
-              <div className="bg-white border border-vien rounded-sm p-5">
+              <div className="bg-white border border-vien rounded-sm p-4 sm:p-5">
                 <H3 className="mb-3">Cùng chuyên đề</H3>
                 <div className="flex items-center justify-between text-[14px] mb-3"><Link href={R.F03(cd.slug)} className="text-den font-bold hover:text-blue">{cd.ten}</Link><span className="text-[13px] text-mut">{sameCd.length + 1} bài</span></div>
                 <ul className="space-y-3 text-[14px]">{sameCd.slice(0, 3).map((x) => <li key={x.id}><Link href={R.F02(x.slug)} className="text-den hover:text-blue leading-snug">{x.tieuDe}</Link></li>)}</ul>
                 <div className="mt-4"><MoreLink href={R.F03(cd.slug)}>Xem tất cả trong chuyên đề</MoreLink></div>
               </div>
             )}
-            <div className="bg-white border border-vien rounded-sm p-5">
+            <div className="bg-white border border-vien rounded-sm p-4 sm:p-5">
               <H3 className="mb-4">Bài xem nhiều nhất</H3>
               <TopList list={top} />
             </div>

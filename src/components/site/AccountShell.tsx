@@ -20,7 +20,7 @@ export function AccountShell({ children }: { children: React.ReactNode }) {
     if (ready && session.role !== "tvv") router.replace(`${R.G01}?next=${encodeURIComponent(pathname)}`);
   }, [ready, session.role, router, pathname]);
 
-  if (!ready || !tvv) return <div className="wrap py-20 text-mut">Đang kiểm tra phiên đăng nhập…</div>;
+  if (!ready || !tvv) return <div className="wrap py-12 sm:py-20 text-mut">Đang kiểm tra phiên đăng nhập…</div>;
 
   const active = [...ACCOUNT_TABS].sort((a, b) => b.href.length - a.href.length).find((t) => pathname === t.href || (t.href !== R.G02a && pathname.startsWith(t.href)))?.code ?? "G02a";
 
@@ -54,6 +54,6 @@ export function RequireTVV({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { ready, session } = useStore();
   useEffect(() => { if (ready && session.role !== "tvv") router.replace(`${R.G01}?next=${encodeURIComponent(pathname)}`); }, [ready, session.role, router, pathname]);
-  if (!ready || session.role !== "tvv") return <div className="wrap py-20 text-mut">Đang kiểm tra phiên đăng nhập…</div>;
+  if (!ready || session.role !== "tvv") return <div className="wrap py-12 sm:py-20 text-mut">Đang kiểm tra phiên đăng nhập…</div>;
   return <>{children}</>;
 }

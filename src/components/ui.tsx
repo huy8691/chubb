@@ -87,13 +87,13 @@ export function Card({ className, children, as: Tag = "div" }: { className?: str
 /** Khối tiêu đề + mô tả + link ở góc phải (dùng cho index/dashboard) */
 export function SectionHead({ eyebrow, title, desc, right, className }: { eyebrow?: string; title: React.ReactNode; desc?: string; right?: React.ReactNode; className?: string }) {
   return (
-    <div className={cx("flex items-end justify-between gap-6 mb-6", className)}>
+    <div className={cx("flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-6 mb-6", className)}>
       <div>
         {eyebrow && <Eyebrow className="mb-2">{eyebrow}</Eyebrow>}
         <H2>{title}</H2>
         {desc && <Muted className="mt-2 max-w-[640px]">{desc}</Muted>}
       </div>
-      {right}
+      {right && <div className="shrink-0">{right}</div>}
     </div>
   );
 }
@@ -102,7 +102,7 @@ export function SectionHead({ eyebrow, title, desc, right, className }: { eyebro
 export function Hero({ eyebrow, title, desc, actions, image, children }: { eyebrow?: string; title: React.ReactNode; desc?: string; actions?: React.ReactNode; image?: string; children?: React.ReactNode }) {
   return (
     <section className="bg-xam">
-      <div className="wrap py-16 grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-10 items-center">
+      <div className="wrap py-10 sm:py-16 grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-10 items-center">
         <div>
           {eyebrow && <Eyebrow className="mb-3">{eyebrow}</Eyebrow>}
           <H1>{title}</H1>
@@ -119,9 +119,10 @@ export function Hero({ eyebrow, title, desc, actions, image, children }: { eyebr
 
 /** Ô ảnh giữ chỗ — demo bám wireframe, KHÔNG dùng ảnh thật (chủ dự án 08/09: "bỏ hình ảnh, dùng placeholder thôi"). `src` được nhận để giữ tương thích nhưng bỏ qua. */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function ImageBox({ src: _src, alt = "Ảnh", ratio = "16/9", className }: { src?: string; alt?: string; ratio?: string; className?: string }) {
+export function ImageBox({ src: _src, alt = "Ảnh", ratio = "16/9", className, bordered = true }: { src?: string; alt?: string; ratio?: string; className?: string; bordered?: boolean }) {
+  // bordered=false: ảnh nằm sát mép một card đã có border (overflow-hidden) → bỏ border/bo góc riêng để không thành 2 viền chồng nhau
   return (
-    <div role="img" aria-label={alt} className={cx("bg-vien2 border border-[#D6D6D6] rounded-sm overflow-hidden flex items-center justify-center text-mut text-[13px]", className)} style={{ aspectRatio: ratio }}>
+    <div role="img" aria-label={alt} className={cx("bg-vien2 overflow-hidden flex items-center justify-center text-mut text-[13px]", bordered && "border border-[#D6D6D6] rounded-sm", className)} style={{ aspectRatio: ratio }}>
       <span>Ảnh</span>
     </div>
   );
@@ -244,7 +245,7 @@ export function EmptyState({ title, desc, action }: { title: string; desc?: stri
 export function Modal({ open, onClose, title, children, footer, width = 640 }: { open: boolean; onClose: () => void; title: React.ReactNode; children: React.ReactNode; footer?: React.ReactNode; width?: number }) {
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-den/50 p-6 overflow-y-auto" onClick={onClose} role="dialog" aria-modal>
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-den/50 p-4 sm:p-6 overflow-y-auto" onClick={onClose} role="dialog" aria-modal>
       <div className="bg-white rounded-sm shadow-xl w-full my-10" style={{ maxWidth: width }} onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between px-6 py-4 border-b border-vien2">
           <h3 className="font-bold text-[18px] text-den">{title}</h3>
@@ -268,7 +269,7 @@ export function useFlash() {
 /** Thẻ số liệu (dashboard, tổng quan) */
 export function Stat({ value, label, href }: { value: React.ReactNode; label: string; href?: string }) {
   const inner = (<><div className="font-serif font-semibold text-[34px] text-blue leading-none">{value}</div><div className="mt-2 text-[14px] text-ink2">{label}</div></>);
-  return href ? <Link href={href} className="block bg-white border border-vien rounded-sm p-5 hover:border-blue">{inner}</Link> : <div className="bg-white border border-vien rounded-sm p-5">{inner}</div>;
+  return href ? <Link href={href} className="block bg-white border border-vien rounded-sm p-4 sm:p-5 hover:border-blue">{inner}</Link> : <div className="bg-white border border-vien rounded-sm p-4 sm:p-5">{inner}</div>;
 }
 
 /** Avatar chữ cái — luôn là hình tròn giữ chỗ (không ảnh thật), `src` bỏ qua */

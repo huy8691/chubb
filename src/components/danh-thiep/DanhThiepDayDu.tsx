@@ -16,7 +16,7 @@ import { danhHieuCongKhai, fmtPhone, linkDanhThiep, taiVCard, theXemDuoc } from 
 export function DanhThiepDayDu({ ma }: { ma: string }) {
   const { data, ready } = useStore();
   const a = data.advisors.find((x) => x.ma === ma);
-  if (!ready) return <div className="wrap py-24 text-mut">Đang mở danh thiếp…</div>;
+  if (!ready) return <div className="wrap py-14 sm:py-24 text-mut">Đang mở danh thiếp…</div>;
   if (!theXemDuoc(a)) return <KhongXemDuoc />;
   return <TheDayDu a={a} />;
 }
@@ -24,7 +24,7 @@ export function DanhThiepDayDu({ ma }: { ma: string }) {
 /** E07 · Danh thiếp không tồn tại hoặc đã tạm ẩn (trạng thái của E03) */
 export function KhongXemDuoc() {
   return (
-    <div className="wrap py-28 max-w-[1000px] mx-auto text-center">
+    <div className="wrap py-16 sm:py-28 max-w-[1000px] mx-auto text-center">
       <H1 className="text-[34px]">Danh thiếp này hiện không xem được</H1>
       <Muted className="mt-5 text-[16px] max-w-[760px] mx-auto">Có thể mã Tư vấn viên không đúng, hoặc Tư vấn viên đang tạm ẩn danh thiếp. Bạn vẫn có thể tìm Tư vấn viên khác hoặc gọi hotline.</Muted>
       <div className="mt-8 flex flex-wrap gap-3 justify-center">
@@ -70,14 +70,16 @@ function TheDayDu({ a }: { a: Advisor }) {
     <>
       {/* Thẻ chính */}
       <section className="bg-xam">
-        <div className="wrap py-10 flex items-center gap-8">
-          <Avatar name={a.hoTen} size={120} src={a.avatar} />
-          <div className="flex-1 min-w-0">
-            <h1 className="font-serif font-semibold text-[24px] leading-tight text-den uppercase">{a.hoTen}</h1>
-            <p className="text-[14px] text-ink2 mt-2">{[a.chucDanh, ...dh, `Mã ${a.ma}`].join(" · ")}</p>
-            <p className="text-[12.5px] text-mut mt-2">Danh thiếp thật của Chubb Life Việt Nam — mã {a.ma}</p>
+        <div className="wrap py-10 flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-8">
+          <div className="flex items-center gap-5 sm:gap-8 min-w-0 flex-1">
+            <Avatar name={a.hoTen} size={120} src={a.avatar} />
+            <div className="min-w-0">
+              <h1 className="font-serif font-semibold text-[24px] leading-tight text-den uppercase">{a.hoTen}</h1>
+              <p className="text-[14px] text-ink2 mt-2">{[a.chucDanh, ...dh, `Mã ${a.ma}`].join(" · ")}</p>
+              <p className="text-[12.5px] text-mut mt-2">Danh thiếp thật của Chubb Life Việt Nam — mã {a.ma}</p>
+            </div>
           </div>
-          <div className="flex flex-col items-end gap-2 shrink-0">
+          <div className="flex flex-row flex-wrap sm:flex-col sm:items-end gap-3 sm:gap-2 shrink-0">
             <a href={zaloHref} target="_blank" rel="noopener" className={`${btnA} bg-blue text-white border border-blue hover:bg-blue2`}>Kết nối Zalo</a>
             {tvv && tvv.ma !== a.ma && <Button kind="ghost" size="sm" onClick={toggleLuu}>{daLuu ? "Đã lưu" : "Lưu danh thiếp"}</Button>}
             {tvv && tvv.ma === a.ma && <Button kind="ghost" size="sm" href={R.E04}>Sửa danh thiếp của tôi</Button>}
@@ -130,7 +132,7 @@ function TheDayDu({ a }: { a: Advisor }) {
         {(hs?.hienPhan?.nhanXet ?? true) && <KhoiBinhLuan advisorMa={a.ma} />}
 
         {/* CTA kết nối + chia sẻ */}
-        <section className="bg-xam rounded-sm p-8 flex flex-col lg:flex-row gap-8 items-start">
+        <section className="bg-xam rounded-sm p-5 sm:p-8 flex flex-col lg:flex-row gap-8 items-start">
           <div className="flex-1">
             <h2 className="font-serif font-semibold text-[26px] leading-tight text-den">Kết nối ngay với {a.hoTen}</h2>
             <div className="mt-6 flex flex-wrap gap-3">
@@ -195,7 +197,7 @@ function KhoiBinhLuan({ advisorMa }: { advisorMa: string }) {
       ) : (
         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-5">
           {list.map((c) => (
-            <figure key={c.id} className="bg-white border border-vien rounded-sm p-6 flex flex-col">
+            <figure key={c.id} className="bg-white border border-vien rounded-sm p-4 sm:p-6 flex flex-col">
               <blockquote className="text-[14px] text-den leading-relaxed flex-1">“{c.noiDung}”</blockquote>
               <figcaption className="mt-5 flex items-center gap-3"><Avatar name={c.tenKhach} size={32} /><span className="font-bold text-[13px] text-den">{c.tenKhach}</span></figcaption>
             </figure>

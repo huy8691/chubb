@@ -36,7 +36,7 @@ export default function Page() {
 
       {first && (
         <section className="wrap pt-12">
-          <Link href={R.F02(first.slug)} className="group grid grid-cols-1 lg:grid-cols-2 gap-10 items-center bg-xam rounded-sm p-8">
+          <Link href={R.F02(first.slug)} className="group grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-center bg-xam rounded-sm p-4 sm:p-8">
             <div className="aspect-[16/10] bg-white rounded-sm overflow-hidden"><span className="flex items-center justify-center w-full h-full bg-vien2 border border-[#D6D6D6] text-mut text-[13px]">Ảnh</span></div>
             <div>
               <div className="eyebrow mb-3">{cdOf(first.chuyenDeId)?.ten}</div>
@@ -60,12 +60,12 @@ export default function Page() {
         const list = all.filter((a) => a.chuyenDeId === c.id).slice(0, 6);
         return (
           <section key={c.id} className={cx("wrap pt-16", i === cds.length - 1 && "pb-16")}>
-            <div className="flex items-end justify-between gap-6 border-t border-vien2 pt-10">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6 border-t border-vien2 pt-10">
               <div>
                 <H2 className="uppercase tracking-wide text-[22px]">{c.ten}</H2>
                 <Muted className="mt-1">{c.moTa} · {all.filter((a) => a.chuyenDeId === c.id).length} bài</Muted>
               </div>
-              <MoreLink href={R.F03(c.slug)} />
+              <div className="shrink-0"><MoreLink href={R.F03(c.slug)} /></div>
             </div>
             {list.length === 0 ? (
               <Muted className="mt-6">Chuyên đề này chưa có bài viết.</Muted>

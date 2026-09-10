@@ -61,21 +61,21 @@ export default function Page() {
         </div>
 
         <aside className="space-y-6">
-          <Card className="p-5">
+          <Card className="p-4 sm:p-5">
             <H3>Tìm mẫu</H3>
             <SearchBox className="mt-3" value={q} onChange={(v) => { setQ(v); setTrang(1); }} placeholder="Tên mẫu…" />
           </Card>
-          <Card className="p-5">
+          <Card className="p-4 sm:p-5">
             <H3>Dùng nhiều nhất</H3>
             <ol className="mt-3 space-y-2 text-[13px] text-ink2">{dungNhieu.map((m, i) => <li key={m.id}>{i + 1}. {m.ten} · {fmtNum(m.soAnhDaTao)} ảnh</li>)}</ol>
           </Card>
-          <Card className="p-5">
+          <Card className="p-4 sm:p-5">
             <H3>Ảnh thực tế từ Tư vấn viên</H3>
             <Muted className="mt-1 text-[13px]">Ảnh <b>đã hoàn thành</b> của đồng nghiệp, tạo từ các mẫu này — xem để lấy cảm hứng.</Muted>
             <Button className="mt-4" kind="secondary" href={R.D07}>Xem ảnh thực tế</Button>
           </Card>
           {!daDangNhap && (
-            <Card className="p-5">
+            <Card className="p-4 sm:p-5">
               <div className="font-bold text-[15px] text-den">Bạn là Tư vấn viên Chubb Life?</div>
               <Muted className="mt-1 text-[13px]">Đăng nhập để dùng mẫu và tạo ảnh của bạn.</Muted>
               <Button className="mt-4" href={`${R.G01}?next=${encodeURIComponent(R.D08)}`}>Đăng nhập</Button>

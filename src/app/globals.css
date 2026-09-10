@@ -60,7 +60,14 @@ h1, h2, h3, .font-serif {
   width: 100%;
   max-width: 1440px; /* khớp frame Figma 1440 */
   margin-inline: auto;
-  padding-inline: 64px; /* nội dung 1312 = Figma (padding 64 mỗi bên) */
+  padding-inline: 20px; /* mobile: lề gọn để tận dụng bề ngang */
+}
+/* Lề tăng dần theo màn — desktop giữ 64px như Figma (nội dung 1312) */
+@media (min-width: 640px) {
+  .wrap { padding-inline: 40px; }
+}
+@media (min-width: 1024px) {
+  .wrap { padding-inline: 64px; }
 }
 
 @utility eyebrow {

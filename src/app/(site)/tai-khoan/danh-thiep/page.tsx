@@ -77,7 +77,7 @@ export default function Page() {
   const noiBat = [form.namKinhNghiem && `${form.namKinhNghiem} năm kinh nghiệm`, form.namMDRT && `${form.namMDRT} năm liên tiếp MDRT`].filter(Boolean) as string[];
 
   const The = () => (
-    <div className="bg-white border border-vien rounded-sm p-6">
+    <div className="bg-white border border-vien rounded-sm p-4 sm:p-6">
       <div className="aspect-[4/3] bg-xam rounded-sm overflow-hidden flex items-center justify-center text-mut text-[12px]">{form.avatar ? <img src={form.avatar} alt="Ảnh chân dung" className="w-full h-full object-cover" /> : "Ảnh chân dung"}</div>
       <div className="mt-5 font-serif font-semibold text-[22px] text-den uppercase leading-tight">{form.hoTen || "Họ và tên"}</div>
       <div className="text-[13px] text-ink2 mt-1">{form.chucDanh}{tvv.danhHieu[0] ? ` · ${tvv.danhHieu[0]!.ten}` : ""}</div>
@@ -111,7 +111,7 @@ export default function Page() {
               <Field label="Họ và tên" error={loi.hoTen}><Input value={form.hoTen} onChange={(e) => set("hoTen", e.target.value)} /></Field>
               <Field label="Mã số Tư vấn viên" hint="Do Chubb cấp — không sửa được"><Input value={tvv.ma} disabled /></Field>
               <Field label="Ảnh chân dung" className="md:col-span-2">
-                <div className="border border-dashed border-vien rounded-sm p-5 flex items-center justify-between gap-4">
+                <div className="border border-dashed border-vien rounded-sm p-4 sm:p-5 flex items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
                     <div className="size-16 rounded-sm bg-xam overflow-hidden flex items-center justify-center text-[11px] text-mut">{form.avatar ? <img src={form.avatar} alt="" className="w-full h-full object-cover" /> : "Ảnh"}</div>
                     <span className="text-[12.5px] text-ink2">Kéo thả ảnh vào đây · JPG/PNG · tỉ lệ 4:3</span>
@@ -155,18 +155,18 @@ export default function Page() {
                 <div className="text-[12.5px] text-ink2 mb-2">Hành trình nghề nghiệp · tối đa 4 mốc (năm · tiêu đề · 1 câu)</div>
                 <div className="space-y-2">
                   {form.hanhTrinh.map((m, i) => (
-                    <div key={i} className="grid grid-cols-[80px_200px_1fr_auto] gap-2">
+                    <div key={i} className="flex flex-col sm:grid sm:grid-cols-[80px_200px_1fr_auto] gap-2 max-sm:border max-sm:border-vien2 max-sm:rounded-sm max-sm:p-3">
                       <Input value={m.nam} placeholder="Năm" onChange={(e) => set("hanhTrinh", form.hanhTrinh.map((x, k) => k === i ? { ...x, nam: e.target.value } : x))} />
                       <Input value={m.tieuDe} placeholder="Tiêu đề" onChange={(e) => set("hanhTrinh", form.hanhTrinh.map((x, k) => k === i ? { ...x, tieuDe: e.target.value } : x))} />
                       <Input value={m.moTa} placeholder="Mô tả 1 câu…" onChange={(e) => set("hanhTrinh", form.hanhTrinh.map((x, k) => k === i ? { ...x, moTa: e.target.value } : x))} />
-                      <button type="button" aria-label="Xoá mốc" onClick={() => set("hanhTrinh", form.hanhTrinh.filter((_, k) => k !== i))} className="text-mut hover:text-red-fg px-2">✕</button>
+                      <button type="button" aria-label="Xoá mốc" onClick={() => set("hanhTrinh", form.hanhTrinh.filter((_, k) => k !== i))} className="text-mut hover:text-red-fg px-2 self-end sm:self-center whitespace-nowrap">✕<span className="sm:hidden"> Xoá mốc</span></button>
                     </div>
                   ))}
                 </div>
                 {form.hanhTrinh.length < 4 && <Button kind="secondary" size="sm" className="mt-3" onClick={() => set("hanhTrinh", [...form.hanhTrinh, { nam: "", tieuDe: "", moTa: "" }])}>+ Thêm mốc</Button>}
               </div>
 
-              <Card className="p-5">
+              <Card className="p-4 sm:p-5">
                 <div className="font-bold text-[14px] text-den mb-3">Hiện từng phần trên trang công khai</div>
                 <div className="space-y-3">
                   <Checkbox label="Hành trình nghề nghiệp" checked={form.hienPhan.hanhTrinh} onChange={(e) => set("hienPhan", { ...form.hienPhan, hanhTrinh: e.target.checked })} />

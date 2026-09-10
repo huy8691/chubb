@@ -48,7 +48,7 @@ export default function Page() {
     <>
       {/* Hero */}
       <section className="bg-xam">
-        <div className="wrap py-16 grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-10 items-center">
+        <div className="wrap py-10 sm:py-16 grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-10 items-center">
           <div>
             <Eyebrow className="mb-3">Ngôi nhà chung của Tư vấn viên Chubb Life</Eyebrow>
             <H1 className="text-[46px]">Chọn Điều Đáng Để Toàn Tâm</H1>
@@ -65,7 +65,7 @@ export default function Page() {
       {/* Số liệu */}
       <section className="wrap py-10 grid grid-cols-2 lg:grid-cols-4 gap-4">
         {SO_LIEU.map(([v, l]) => (
-          <Card key={l} className="p-5">
+          <Card key={l} className="p-4 sm:p-5">
             <div className="font-serif font-semibold text-[22px] text-blue">{v}</div>
             <div className="text-[13px] text-ink2 mt-1">{l}</div>
           </Card>
@@ -101,8 +101,8 @@ export default function Page() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {congCu.map((c) => (
             <Link key={c.ten} href={c.href} className="block bg-white border border-vien rounded-sm overflow-hidden hover:border-blue">
-              <ImageBox src={c.anh} alt={c.ten} ratio="16/9" className="rounded-none" />
-              <div className="p-5">
+              <ImageBox src={c.anh} alt={c.ten} ratio="16/9" bordered={false} />
+              <div className="p-4 sm:p-5">
                 <div className="font-bold text-[15px] text-den">{c.ten}</div>
                 <p className="text-[13px] text-ink2 mt-2 leading-relaxed">{c.moTa}</p>
                 {c.canDangNhap && !tvv && <Chip tone="amber" className="mt-3">Cần đăng nhập</Chip>}
@@ -121,8 +121,8 @@ export default function Page() {
               const cd = data.chuyenDe.find((c) => c.id === a.chuyenDeId);
               return (
                 <Link key={a.id} href={R.F02(a.slug)} className="block bg-white border border-vien rounded-sm overflow-hidden hover:border-blue">
-                  <ImageBox src={a.anh} alt={a.altAnh} ratio="16/9" className="rounded-none" />
-                  <div className="p-5">
+                  <ImageBox src={a.anh} alt={a.altAnh} ratio="16/9" bordered={false} />
+                  <div className="p-4 sm:p-5">
                     <Eyebrow className="text-[11px]">{cd?.ten}</Eyebrow>
                     <div className="font-bold text-[16px] text-den mt-2 line-clamp-2">{a.tieuDe}</div>
                     <div className="text-[12px] text-mut mt-3">6 phút đọc</div>
@@ -139,7 +139,7 @@ export default function Page() {
         <SectionHead title={<span className="text-[22px]">Toàn Tâm Dẫn Đầu — vinh danh tháng</span>} right={<MoreLink href={R.C01} />} />
         {dauBang?.tvv ? (
           <>
-            <Card className="p-6 grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8 items-center">
+            <Card className="p-4 sm:p-6 grid grid-cols-[96px_1fr] md:grid-cols-[200px_1fr] gap-5 md:gap-8 items-center">
               <ImageBox src="/img/tvv-thang.png" alt={dauBang.tvv.hoTen} ratio="1/1" />
               <div>
                 <Eyebrow className="mb-2">{tenHangMuc} · {thang ? thangLabel(thang) : ""}</Eyebrow>
@@ -148,23 +148,23 @@ export default function Page() {
                 <div className="mt-5"><XemNhanhButton ma={dauBang.tvv.ma} /></div>
               </div>
             </Card>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
               {keTiep.map((n) => n.tvv && (
-                <Card key={n.advisorMa} className="p-5">
-                  <div className="flex items-center gap-3">
+                <Card key={n.advisorMa} className="p-4 flex items-center gap-3 sm:block">
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
                     <Avatar name={n.tvv.hoTen} size={48} />
-                    <div>
-                      <div className="font-bold text-[14px] text-den">{n.tvv.hoTen}</div>
-                      <div className="text-[12px] text-ink2">{tenHangMuc} 2026 · {tinh(n.tvv.vanPhong)}</div>
+                    <div className="min-w-0">
+                      <div className="font-bold text-[14px] text-den truncate">{n.tvv.hoTen}</div>
+                      <div className="text-[12px] text-ink2 truncate">{tenHangMuc} 2026 · {tinh(n.tvv.vanPhong)}</div>
                     </div>
                   </div>
-                  <div className="mt-4"><XemNhanhButton ma={n.tvv.ma} kind="ghost" /></div>
+                  <div className="shrink-0 sm:mt-4"><XemNhanhButton ma={n.tvv.ma} kind="ghost" /></div>
                 </Card>
               ))}
             </div>
           </>
         ) : (
-          <Card className="p-8 text-center text-ink2">Tháng vinh danh sẽ được công bố vào đầu tháng.</Card>
+          <Card className="p-5 sm:p-8 text-center text-ink2">Tháng vinh danh sẽ được công bố vào đầu tháng.</Card>
         )}
         <div className="mt-6"><Button kind="secondary" href={R.C01}>Xem bảng vinh danh</Button></div>
       </section>
@@ -184,7 +184,7 @@ export default function Page() {
 
       {/* CTA */}
       <section className="wrap py-14">
-        <div className="bg-hong-soft border border-hong/20 rounded-sm px-8 py-10 flex flex-wrap items-center justify-between gap-6">
+        <div className="bg-hong-soft border border-hong/20 rounded-sm px-5 sm:px-8 py-10 flex flex-wrap items-center justify-between gap-6">
           <H2>Sẵn sàng bắt đầu hành trình Toàn Tâm?</H2>
           <Button kind="recruit" href={`${R.B01}#ung-tuyen`}>Ứng tuyển ngay</Button>
         </div>

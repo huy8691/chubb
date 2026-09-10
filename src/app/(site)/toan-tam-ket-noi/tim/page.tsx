@@ -12,7 +12,7 @@ import { danhHieuCongKhai, khongDau, laMa7So, namKinhNghiem, theXemDuoc, tinhTha
 const PAGE = 5;
 
 export default function Page() {
-  return <Suspense fallback={<div className="wrap py-24 text-mut">Đang tìm…</div>}><KetQuaTim /></Suspense>;
+  return <Suspense fallback={<div className="wrap py-14 sm:py-24 text-mut">Đang tìm…</div>}><KetQuaTim /></Suspense>;
 }
 
 function KetQuaTim() {
@@ -73,7 +73,7 @@ function KetQuaTim() {
           ) : (
             <div className="mt-5 space-y-4">
               {rows.map((a) => (
-                <Card key={a.ma} className="p-5 flex items-center gap-5">
+                <Card key={a.ma} className="p-4 sm:p-5 flex items-center gap-5">
                   <Avatar name={a.hoTen} size={96} src={a.avatar} />
                   <div className="flex-1 min-w-0">
                     <div className="text-[12px] font-bold text-blue uppercase">Mã {a.ma} · {tinhThanh(a.vanPhong)}</div>
@@ -91,7 +91,7 @@ function KetQuaTim() {
           )}
         </div>
 
-        <aside className="bg-xam rounded-sm p-6 self-start">
+        <aside className="bg-xam rounded-sm p-4 sm:p-6 self-start">
           <div className="font-bold text-[17px] text-den">Mẹo tìm</div>
           <ul className="mt-4 space-y-3 text-[13.5px] text-ink2 list-disc pl-5">
             <li>Mã TVV có 7 chữ số — in trên thẻ, ngay dưới mã QR</li>

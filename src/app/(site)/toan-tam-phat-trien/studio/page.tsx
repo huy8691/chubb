@@ -10,7 +10,8 @@ import { fmtDate } from "@/lib/seed";
 import type { StudioImage } from "@/lib/types";
 import { RequireTVV } from "@/components/site/AccountShell";
 import { Button, Card, Checkbox, Chip, Eyebrow, Field, H1, H2, ImageBox, Input, MoreLink, Muted, cx, useFlash } from "@/components/ui";
-import { StudioPreview, tiLeLabel, tiLeToRatio } from "@/components/cong-cu/StudioPreview";
+import { StudioPreview, tiLeLabel, taiAnhStudio } from "@/components/cong-cu/StudioPreview";
+import { MauStudioCard } from "@/components/cong-cu/MauStudioCard";
 
 const GIOI_HAN = 32;
 
@@ -38,6 +39,7 @@ function Studio() {
   const m = mau.find((x) => x.id === mauId) ?? mau[0];
   const [anh, setAnh] = useState<string>();
   const [zoom, setZoom] = useState(1);
+  const [offset, setOffset] = useState({ x: 0, y: 0 }); // vị trí ảnh trong khung (%), kéo để chỉnh
   const [loiAnh, setLoiAnh] = useState("");
   const [hoTen, setHoTen] = useState(tvv.hoTen);
   const [chucDanh, setChucDanh] = useState(tvv.chucDanh);
@@ -50,7 +52,7 @@ function Studio() {
     if (!f) return;
     if (!/image\/(jpeg|png)/.test(f.type)) { setLoiAnh("Chỉ nhận ảnh JPG hoặc PNG."); return; }
     if (f.size > 5 * 1024 * 1024) { setLoiAnh("Ảnh vượt 5MB — chọn ảnh nhỏ hơn."); return; }
-    setLoiAnh(""); setAnh(await docAnhThuNho(f));
+    setLoiAnh(""); setAnh(await docAnhThuNho(f)); setZoom(1); setOffset({ x: 0, y: 0 });
   };
   const taoAnh = (trangThai: StudioImage["trangThai"]): StudioImage => ({ id: `as${Date.now()}`, templateId: m.id, advisorMa: tvv.ma, anh: anh ?? m.anh, tao: new Date().toISOString(), trangThai, dongYCongKhai: trangThai === "cho-duyet", phienBanMau: m.phienBan });
   const luu = () => { actions.update("studioImages", (l) => [taoAnh("rieng-tu"), ...l]); flash("Đã lưu vào Ảnh Studio của tôi"); };
@@ -59,7 +61,7 @@ function Studio() {
 
   const mauKhac = mau.filter((x) => x.id !== m.id).sort((a, b) => b.soAnhDaTao - a.soAnhDaTao).slice(0, 6); // 09/09: khối cuối là mẫu khác để tham khảo, không phải ảnh TVV (D07 đi từ D08)
 
-  if (!m) return <div className="wrap py-16"><Card className="p-8 text-center"><H2>Studio chưa có Mẫu Studio nào</H2><Muted className="mt-2">Chubb Life đang chuẩn bị mẫu. Bạn quay lại sau nhé.</Muted></Card></div>;
+  if (!m) return <div className="wrap py-10 sm:py-16"><Card className="p-5 sm:p-8 text-center"><H2>Studio chưa có Mẫu Studio nào</H2><Muted className="mt-2">Chubb Life đang chuẩn bị mẫu. Bạn quay lại sau nhé.</Muted></Card></div>;
 
   return (
     <>
@@ -73,7 +75,7 @@ function Studio() {
 
       <section className="wrap py-10 grid grid-cols-1 lg:grid-cols-[1fr_560px] gap-8 items-start">
         <div className="space-y-8">
-          <Card className="p-6">
+          <Card className="p-4 sm:p-6">
             <div className="font-bold text-[16px] text-den">Bước 1 — Mẫu đã chọn</div>
             <div className="mt-4 flex items-start gap-5">
               <div className="w-[130px] shrink-0 rounded-sm border border-blue bg-blue-soft p-2">
@@ -88,7 +90,7 @@ function Studio() {
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-4 sm:p-6">
             <div className="font-bold text-[16px] text-den">Bước 2 — Tải ảnh chân dung</div>
             <input ref={fileRef} type="file" accept="image/png,image/jpeg" hidden onChange={(e) => chonTep(e.target.files?.[0])} />
             <button type="button" onClick={() => fileRef.current?.click()} onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); chonTep(e.dataTransfer.files?.[0]); }} className={cx("mt-4 w-full h-24 rounded-sm border border-dashed flex items-center justify-center gap-3 text-[13px]", loiAnh ? "border-red-fg text-red-fg" : "border-vien text-mut hover:border-blue hover:text-blue")}>
@@ -98,7 +100,7 @@ function Studio() {
             <label className="mt-4 flex items-center gap-3 text-[13px] text-ink2">Thu phóng<input type="range" min={1} max={2} step={0.05} value={zoom} onChange={(e) => setZoom(Number(e.target.value))} disabled={!anh} className="flex-1 accent-blue" /><span className="w-10 text-right">{Math.round(zoom * 100)}%</span></label>
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-4 sm:p-6">
             <div className="font-bold text-[16px] text-den">Bước 3 — Thông tin hiển thị</div>
             <div className="mt-4 space-y-4 max-w-[600px]">
               <Field label="Họ tên" count={`${hoTen.length}/${GIOI_HAN}`}><Input value={hoTen} maxLength={GIOI_HAN} onChange={(e) => setHoTen(e.target.value)} /></Field>
@@ -112,14 +114,20 @@ function Studio() {
           </Card>
         </div>
 
-        <Card className="p-6 lg:sticky lg:top-20">
+        <Card className="p-4 sm:p-6 lg:sticky lg:top-20">
           <div className="font-bold text-[16px] text-den">Xem trước</div>
-          <div className="mt-4 max-w-[380px] mx-auto"><StudioPreview template={m} portrait={anh} zoom={zoom} hoTen={hoTen} chucDanh={chucDanh} soDienThoai={sdt} /></div>
+          <div className="mt-4 max-w-[380px] mx-auto"><StudioPreview template={m} portrait={anh} zoom={zoom} offsetX={offset.x} offsetY={offset.y} onOffsetChange={(x, y) => setOffset({ x, y })} hoTen={hoTen} chucDanh={chucDanh} soDienThoai={sdt} /></div>
+          {anh && (
+            <div className="mt-2 flex items-center justify-center gap-2 text-[12px] text-ink2">
+              <span>{zoom > 1 ? "Kéo ảnh trong khung để dời vị trí" : "Phóng to rồi kéo ảnh để dời vị trí"}</span>
+              {(offset.x !== 0 || offset.y !== 0) && <button type="button" className="text-blue font-bold hover:underline" onClick={() => setOffset({ x: 0, y: 0 })}>Đặt lại vị trí</button>}
+            </div>
+          )}
           <Muted className="mt-3 text-[12px] text-center">Phiên bản mẫu v{m.phienBan ?? 1} · cập nhật {fmtDate(m.capNhat)}</Muted>
           <div className="mt-5">
             <div className="text-[11.5px] font-bold tracking-wider text-mut">LƯU CHO RIÊNG BẠN</div>
             <div className="mt-2 flex flex-wrap items-center gap-2">
-              <Button size="sm" onClick={() => flash("Đã tải ảnh về máy")}>Tải ảnh</Button>
+              <Button size="sm" onClick={() => taiAnhStudio({ template: m, portrait: anh, zoom, offsetX: offset.x, offsetY: offset.y, hoTen, chucDanh, soDienThoai: sdt }).then(() => flash("Đã tải ảnh về máy"))}>Tải ảnh</Button>
               <Button size="sm" kind="secondary" onClick={luu}>Lưu vào Ảnh Studio của tôi</Button>
             </div>
             <Muted className="mt-2 text-[12px]">Chỉ bạn thấy. Ảnh nằm ở Trang cá nhân › Đã lưu › Ảnh Studio của tôi.</Muted>
@@ -135,16 +143,10 @@ function Studio() {
 
       <section className="bg-xam">
         <div className="wrap py-14">
-          <div className="flex items-end justify-between gap-6 mb-6"><H2>Tham khảo mẫu khác</H2><MoreLink href={R.D08} /></div>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-6 mb-6"><H2>Tham khảo mẫu khác</H2><div className="shrink-0"><MoreLink href={R.D08} /></div></div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {mauKhac.map((x) => (
-              <Card key={x.id} className="p-3 flex flex-col">
-                <ImageBox src={x.anh} ratio={tiLeToRatio(x.tiLe)} />
-                <div className="mt-3 text-[13px] font-bold text-den truncate">{x.ten}</div>
-                <div className="text-[12px] text-ink2 mt-0.5 truncate">{tiLeLabel(x.tiLe)} · phiên bản v{x.phienBan ?? 1}</div>
-                <div className="text-[12px] text-mut">Cập nhật {fmtDate(x.capNhat)}</div>
-                <Button size="sm" kind="secondary" className="mt-3 w-full" onClick={() => dungMau(x.id)}>Dùng mẫu này</Button>
-              </Card>
+              <MauStudioCard key={x.id} m={x} onDung={dungMau} />
             ))}
           </div>
         </div>

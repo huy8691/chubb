@@ -69,11 +69,11 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
         </div>
 
         <aside className="space-y-8 lg:sticky lg:top-24">
-          <div className="bg-white border border-vien rounded-sm p-5">
+          <div className="bg-white border border-vien rounded-sm p-4 sm:p-5">
             <H3 className="mb-3">{isAll ? "Tìm bài viết" : "Tìm trong chuyên đề"}</H3>
             <SearchBox value={q} onChange={(v) => { setQ(v); setPage(1); }} placeholder="Tìm theo tiêu đề bài viết" />
           </div>
-          <div className="bg-white border border-vien rounded-sm p-5">
+          <div className="bg-white border border-vien rounded-sm p-4 sm:p-5">
             <H3 className="mb-3">Chuyên đề</H3>
             <ul className="divide-y divide-vien2">
               <li className="flex items-center justify-between py-2.5 text-[14px]">
@@ -89,7 +89,7 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
             </ul>
           </div>
           {top.length > 0 && (
-            <div className="bg-white border border-vien rounded-sm p-5">
+            <div className="bg-white border border-vien rounded-sm p-4 sm:p-5">
               <H3 className="mb-4">Bài xem nhiều nhất</H3>
               <TopList list={top} />
             </div>

@@ -70,7 +70,7 @@ export default function Page() {
         )}
         <Pagination page={p} pages={pages} onChange={setTrang} />
 
-        <Card className="mt-10 p-6 flex flex-wrap items-center justify-between gap-6 bg-blue-soft/40">
+        <Card className="mt-10 p-4 sm:p-6 flex flex-wrap items-center justify-between gap-6 bg-blue-soft/40">
           <div>
             <H3>Bạn là Tư vấn viên Chubb Life?</H3>
             <Muted className="mt-1">Đăng nhập để xem thêm bảng minh hoạ, biểu mẫu hồ sơ và hướng dẫn quy trình nội bộ.</Muted>

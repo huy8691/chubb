@@ -72,7 +72,7 @@ export function TheTVV({ v, sub, thangId, hangMucId, size = "md", chiTiet = true
   const dt = danhThiep && v.coTaiKhoan;
   return (
     <div className="bg-white border border-vien rounded-sm overflow-hidden flex flex-col">
-      <ImageBox src={anhTVV(v.ma)} alt={v.hoTen} ratio={sm ? "1/1" : "3/4"} />
+      <ImageBox src={anhTVV(v.ma)} alt={v.hoTen} ratio={sm ? "1/1" : "3/4"} bordered={false} />
       <div className="p-4 flex flex-col flex-1">
         <div className={cx("font-bold text-den", sm ? "text-[14px]" : "text-[16px]")}>{chiTiet && !dt ? <Link href={linkC02(v.ma, thangId, hangMucId)} className="hover:text-blue">{v.hoTen}</Link> : v.hoTen}</div>
         <div className={cx("text-ink2", sm ? "text-[12px]" : "text-[13px] mt-0.5")}>{sub.replace(/ — .*$/, "")}</div>

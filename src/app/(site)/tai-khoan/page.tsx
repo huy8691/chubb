@@ -51,7 +51,7 @@ export default function Page() {
       {node}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Stat value={tvv.luotXemThangNay ?? 0} label="lượt xem danh thiếp tháng này" href={R.E04} />
-        <div className="bg-white border border-vien rounded-sm p-5">
+        <div className="bg-white border border-vien rounded-sm p-4 sm:p-5">
           <div className="font-serif font-semibold text-[34px] text-blue leading-none">{data.ranking.find((r) => r.advisorMa === tvv.ma)?.luotDuocTinh ?? tvv.luotChiaSeThangNay}</div>
           <div className="mt-2 text-[14px] text-ink2">lượt chia sẻ được tính tháng này · <Link href={R.S03} className="text-blue font-bold hover:underline">Cách đếm</Link></div>
         </div>
@@ -65,7 +65,7 @@ export default function Page() {
           {viec.length === 0 ? <div className="px-5 py-6 text-[14px] text-ink2">Không có việc nào cần làm — mọi thứ đã xong.</div> : (
             <ul>
               {viec.map((v, i) => (
-                <li key={i} className="flex items-center justify-between gap-4 px-5 py-4 border-b border-vien2 last:border-0 text-[14px] text-den">
+                <li key={i} className="flex items-center justify-between gap-4 px-4 py-3 sm:px-5 sm:py-4 border-b border-vien2 last:border-0 text-[14px] text-den">
                   <span>{v.text}</span>
                   {v.href ? <Link href={v.href} className="text-blue font-bold text-[13px] shrink-0">{v.nut}</Link> : <button type="button" onClick={v.onClick} className="text-blue font-bold text-[13px] shrink-0">{v.nut}</button>}
                 </li>
@@ -76,16 +76,16 @@ export default function Page() {
       </section>
 
       <section id="danh-hieu" className="scroll-mt-24">
-        <div className="flex items-end justify-between gap-4 mb-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-4 mb-4">
           <H2>Danh hiệu & vinh danh</H2>
-          <Link href={R.C01} className="text-[14px] font-bold text-blue hover:underline">Xem trang Vinh danh công khai</Link>
+          <Link href={R.C01} className="text-[14px] font-bold text-blue hover:underline shrink-0">Xem trang Vinh danh công khai</Link>
         </div>
         <Card>
           {tvv.danhHieu.length === 0 ? <div className="px-5 py-6 text-[14px] text-ink2">Bạn chưa có danh hiệu nào được Chubb ghi nhận.</div> : (
             <ul>
               {tvv.danhHieu.map((d) => {
                 return (
-                  <li key={d.id} className="flex items-center gap-4 px-5 py-4 border-b border-vien2 last:border-0">
+                  <li key={d.id} className="flex items-center gap-4 px-4 py-3 sm:px-5 sm:py-4 border-b border-vien2 last:border-0">
                     <div className="size-12 shrink-0 rounded-sm bg-blue-soft text-blue font-bold flex items-center justify-center text-[11px]" aria-label="Huy hiệu">{tenHangMuc(d.hangMucId).split(" ").map((s) => s[0]).join("").slice(0, 3)}</div>
                     <div className="flex-1 min-w-0">
                       <div className="font-bold text-[15px] text-den">{d.ten}</div>
@@ -108,7 +108,7 @@ export default function Page() {
           {loiChuc.length === 0 ? <div className="px-5 py-6 text-[14px] text-ink2">Chưa có lời chúc nào.</div> : (
             <ul>
               {(moRongLC ? loiChuc : loiChuc.slice(0, 3)).map((l) => (
-                <li key={l.id} className="flex items-start gap-4 px-5 py-4 border-b border-vien2 last:border-0">
+                <li key={l.id} className="flex items-start gap-4 px-4 py-3 sm:px-5 sm:py-4 border-b border-vien2 last:border-0">
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-baseline gap-3"><span className="font-bold text-[15px] text-den">{tenGui(l.nguoiGuiMa)}</span><span className="text-[12.5px] text-mut">{fmtDateTime(l.ngay)}</span></div>
                     <p className="text-[13.5px] text-ink2 mt-1">{l.noiDung}</p>

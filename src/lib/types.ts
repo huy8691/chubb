@@ -120,6 +120,10 @@ export interface StudioTemplate {
   /** Thêm cho H02a — hoạ tiết thương hiệu (1–4) và tên tệp ảnh nền đã tải lên */
   hoaTiet?: number;
   tenTep?: string;
+  /** Trang trí kiểu mẫu thiết kế (Canva): nhãn ruy-băng, màu nhấn, bố cục */
+  nhan?: string;
+  mauNhan?: string;
+  boCuc?: "co-ban" | "dai-duoi" | "vien";
   trangThai: TrangThaiXuatBan | "luu-tru";
   soAnhDaTao: number;
   capNhat: string;

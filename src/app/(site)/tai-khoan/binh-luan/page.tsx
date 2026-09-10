@@ -47,7 +47,7 @@ export default function Page() {
       {ds.length === 0 ? <EmptyState title="Chưa có bình luận nào" desc="Khách để lại bình luận trên danh thiếp công khai của bạn sẽ hiện ở đây." /> : (
         <div className="space-y-3">
           {ds.map((b) => (
-            <div key={b.id} className="bg-white border border-vien rounded-sm p-5">
+            <div key={b.id} className="bg-white border border-vien rounded-sm p-4 sm:p-5">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3 flex-wrap">
                   <span className="font-bold text-[14px] text-den">{b.tenKhach}</span>

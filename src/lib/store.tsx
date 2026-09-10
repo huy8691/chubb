@@ -88,7 +88,7 @@ interface StoreValue {
 
 const Ctx = createContext<StoreValue | null>(null);
 /** Đổi số này mỗi lần sửa seed để phiên cũ trong sessionStorage không che dữ liệu mới */
-const SEED_VERSION = "2026-09-10e";
+const SEED_VERSION = "2026-09-10g";
 const KEY_DATA = `ecard2-demo-data-${SEED_VERSION}`;
 const KEY_SESSION = "ecard2-demo-session";
 const GUEST: Session = { role: "guest" };

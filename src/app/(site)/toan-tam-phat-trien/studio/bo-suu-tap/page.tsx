@@ -69,15 +69,15 @@ export default function Page() {
         </div>
 
         <aside className="space-y-6">
-          <Card className="p-5">
+          <Card className="p-4 sm:p-5">
             <H3>Tìm ảnh</H3>
             <SearchBox className="mt-3" value={q} onChange={(v) => { setQ(v); setTrang(1); }} placeholder="Tên Tư vấn viên, mã, tên mẫu…" />
           </Card>
-          <Card className="p-5">
+          <Card className="p-4 sm:p-5">
             <H3>Xem nhiều tuần này</H3>
             <ol className="mt-3 space-y-2 text-[13px] text-ink2">{xemNhieu.map((a, i) => <li key={a.id}>{i + 1}. {tenMau(a.templateId)} — {tvv(a.advisorMa)?.hoTen}</li>)}</ol>
           </Card>
-          <Card className="p-5">
+          <Card className="p-4 sm:p-5">
             <H3>Góp ảnh của bạn</H3>
             <div className="mt-3 font-bold text-[15px] text-den">Bạn là Tư vấn viên Chubb Life?</div>
             <Muted className="mt-1 text-[13px]">Chọn một Mẫu Studio, tạo ảnh của bạn, rồi bấm “Hiển thị công khai” để ảnh xuất hiện tại đây cho đồng nghiệp tham khảo.</Muted>

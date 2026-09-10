@@ -19,8 +19,8 @@ function ChiaSe() {
     setKq(id ? data.quizResultTypes.find((t) => t.id === id) : kieuKetQua(docDapAn(), data.quizResultTypes));
   }, [sp, data.quizResultTypes]);
 
-  if (kq === null) return <div className="wrap py-16 text-mut">Đang mở kết quả…</div>;
-  if (!kq) return <div className="wrap py-16"><EmptyState title="Liên kết kết quả không còn hiệu lực" desc="Bạn có thể tự làm trắc nghiệm để nhận kết quả của mình." action={<Button href={R.D04}>Làm trắc nghiệm của bạn</Button>} /></div>;
+  if (kq === null) return <div className="wrap py-10 sm:py-16 text-mut">Đang mở kết quả…</div>;
+  if (!kq) return <div className="wrap py-10 sm:py-16"><EmptyState title="Liên kết kết quả không còn hiệu lực" desc="Bạn có thể tự làm trắc nghiệm để nhận kết quả của mình." action={<Button href={R.D04}>Làm trắc nghiệm của bạn</Button>} /></div>;
 
   const saoChep = async () => { try { await navigator.clipboard.writeText(window.location.href); } catch {} flash("Đã sao chép liên kết"); };
 
@@ -28,7 +28,7 @@ function ChiaSe() {
     <>
       <section className="bg-xam">
         <div className="wrap py-12 flex flex-col items-center text-center">
-          <div className="w-full max-w-[720px] rounded-sm overflow-hidden bg-blue text-white flex items-center gap-8 px-10" style={{ aspectRatio: "1200/630" }} aria-label="Ảnh chia sẻ 1200×630">
+          <div className="w-full max-w-[720px] rounded-sm overflow-hidden bg-blue text-white flex items-center gap-8 px-5 sm:px-10" style={{ aspectRatio: "1200/630" }} aria-label="Ảnh chia sẻ 1200×630">
             {kq.anhChiaSe ? <span className="flex items-center justify-center w-full h-full bg-vien2 border border-[#D6D6D6] text-mut text-[13px]">Ảnh</span> : (
               <>
                 <div className="size-28 shrink-0 rounded-full bg-white/15 flex items-center justify-center text-[56px]" aria-label="Huy hiệu">{kq.huyHieu}</div>
@@ -47,7 +47,7 @@ function ChiaSe() {
       <section className="wrap py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[["Điểm mạnh", kq.diemManh], ["Phong cách tư vấn", kq.phongCach], ["Phù hợp với", kq.phuHopVoi]].map(([t, v]) => (
-            <div key={t} className="bg-xam rounded-sm p-5"><div className="font-bold text-[15px] text-den">{t}</div><p className="mt-2 text-[14px] text-ink2 leading-relaxed">{v}</p></div>
+            <div key={t} className="bg-xam rounded-sm p-4 sm:p-5"><div className="font-bold text-[15px] text-den">{t}</div><p className="mt-2 text-[14px] text-ink2 leading-relaxed">{v}</p></div>
           ))}
         </div>
         <div className="mt-10 flex flex-wrap justify-center gap-3">

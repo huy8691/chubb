@@ -35,7 +35,7 @@ export default function Page() {
 
   const Title = ({ children }: { children: React.ReactNode }) => <h2 className="text-[16px] font-bold text-den tracking-wide uppercase mb-4">{children}</h2>;
   const Row = ({ thumb, title, sub, ngay, mo, boLuuId }: { thumb: React.ReactNode; title: string; sub: string; ngay: string; mo: React.ReactNode; boLuuId: string }) => (
-    <li className="flex items-center gap-5 px-5 py-4 border-b border-vien2 last:border-0">
+    <li className="flex items-center gap-5 px-4 py-3 sm:px-5 sm:py-4 border-b border-vien2 last:border-0">
       <div className="w-[96px] shrink-0">{thumb}</div>
       <div className="flex-1 min-w-0"><div className="font-bold text-[15px] text-den line-clamp-2">{title}</div><div className="text-[12.5px] text-ink2 mt-0.5">{sub}</div></div>
       <div className="text-[12.5px] text-ink2 shrink-0 w-[120px]">Lưu ngày {fmtDate(ngay).slice(0, 5)}</div>

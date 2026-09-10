@@ -103,7 +103,7 @@ export function GanBan({ onLocVanPhong }: { onLocVanPhong: (tenVanPhong: string[
           <div className="absolute right-2 bottom-1 text-[10px] text-ink2/80 bg-white/80 px-1 rounded">© OpenStreetMap contributors</div>
         </div>
 
-        <Card className="p-5 min-h-[420px]">
+        <Card className="p-4 sm:p-5 min-h-[420px]">
           {!viTri ? (
             <>
               <div className="font-bold text-[16px] text-den">Chưa có vị trí của bạn</div>

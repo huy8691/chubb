@@ -53,7 +53,7 @@ function KetQua({ q0 }: { q0: string }) {
       )}
 
       {q0.trim() && ket.length === 0 ? (
-        <div className="mt-6 border border-dashed border-vien rounded-sm p-8 flex flex-wrap items-center justify-between gap-6">
+        <div className="mt-6 border border-dashed border-vien rounded-sm p-5 sm:p-8 flex flex-wrap items-center justify-between gap-6">
           <div className="font-bold text-[15px] text-den max-w-[720px]">Không tìm thấy bài viết cho “{q0.trim()}” — thử từ khoá khác, hoặc xem tất cả bài viết.</div>
           <Button kind="secondary" href={R.F03("tat-ca")}>Xem tất cả bài viết</Button>
         </div>
@@ -61,7 +61,7 @@ function KetQua({ q0 }: { q0: string }) {
         <ul className="mt-6 divide-y divide-vien2 border-y border-vien2">
           {hien.map(({ a }) => (
             <li key={a.id}>
-              <Link href={R.F02(a.slug)} className={cx("group grid grid-cols-[200px_1fr] gap-6 items-center py-5 hover:bg-xam -mx-4 px-4")}>
+              <Link href={R.F02(a.slug)} className={cx("group grid grid-cols-[110px_1fr] sm:grid-cols-[200px_1fr] gap-4 sm:gap-6 items-center py-5 hover:bg-xam -mx-4 px-4")}>
                 <div className="aspect-video bg-xam rounded-sm overflow-hidden"><span className="flex items-center justify-center w-full h-full bg-vien2 border border-[#D6D6D6] text-mut text-[12px]">Ảnh</span></div>
                 <div>
                   <div className="font-bold text-[16px] leading-snug text-den group-hover:text-blue line-clamp-2">{a.tieuDe}</div>

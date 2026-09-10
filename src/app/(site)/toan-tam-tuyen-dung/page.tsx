@@ -79,7 +79,7 @@ function TuyenDung() {
     <>
       {/* Hero */}
       <section className="bg-xam">
-        <div className="wrap py-16 grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-10 items-center">
+        <div className="wrap py-10 sm:py-16 grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-10 items-center">
           <div>
             <Eyebrow className="mb-3">Chiến dịch tháng 8/2026</Eyebrow>
             <H1 className="text-[46px]">Chọn Điều Đáng Để Toàn Tâm</H1>
@@ -105,7 +105,7 @@ function TuyenDung() {
           <button type="button" onClick={() => setTranscript(!transcript)} className={cx("h-8 px-3 rounded-sm border text-[13px] font-bold", transcript ? "bg-blue text-white border-blue" : "bg-white text-ink2 border-vien hover:border-blue")}>Bản ghi lời thoại (transcript)</button>
         </div>
         {transcript && (
-          <Card className="mt-4 p-5 text-[14px] text-ink2 leading-relaxed">
+          <Card className="mt-4 p-4 sm:p-5 text-[14px] text-ink2 leading-relaxed">
             <p>Không phải ai bắt đầu cũng biết mình sẽ đi bao xa. Nhưng qua từng trải nghiệm, từng giá trị tạo ra, từng cột mốc đạt được, họ tìm thấy lý do để toàn tâm — với nghề, với khách hàng và với chính mình.</p>
           </Card>
         )}
@@ -117,7 +117,7 @@ function TuyenDung() {
         <Muted className="mt-3 text-[15px]">Ba trụ giá trị làm nên người Tư vấn Tài chính Toàn Tâm của Chubb Life Việt Nam.</Muted>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
           {TRU.map((t) => (
-            <Card key={t.ten} className="p-6">
+            <Card key={t.ten} className="p-4 sm:p-6">
               <div className="font-bold text-[15px] text-blue uppercase tracking-wide">{t.ten}</div>
               <p className="text-[13.5px] text-ink2 mt-3 leading-relaxed">{t.mo}</p>
             </Card>
@@ -133,7 +133,7 @@ function TuyenDung() {
             {nguoiKe.map((n, i) => {
               const bai = cauChuyen[i];
               return (
-                <Link key={n.ten} href={bai ? R.F02(bai.slug) : R.F03(slugButPha)} className="block bg-white border border-vien rounded-sm p-6 grid grid-cols-[200px_1fr] gap-6 hover:border-blue">
+                <Link key={n.ten} href={bai ? R.F02(bai.slug) : R.F03(slugButPha)} className="block bg-white border border-vien rounded-sm p-4 sm:p-6 grid grid-cols-[110px_1fr] sm:grid-cols-[200px_1fr] gap-4 sm:gap-6 hover:border-blue">
                   <ImageBox src={n.anh} alt={n.ten} ratio="3/4" />
                   <div>
                     <div className="font-serif font-semibold text-[18px] text-den">{n.ten}</div>
@@ -209,7 +209,7 @@ function TuyenDung() {
         <div className="wrap">
           <H2 className="text-[22px]">Đăng ký ứng tuyển</H2>
           <Muted className="mt-3 text-[15px]">Điền thông tin để đội ngũ Tuyển dụng Chubb Life liên hệ với bạn.</Muted>
-          <Card className="mt-8 p-8">
+          <Card className="mt-8 p-5 sm:p-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Field label="Họ và tên *" error={loi.hoTen}><Input value={hoTen} onChange={(e) => setHoTen(e.target.value)} placeholder="Nguyễn Văn A" /></Field>
               <Field label="Số điện thoại *" error={loi.sdt}><Input inputMode="tel" value={sdt} onChange={(e) => setSdt(e.target.value)} placeholder="09xx xxx xxx" /></Field>

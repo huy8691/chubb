@@ -14,12 +14,12 @@ function DaGui() {
   const ma = sp.get("ma") ?? "";
   const hs = data.candidates.find((c) => c.id === ma);
   return (
-    <div className="wrap py-16 max-w-[800px] mx-auto text-center">
+    <div className="wrap py-10 sm:py-16 max-w-[800px] mx-auto text-center">
       <div className="mx-auto size-16 rounded-full bg-green-bg text-green-fg flex items-center justify-center text-[28px]" aria-hidden>✓</div>
       <H1 className="mt-6 text-[34px]">Đã nhận thông tin của bạn</H1>
       <Muted className="mt-3 text-[17px]">Đội ngũ Tuyển dụng Chubb Life sẽ gọi lại trong 2 ngày làm việc.</Muted>
 
-      <Card className="mt-10 p-8 text-left">
+      <Card className="mt-10 p-5 sm:p-8 text-left">
         <div className="font-serif font-semibold text-[18px] text-den text-center">3 bước tiếp theo</div>
         <ol className="mt-6 space-y-4 max-w-[420px] mx-auto">
           {BUOC.map((b, i) => (

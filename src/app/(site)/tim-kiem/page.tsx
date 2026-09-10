@@ -92,7 +92,7 @@ function KetQuaTim() {
       )}
 
       {q0 && tatCa.length === 0 ? (
-        <div className="mt-8 border border-dashed border-vien rounded-sm p-8 flex flex-wrap items-center justify-between gap-6">
+        <div className="mt-8 border border-dashed border-vien rounded-sm p-5 sm:p-8 flex flex-wrap items-center justify-between gap-6">
           <div className="font-bold text-[15px] text-den max-w-[720px]">Không có kết quả nào cho “{q0}” — thử từ khoá khác, hoặc tìm Tư vấn viên theo mã 7 chữ số</div>
           <Button kind="secondary" href={R.E01}>Tìm Tư vấn viên</Button>
         </div>
@@ -100,7 +100,7 @@ function KetQuaTim() {
         <ul className="mt-6 divide-y divide-vien2 border-y border-vien2">
           {hien.map((r, i) => (
             <li key={`${r.loai}-${r.href}-${i}`}>
-              <Link href={r.href} className={cx("grid grid-cols-[140px_1fr] gap-6 py-6 hover:bg-xam -mx-4 px-4")}>
+              <Link href={r.href} className={cx("grid grid-cols-[92px_1fr] sm:grid-cols-[140px_1fr] gap-4 sm:gap-6 py-6 hover:bg-xam -mx-4 px-4")}>
                 <Eyebrow className="text-[11px] mt-1">{r.nhan}</Eyebrow>
                 <div>
                   <div className="font-bold text-[16px] text-den">{r.tieuDe}</div>

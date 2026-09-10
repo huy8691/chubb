@@ -7,7 +7,7 @@ export default async function Page({ params }: { params: Promise<{ ma: string }>
   const { ma } = await params;
   if (!/^\d{7}$/.test(ma)) notFound();
   return (
-    <Suspense fallback={<div className="wrap py-24 text-mut">Đang mở danh thiếp…</div>}>
+    <Suspense fallback={<div className="wrap py-14 sm:py-24 text-mut">Đang mở danh thiếp…</div>}>
       <DanhThiepDayDu ma={ma} />
     </Suspense>
   );

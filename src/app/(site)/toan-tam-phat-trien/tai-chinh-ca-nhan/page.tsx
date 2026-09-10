@@ -51,7 +51,7 @@ export default function Page() {
       </section>
 
       <section className="wrap py-10 grid grid-cols-1 lg:grid-cols-[1fr_520px] gap-8 items-start">
-        <Card className="p-6">
+        <Card className="p-4 sm:p-6">
           <Eyebrow className="mb-4">Thông tin của bạn</Eyebrow>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <Field label="Thu nhập hàng tháng (₫)" error={loi.thuNhap}><Input inputMode="numeric" value={nhomSo(thuNhap)} onChange={(e) => setThuNhap(soLe(e.target.value))} /></Field>
@@ -80,7 +80,7 @@ export default function Page() {
           </div>
         </Card>
 
-        <Card className="p-6 bg-blue-soft/40">
+        <Card className="p-4 sm:p-6 bg-blue-soft/40">
           <Eyebrow className="mb-4">Kết quả ước tính</Eyebrow>
           {!daTinh || coLoi ? (
             <Muted>Điền thông tin bên trái rồi bấm “Xem kết quả”.</Muted>

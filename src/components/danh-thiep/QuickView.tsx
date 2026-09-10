@@ -26,8 +26,8 @@ function QuickViewInner({ a, onClose }: { a: Advisor; onClose: () => void }) {
   return (
     <>
       <Modal open onClose={onClose} title="Danh thiếp Tư vấn viên" width={760}>
-        <div className="flex gap-6 items-start">
-          <Avatar name={a.hoTen} size={200} src={a.avatar} />
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start">
+          <div className="shrink-0"><Avatar name={a.hoTen} size={200} src={a.avatar} /></div>
           <div className="flex-1 min-w-0">
             <div className="eyebrow text-[11.5px]">Tư vấn Tài chính Toàn Tâm · Chubb Life</div>
             <h2 className="font-serif font-semibold text-[28px] leading-tight text-den mt-1 uppercase">{a.hoTen}</h2>
