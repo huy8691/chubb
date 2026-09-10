@@ -25,9 +25,11 @@ const TINH: { k: RegExp; v: ViTri }[] = [
 ];
 const kmGiua = (a: { lat: number; lng: number }, b: { lat: number; lng: number }) => { const R0 = 6371, d = Math.PI / 180; const dLat = (b.lat - a.lat) * d, dLng = (b.lng - a.lng) * d; const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * d) * Math.cos(b.lat * d) * Math.sin(dLng / 2) ** 2; return 2 * R0 * Math.asin(Math.sqrt(h)); };
 const fmtKm = (km: number) => (km < 10 ? km.toFixed(1).replace(".", ",") : Math.round(km).toString()) + " km";
-/** Chiếu lat/lng lên khung bản đồ giả lập (bao toàn Việt Nam) */
-const BOX = { latMin: 8.5, latMax: 23.4, lngMin: 102.1, lngMax: 109.6 };
-const toXY = (lat: number, lng: number) => ({ x: ((lng - BOX.lngMin) / (BOX.lngMax - BOX.lngMin)) * 100, y: ((BOX.latMax - lat) / (BOX.latMax - BOX.latMin)) * 100 });
+/** Khung bản đồ giả lập: toàn Việt Nam khi chưa có vị trí; có vị trí thì thu về quanh người dùng theo bán kính */
+type Box = { latMin: number; latMax: number; lngMin: number; lngMax: number };
+const VN: Box = { latMin: 8.5, latMax: 23.4, lngMin: 102.1, lngMax: 109.6 };
+const boxQuanh = (c: { lat: number; lng: number }, km: number): Box => { const half = Math.max(km * 1.6, 12); const dLat = half / 111, dLng = half / (111 * Math.cos((c.lat * Math.PI) / 180)); return { latMin: c.lat - dLat, latMax: c.lat + dLat, lngMin: c.lng - dLng * (880 / 420), lngMax: c.lng + dLng * (880 / 420) }; };
+const toXY = (box: Box, lat: number, lng: number) => ({ x: ((lng - box.lngMin) / (box.lngMax - box.lngMin)) * 100, y: ((box.latMax - lat) / (box.latMax - box.latMin)) * 100 });
 
 export function GanBan({ onLocVanPhong }: { onLocVanPhong: (tenVanPhong: string[] | null) => void }) {
   const { data } = useStore();
@@ -35,6 +37,7 @@ export function GanBan({ onLocVanPhong }: { onLocVanPhong: (tenVanPhong: string[
   const [viTri, setViTri] = useState<ViTri | null>(null);
   const [loi, setLoi] = useState("");
   const [banKinh, setBanKinh] = useState(10);
+  const datBanKinh = (v: number) => setBanKinh(Math.min(100, Math.max(1, Math.round(v) || 1)));
   const [xemNhanh, setXemNhanh] = useState<string>();
   const congKhai = useMemo(() => data.advisors.filter(theXemDuoc), [data.advisors]);
   const demTVV = (o: Office) => congKhai.filter((a) => a.vanPhong === o.ten).length;
@@ -42,6 +45,8 @@ export function GanBan({ onLocVanPhong }: { onLocVanPhong: (tenVanPhong: string[
   const trongBanKinh = vanPhongGan.filter((x) => x.km <= banKinh);
   const tvvGan = useMemo(() => trongBanKinh.flatMap((x) => congKhai.filter((a) => a.vanPhong === x.o.ten).map((a) => ({ a, km: x.km, o: x.o }))).slice(0, 5), [trongBanKinh, congKhai]);
   const tongGan = trongBanKinh.reduce((s, x) => s + demTVV(x.o), 0);
+  const box = viTri ? boxQuanh(viTri, banKinh) : VN;
+  const kmMoiPhanTram = (box.latMax - box.latMin) * 111 / 100; // km ứng với 1% chiều cao khung
 
   const tim = (e: React.FormEvent) => {
     e.preventDefault(); setLoi("");
@@ -70,10 +75,10 @@ export function GanBan({ onLocVanPhong }: { onLocVanPhong: (tenVanPhong: string[
 
       <div className="mt-5 grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8 items-start">
         <div className="relative h-[420px] rounded-sm border border-vien bg-xam overflow-hidden" aria-label="Bản đồ văn phòng Chubb Life">
-          {data.offices.map((o) => { const p = toXY(o.lat, o.lng); const gan = trongBanKinh.some((x) => x.o.id === o.id); return (
+          {data.offices.map((o) => { const p = toXY(box, o.lat, o.lng); if (p.x < -5 || p.x > 105 || p.y < -5 || p.y > 105) return null; const gan = trongBanKinh.some((x) => x.o.id === o.id); return (
             <button key={o.id} type="button" title={`${o.ten} · ${demTVV(o)} Tư vấn viên`} onClick={() => { setBanKinh(10); setViTri({ lat: o.lat, lng: o.lng, nhan: o.ten }); }}
               className={`absolute -translate-x-1/2 -translate-y-1/2 size-8 rounded-full text-white text-[11px] font-bold flex items-center justify-center shadow ${gan ? "bg-blue ring-4 ring-blue/25" : "bg-blue/70 hover:bg-blue"}`} style={{ left: `${p.x}%`, top: `${p.y}%` }}>{demTVV(o)}</button>); })}
-          {viTri && (() => { const p = toXY(viTri.lat, viTri.lng); return <div className="absolute -translate-x-1/2 -translate-y-1/2 flex items-center gap-1.5" style={{ left: `${p.x}%`, top: `${p.y}%` }}><span className="size-5 rounded-full bg-white border-4 border-blue" /><span className="text-[12px] font-bold text-blue">Bạn</span></div>; })()}
+          {viTri && (() => { const p = toXY(box, viTri.lat, viTri.lng); const dPct = (banKinh / kmMoiPhanTram) * 2; return <><div className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-blue bg-blue/10 pointer-events-none" style={{ left: `${p.x}%`, top: `${p.y}%`, height: `${dPct}%`, aspectRatio: "1" }} aria-label={`Bán kính ${banKinh} km`} /><div className="absolute -translate-x-1/2 -translate-y-1/2 flex items-center gap-1.5" style={{ left: `${p.x}%`, top: `${p.y}%` }}><span className="size-5 rounded-full bg-white border-4 border-blue" /><span className="text-[12px] font-bold text-blue">Bạn</span></div></>; })()}
           <div className="absolute left-4 bottom-3 text-[12px] text-mut">Bản đồ · marker là văn phòng Chubb Life, số trên marker là số Tư vấn viên</div>
         </div>
 
@@ -87,8 +92,8 @@ export function GanBan({ onLocVanPhong }: { onLocVanPhong: (tenVanPhong: string[
           ) : tvvGan.length === 0 ? (
             <>
               <div className="font-bold text-[16px] text-den">Không có Tư vấn viên trong {banKinh} km</div>
-              <Muted className="mt-2 text-[13.5px]">Quanh {viTri.nhan} chưa có văn phòng Chubb Life. Mở rộng bán kính hoặc gọi hotline 1800 xxxx.</Muted>
-              <div className="mt-4 flex gap-3"><Button size="sm" kind="secondary" onClick={() => setBanKinh(banKinh >= 30 ? 300 : 30)}>Mở rộng {banKinh >= 30 ? "toàn quốc" : "30 km"}</Button><Button size="sm" kind="ghost" href={R.S03}>Liên hệ & trợ giúp</Button></div>
+              <Muted className="mt-2 text-[13.5px]">Quanh {viTri.nhan} chưa có văn phòng Chubb Life. Kéo rộng bán kính tìm hoặc gọi hotline 1800 xxxx.</Muted>
+              <div className="mt-4 flex gap-3"><Button size="sm" kind="ghost" href={R.S03}>Liên hệ & trợ giúp</Button></div>
             </>
           ) : (
             <>
@@ -107,6 +112,18 @@ export function GanBan({ onLocVanPhong }: { onLocVanPhong: (tenVanPhong: string[
           )}
         </Card>
       </div>
+      {viTri && (
+        <div className="mt-5">
+          <div className="font-bold text-[14px] text-den">Bán kính tìm</div>
+          <div className="mt-2 flex flex-wrap items-center gap-4">
+            <div className="w-full max-w-[600px]">
+              <input type="range" min={1} max={100} value={banKinh} onChange={(e) => datBanKinh(Number(e.target.value))} className="w-full accent-blue" aria-label="Bán kính tìm (km)" />
+              <div className="flex justify-between text-[12.5px] text-mut"><span>1 km</span><span>100 km</span></div>
+            </div>
+            <label className="flex items-center gap-2 text-[13px] text-ink2"><Input type="number" min={1} max={100} value={banKinh} onChange={(e) => datBanKinh(Number(e.target.value))} className="h-10 w-[100px]" aria-label="Bán kính (km)" />km</label>
+          </div>
+        </div>
+      )}
       {viTri && tongGan > 0 && (
         <div className="mt-4 flex items-center gap-4 text-[14px]">
           <button type="button" className="link-more" onClick={() => onLocVanPhong(trongBanKinh.map((x) => x.o.ten))}>Xem tất cả {fmtNum(tongGan)} Tư vấn viên trong {banKinh} km</button>
