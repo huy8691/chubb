@@ -1,5 +1,5 @@
 "use client";
-/** Khối "Tìm Tư vấn viên gần bạn" trên E01 (09–10/09): nhập địa chỉ/khu vực hoặc dùng vị trí trình duyệt → bản đồ thật (ô ảnh OpenStreetMap/CARTO, chiếu Mercator) với marker = văn phòng (số TVV),
+/** Khối "Tìm Tư vấn viên gần bạn" trên E01 (09–10/09): nhập địa chỉ/khu vực hoặc dùng vị trí trình duyệt → bản đồ thật (ô ảnh OpenStreetMap, chiếu Mercator) với marker = văn phòng (số TVV),
  *  vòng tròn bán kính (thanh kéo 1–100 km + ô số), khung 5 TVV gần nhất theo khoảng cách tới văn phòng. Trạng thái: chưa có vị trí · không có TVV trong bán kính.
  *  "Xem tất cả trong N km" → lọc danh bạ bên dưới theo các văn phòng gần. Bản thật: Chubb chốt dịch vụ bản đồ (Google Maps có phí / OSM miễn phí). */
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -33,7 +33,7 @@ const TILE = 256;
 const worldPx = (lat: number, lng: number, z: number) => { const n = TILE * 2 ** z; const x = ((lng + 180) / 360) * n; const s = Math.sin((lat * Math.PI) / 180); const y = (0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI)) * n; return { x, y }; };
 const metPerPx = (lat: number, z: number) => (156543.03 * Math.cos((lat * Math.PI) / 180)) / 2 ** z;
 const zoomChoBanKinh = (lat: number, km: number, hPx: number) => { const mpp = (km * 2000) / (hPx * 0.6); const z = Math.floor(Math.log2((156543.03 * Math.cos((lat * Math.PI) / 180)) / mpp)); return Math.max(5, Math.min(14, z)); };
-const tileUrl = (z: number, x: number, y: number) => `https://${"abcd"[(x + y) % 4]}.basemaps.cartocdn.com/rastertiles/voyager/${z}/${x}/${y}.png`;
+const tileUrl = (z: number, x: number, y: number) => `https://tile.openstreetmap.de/${z}/${x}/${y}.png`;
 
 export function GanBan({ onLocVanPhong }: { onLocVanPhong: (tenVanPhong: string[] | null) => void }) {
   const { data } = useStore();
@@ -100,7 +100,7 @@ export function GanBan({ onLocVanPhong }: { onLocVanPhong: (tenVanPhong: string[
             <button key={o.id} type="button" title={`${o.ten} · ${demTVV(o)} Tư vấn viên`} onClick={() => { setBanKinh(10); setViTri({ lat: o.lat, lng: o.lng, nhan: o.ten }); }}
               className={`absolute -translate-x-1/2 -translate-y-1/2 size-8 rounded-full text-white text-[11px] font-bold flex items-center justify-center shadow ${gan ? "bg-blue ring-4 ring-blue/25" : "bg-blue/80 hover:bg-blue"}`} style={{ left: p.x, top: p.y }}>{demTVV(o)}</button>); })}
           {viTri && (() => { const p = toPx(viTri.lat, viTri.lng); return <div className="absolute -translate-x-1/2 -translate-y-1/2 flex items-center gap-1.5 pointer-events-none" style={{ left: p.x, top: p.y }}><span className="size-5 rounded-full bg-white border-4 border-blue" /><span className="text-[12px] font-bold text-blue drop-shadow">Bạn</span></div>; })()}
-          <div className="absolute right-2 bottom-1 text-[10px] text-ink2/80 bg-white/80 px-1 rounded">© OpenStreetMap contributors © CARTO</div>
+          <div className="absolute right-2 bottom-1 text-[10px] text-ink2/80 bg-white/80 px-1 rounded">© OpenStreetMap contributors</div>
         </div>
 
         <Card className="p-5 min-h-[420px]">
