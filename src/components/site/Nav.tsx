@@ -1,7 +1,7 @@
 "use client";
 /**
  * nav/guest và nav/logged — một component, đổi trạng thái theo phiên.
- * Sau đăng nhập: thay "Đăng nhập TVV" bằng chuông (G07) + tên TVV (mở menu G05).
+ * Sau đăng nhập: thay "Đăng nhập TVV" bằng tên TVV (mở menu tài khoản G05).
  * Ô tìm toàn site là ICON mở popup (giữ header 1 dòng); popup → S01. A01 dùng chung (08/09, bỏ A02).
  */
 import Link from "next/link";
@@ -10,17 +10,16 @@ import { useEffect, useRef, useState } from "react";
 import { R, TABS } from "@/lib/routes";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
 import { Avatar, cx } from "@/components/ui";
-import { fmtDateTime } from "@/lib/seed";
 
 export function Nav({ active }: { active?: string }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { data, actions } = useStore();
+  const { actions } = useStore();
   const tvv = useCurrentAdvisor();
   const [q, setQ] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(false); // menu di động (< lg)
-  const [menu, setMenu] = useState<"none" | "account" | "notif">("none");
+  const [menu, setMenu] = useState<"none" | "account">("none");
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -35,8 +34,6 @@ export function Nav({ active }: { active?: string }) {
   useEffect(() => { setNavOpen(false); setMenu("none"); }, [pathname]);
 
   const activeCode = active ?? TABS.find((t) => pathname.startsWith(t.href))?.code ?? (pathname === "/" ? "A01" : "");
-  const notifs = tvv ? data.notifications.filter((n) => n.advisorMa === tvv.ma) : [];
-  const unread = notifs.filter((n) => !n.daDoc).length;
   const submitSearch = (e: React.FormEvent) => { e.preventDefault(); if (q.trim()) { setSearchOpen(false); router.push(R.S01(q.trim())); } };
 
   return (
@@ -61,11 +58,6 @@ export function Nav({ active }: { active?: string }) {
             <Link href={R.G01} className="hidden lg:inline-flex h-9 px-4 items-center rounded-sm border border-blue text-blue text-[13px] font-bold hover:bg-blue-soft whitespace-nowrap">Đăng nhập TVV</Link>
           ) : (
             <div className="relative flex items-center gap-2 sm:gap-3" ref={ref}>
-              {/* G07 · Thông báo */}
-              <button type="button" aria-label="Thông báo" onClick={() => setMenu(menu === "notif" ? "none" : "notif")} className="relative size-8 sm:size-9 rounded-sm border border-vien flex items-center justify-center hover:border-blue">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden><path d="M4 12V8a5 5 0 0 1 10 0v4l1.5 2h-13L4 12Z" stroke="currentColor" strokeWidth="1.5" /><path d="M7.5 15.5a1.5 1.5 0 0 0 3 0" stroke="currentColor" strokeWidth="1.5" /></svg>
-                {unread > 0 && <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-hong text-white text-[11px] font-bold flex items-center justify-center">{unread}</span>}
-              </button>
               {/* G05 · Menu tài khoản */}
               <button type="button" aria-label="Menu tài khoản" onClick={() => setMenu(menu === "account" ? "none" : "account")} className="flex items-center gap-2 h-8 sm:h-9 pl-1 pr-1 sm:pr-3 rounded-sm border border-vien hover:border-blue text-[13px] font-bold text-den">
                 <Avatar name={tvv.hoTen} size={28} /> <span className="hidden xl:inline max-w-[140px] truncate">{tvv.hoTen}</span> <span aria-hidden className="hidden sm:inline text-mut">▾</span>
@@ -77,23 +69,6 @@ export function Nav({ active }: { active?: string }) {
                     <Link key={h} href={h} onClick={() => setMenu("none")} className="block px-3 py-2 rounded-sm text-ink2 hover:bg-xam hover:text-blue">{l}</Link>
                   ))}
                   <button type="button" onClick={() => { actions.logout(); setMenu("none"); router.push(R.A01); }} className="w-full text-left px-3 py-2 rounded-sm text-red-fg hover:bg-xam font-bold">Đăng xuất</button>
-                </div>
-              )}
-              {menu === "notif" && (
-                <div className="absolute right-0 top-11 w-[calc(100vw-40px)] max-w-[380px] bg-white border border-vien rounded-sm shadow-lg text-[14px]" role="menu">
-                  <div className="flex items-center justify-between px-4 py-3 border-b border-vien2"><span className="font-bold">Thông báo</span>
-                    <button type="button" className="text-[12.5px] text-blue font-bold" onClick={() => actions.update("notifications", (ns) => ns.map((n) => n.advisorMa === tvv.ma ? { ...n, daDoc: true } : n))}>Đánh dấu đã đọc</button></div>
-                  <ul className="max-h-[360px] overflow-auto">
-                    {notifs.length === 0 && <li className="px-4 py-6 text-mut text-center">Chưa có thông báo</li>}
-                    {notifs.map((n) => (
-                      <li key={n.id} className={cx("px-4 py-3 border-b border-vien2 last:border-0", !n.daDoc && "bg-blue-soft/40")}>
-                        <Link href={n.href ?? R.G02a} onClick={() => { actions.update("notifications", (ns) => ns.map((x) => x.id === n.id ? { ...x, daDoc: true } : x)); setMenu("none"); }} className="block hover:text-blue">
-                          <div className="text-den">{n.noiDung}</div>
-                          <div className="text-[12px] text-mut mt-0.5">{fmtDateTime(n.ngay)}</div>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               )}
             </div>
