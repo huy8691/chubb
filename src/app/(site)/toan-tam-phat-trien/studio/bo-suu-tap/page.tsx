@@ -65,7 +65,6 @@ export default function Page() {
             </div>
           )}
           <Pagination page={p} pages={pages} onChange={setTrang} />
-          {pages > 1 && <Muted className="mt-2 text-[13px] text-center">Hiện {(p - 1) * MOI_TRANG + 1}–{Math.min(p * MOI_TRANG, loc.length)} / {loc.length}</Muted>}
         </div>
 
         <aside className="space-y-6">
