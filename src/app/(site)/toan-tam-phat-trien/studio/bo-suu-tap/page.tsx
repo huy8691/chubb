@@ -64,7 +64,10 @@ export default function Page() {
                 </Card>); })}
             </div>
           )}
-          <Pagination page={p} pages={pages} onChange={setTrang} />
+          <div className="flex items-center justify-between gap-4">
+            <Muted className="mt-6 text-[13px]">Hiện {loc.length === 0 ? 0 : (p - 1) * MOI_TRANG + 1}–{Math.min(p * MOI_TRANG, loc.length)} / {loc.length}</Muted>
+            <Pagination page={p} pages={pages} onChange={setTrang} />
+          </div>
         </div>
 
         <aside className="space-y-6">
