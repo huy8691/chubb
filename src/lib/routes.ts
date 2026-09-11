@@ -31,6 +31,7 @@ export const R = {
   D05: "/toan-tam-phat-trien/trac-nghiem/ket-qua",
   D06: "/toan-tam-phat-trien/trac-nghiem/chia-se",
   G04: "/toan-tam-phat-trien/tai-lieu",
+  G04a: (id: string) => `/toan-tam-phat-trien/tai-lieu/${id}`, // xem chi tiết tài liệu (PDF · ảnh · DOC); dùng chung cho G04 công khai & G10 TVV
   // Danh thiếp
   E01: "/toan-tam-ket-noi",
   E06: (q?: string) => q ? `/toan-tam-ket-noi/tim?q=${encodeURIComponent(q)}` : "/toan-tam-ket-noi/tim",

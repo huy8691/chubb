@@ -5,6 +5,7 @@
  * Tài liệu công khai vẫn ở G04 (tab Công cụ); trang này chỉ có tệp nội bộ.
  */
 import { useMemo, useState } from "react";
+import { R } from "@/lib/routes";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
 import { fmtDate } from "@/lib/seed";
 import { Button, Card, Chip, EmptyState, Eyebrow, FilterChips, H2, Muted, Pagination, SearchBox, Select, Table, useFlash } from "@/components/ui";
@@ -100,7 +101,7 @@ export default function Page() {
                 <td className="text-ink2">{d.kichCo}</td>
                 <td className="text-ink2">{d.phienBan}</td>
                 <td className="text-ink2 whitespace-nowrap">{fmtDate(d.capNhat)}</td>
-                <td><Button size="sm" kind="secondary" onClick={() => flash(`Đã mở “${d.ten}”`)}>Xem</Button></td>
+                <td><Button size="sm" kind="secondary" href={R.G04a(d.id)}>Xem</Button></td>
                 <td><Button size="sm" onClick={() => flash(`Đã tải “${d.ten}” (${d.dinhDang} · ${d.kichCo})`)}>Tải</Button></td>
                 <td>
                   <button type="button" onClick={() => toggleLuu(d.id, d.ten)} className={daLuu(d.id) ? "text-[13px] font-bold text-ink2 hover:text-red-fg whitespace-nowrap" : "text-[13px] font-bold text-blue hover:underline whitespace-nowrap"}>

@@ -61,7 +61,7 @@ export default function Page() {
                   <td className="text-ink2">{d.kichCo}</td>
                   <td className="text-ink2">{d.phienBan}</td>
                   <td className="text-ink2 whitespace-nowrap">{fmtDate(d.capNhat)}</td>
-                  <td><Button size="sm" kind="ghost" onClick={() => flash(`Đã mở “${d.ten}”`)}>Xem</Button></td>
+                  <td><Button size="sm" kind="ghost" href={R.G04a(d.id)}>Xem</Button></td>
                   <td><Button size="sm" kind="secondary" onClick={() => flash(`Đã tải “${d.ten}” (${d.dinhDang} · ${d.kichCo})`)}>Tải</Button></td>
                 </tr>
               ))}
