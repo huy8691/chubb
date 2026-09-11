@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
 import { fmtDateTime } from "@/lib/seed";
 import type { BinhLuan } from "@/lib/types";
-import { Button, Chip, EmptyState, FilterChips, Muted, useFlash } from "@/components/ui";
+import { Button, Chip, EmptyState, FilterChips, Modal, Muted, useFlash } from "@/components/ui";
 
 type Loc = "tat-ca" | BinhLuan["trangThai"];
 const TT: Record<BinhLuan["trangThai"], [string, "green" | "amber" | "grey"]> = { "cho-duyet": ["Chờ duyệt", "amber"], "dang-hien": ["Đang hiện", "green"], "da-an": ["Đã ẩn", "grey"] };
@@ -17,6 +17,7 @@ export default function Page() {
   const { data, actions } = useStore();
   const { flash, node } = useFlash();
   const [loc, setLoc] = useState<Loc>("tat-ca");
+  const [xoaXn, setXoaXn] = useState<BinhLuan | null>(null);
   if (!tvv) return null;
 
   const all = data.binhLuan.filter((b) => b.advisorMa === tvv.ma);
@@ -66,13 +67,18 @@ export default function Page() {
                   {b.trangThai === "dang-hien" && <Button size="sm" kind="secondary" onClick={() => doi(b.id, { trangThai: "da-an" }, "Đã ẩn bình luận khỏi danh thiếp")}>Ẩn</Button>}
                   {b.trangThai === "cho-duyet" && <Button size="sm" kind="secondary" onClick={() => doi(b.id, { trangThai: "da-an" }, "Đã ẩn bình luận")}>Ẩn</Button>}
                   {b.trangThai === "da-an" && <Button size="sm" kind="secondary" onClick={() => doi(b.id, { trangThai: "dang-hien" }, "Bình luận hiện lại công khai")}>Hiện lại</Button>}
-                  <Button size="sm" kind="ghost" onClick={() => xoa(b.id)} className="text-red-fg">Xoá</Button>
+                  <Button size="sm" kind="ghost" onClick={() => setXoaXn(b)} className="text-red-fg">Xoá</Button>
                 </div>
               </div>
             </div>
           ))}
         </div>
       )}
+
+      <Modal open={!!xoaXn} onClose={() => setXoaXn(null)} title="Xoá bình luận này?" width={520}
+        footer={<><Button kind="secondary" onClick={() => setXoaXn(null)}>Huỷ</Button><Button kind="danger" onClick={() => { if (xoaXn) xoa(xoaXn.id); setXoaXn(null); }}>Xoá</Button></>}>
+        <p className="text-[14px] text-ink2">Bình luận của <b className="text-den">{xoaXn?.tenKhach}</b> sẽ bị xoá vĩnh viễn khỏi danh thiếp của bạn và không khôi phục được.</p>
+      </Modal>
     </div>
   );
 }

@@ -9,7 +9,7 @@ import { use, useState } from "react";
 import { R } from "@/lib/routes";
 import { thangLabel } from "@/lib/seed";
 import type { HangMuc, NguoiDat, HonorMonth } from "@/lib/types";
-import { Button, Chip, EmptyState, Field, Input, Table, cx, useFlash } from "@/components/ui";
+import { Button, Chip, EmptyState, Field, Input, Modal, Table, cx, useFlash } from "@/components/ui";
 import { CmsCard, CmsFormActions, CmsHeader } from "@/components/cms/CmsShell";
 import { ThemTvvModal } from "@/components/vinh-danh/ThemTvvModal";
 import { useHonor } from "@/components/vinh-danh/honor";
@@ -23,6 +23,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [suaHm, setSuaHm] = useState<{ id: string; ten: string } | null>(null);
   const [themHm, setThemHm] = useState<string | null>(null);
   const [modal, setModal] = useState<{ hm: HangMuc; edit?: NguoiDat } | null>(null);
+  const [xoaNd, setXoaNd] = useState<{ hm: HangMuc; nd: NguoiDat } | null>(null);
 
   if (!month) {
     return (<><CmsHeader crumbs={[{ label: "Vinh danh", href: R.H03 }]} title="Không tìm thấy tháng" /><EmptyState title="Tháng này không có trong danh sách" action={<Button kind="secondary" href={R.H03}>Về danh sách</Button>} /></>);
@@ -131,7 +132,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                       <td className="text-[12.5px] text-ink2">{v.nd.nguon === "excel" ? "Excel" : "Thêm tay"}</td>
                       <td className="text-right whitespace-nowrap">
                         <button type="button" className="font-bold text-blue hover:underline" onClick={() => setModal({ hm: h, edit: v.nd })}>Sửa</button>
-                        <button type="button" className="ml-3 font-bold text-red-fg hover:underline" onClick={() => xoaNguoi(h, v.nd)}>Xoá</button>
+                        <button type="button" className="ml-3 font-bold text-red-fg hover:underline" onClick={() => setXoaNd({ hm: h, nd: v.nd })}>Xoá</button>
                       </td>
                     </tr>
                   ))}
@@ -165,7 +166,13 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         </CmsCard>
       </div>
 
-      {modal && <ThemTvvModal key={`${modal.hm.id}-${modal.edit?.advisorMa ?? "new"}`} open onClose={() => setModal(null)} month={month} hangMuc={modal.hm} edit={modal.edit} onDone={flash} />}
+      {modal && <ThemTvvModal key={`${modal.hm.id}-${modal.edit?.advisorMa ?? "new"}`} open onClose={() => setModal(null)} month={month} hangMuc={modal.hm} edit={modal.edit} onDone={flash}
+        onRequestDelete={modal.edit ? () => { const m = modal; setModal(null); setXoaNd({ hm: m.hm, nd: m.edit! }); } : undefined} />}
+
+      <Modal open={!!xoaNd} onClose={() => setXoaNd(null)} title="Xoá người khỏi bảng vinh danh?" width={520}
+        footer={<><Button kind="secondary" onClick={() => setXoaNd(null)}>Huỷ</Button><Button kind="danger" onClick={() => { if (xoaNd) xoaNguoi(xoaNd.hm, xoaNd.nd); setXoaNd(null); }}>Xoá</Button></>}>
+        <p className="text-[14px] text-ink2"><b className="text-den">{xoaNd?.nd.hoTen}</b> sẽ bị gỡ khỏi hạng mục <b className="text-den">{xoaNd?.hm.ten}</b> và không còn hiện trên bảng vinh danh công khai. Bạn có thể thêm lại sau.</p>
+      </Modal>
       {node}
     </>
   );

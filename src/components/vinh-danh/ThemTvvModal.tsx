@@ -4,7 +4,6 @@
  * Chọn từ danh sách TVV hoặc Nhập tay; thứ tự · ba số. 09/09: không còn bước TVV đồng ý — người trong bảng hiện khi bảng công bố.
  */
 import { useMemo, useState } from "react";
-import { R } from "@/lib/routes";
 import { useStore } from "@/lib/store";
 import { thangLabel } from "@/lib/seed";
 import type { HangMuc, HonorMonth, NguoiDat } from "@/lib/types";
@@ -18,9 +17,11 @@ interface Props {
   /** đang sửa người nào (undefined = thêm mới) */
   edit?: NguoiDat;
   onDone: (msg: string) => void;
+  /** Yêu cầu xoá người đang sửa — cha đóng popup này rồi mở hộp xác nhận (H03e) */
+  onRequestDelete?: () => void;
 }
 
-export function ThemTvvModal({ open, onClose, month, hangMuc, edit, onDone }: Props) {
+export function ThemTvvModal({ open, onClose, month, hangMuc, edit, onDone, onRequestDelete }: Props) {
   const { data, actions } = useStore();
   const editAdvisor = edit ? data.advisors.find((a) => a.ma === edit.advisorMa) : undefined;
   const [mode, setMode] = useState<"chon" | "tay">(edit && !editAdvisor ? "tay" : "chon");
@@ -78,12 +79,6 @@ export function ThemTvvModal({ open, onClose, month, hangMuc, edit, onDone }: Pr
     return "";
   };
 
-  const xoa = () => {
-    if (!edit) return;
-    actions.update("honorMonths", (ms) => ms.map((m) => m.id !== month.id ? m : { ...m, capNhat: new Date().toISOString(), hangMuc: m.hangMuc.map((h) => h.hangMucId !== hangMuc.id ? h : { ...h, nguoiDat: h.nguoiDat.filter((x) => x.advisorMa !== edit.advisorMa).map((x, i) => ({ ...x, thuHang: i + 1 })) }) }));
-    onDone("Đã xoá khỏi bảng"); onClose();
-  };
-
   const submit = (tiep: boolean) => {
     const e = luu();
     if (e) { setErr(e); return; }
@@ -100,7 +95,7 @@ export function ThemTvvModal({ open, onClose, month, hangMuc, edit, onDone }: Pr
         <Button onClick={() => submit(false)}>{edit ? "Lưu thay đổi" : "Thêm vào hạng mục"}</Button>
         {!edit && <Button kind="secondary" onClick={() => submit(true)}>Thêm & tiếp người khác</Button>}
         <Button kind="ghost" onClick={onClose}>Huỷ</Button>
-        {edit && <Button kind="danger" size="sm" className="ml-auto" onClick={xoa}>Xoá khỏi bảng</Button>}
+        {edit && onRequestDelete && <Button kind="danger" size="sm" className="ml-auto" onClick={onRequestDelete}>Xoá khỏi bảng</Button>}
       </>
     }>
       <div className="text-[12.5px] text-ink2 mb-2">Cách thêm</div>
