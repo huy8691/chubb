@@ -24,14 +24,12 @@ export default function Page() {
   const ungVien = data.candidates.filter((c) => c.trangThai === "moi").length;
   const anhChoDuyet = data.studioImages.filter((a) => a.trangThai === "cho-duyet").length;
   const tinChuaXem = data.contactMessages.filter((m) => m.trangThai === "chua-xem").length;
-  const coChuaXuLy = data.flaggedRows.filter((f) => !f.daXuLy).length;
-  const tongViec = ungVien + anhChoDuyet + tinChuaXem + coChuaXuLy;
+  const tongViec = ungVien + anhChoDuyet + tinChuaXem;
 
   const hang: { loai: string; noiDung: string; nguon: string; so: number; chip: string; tone: "amber" | "grey"; href: string }[] = [
     { loai: "Ứng viên", noiDung: `Ứng viên mới từ form tuyển dụng (${ungVien})`, nguon: "Form Tuyển dụng", so: ungVien, chip: "Mới", tone: "amber", href: `${R.H12}?loc=moi` },
     { loai: "Ảnh Studio", noiDung: `Ảnh xin hiển thị công khai (${anhChoDuyet})`, nguon: "Tư vấn viên", so: anhChoDuyet, chip: "Chờ duyệt", tone: "amber", href: `${R.H07}?loc=cho-duyet` },
     { loai: "Liên hệ", noiDung: `Tin nhắn liên hệ chưa xem (${tinChuaXem})`, nguon: "Form Liên hệ", so: tinChuaXem, chip: "Mới", tone: "amber", href: `${R.H16}?loc=chua-xem` },
-    { loai: "Báo cáo BXH", noiDung: `Hàng gắn cờ chưa xử lý (${coChuaXuLy})`, nguon: "Hệ thống", so: coChuaXuLy, chip: "Chờ xử lý", tone: "amber", href: R.H08 },
   ];
 
   const cuonXuong = () => document.getElementById("viec-can-xu-ly")?.scrollIntoView({ behavior: "smooth", block: "start" });

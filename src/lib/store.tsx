@@ -28,7 +28,6 @@ export interface DemoData {
   contactMessages: typeof seed.contactMessages;
   cmsUsers: typeof seed.cmsUsers;
   ranking: typeof seed.ranking;
-  flaggedRows: typeof seed.flaggedRows;
   quizQuestions: typeof seed.quizQuestions;
   quizResultTypes: typeof seed.quizResultTypes;
   financeParams: typeof seed.financeParams;
@@ -52,7 +51,6 @@ const initialData = (): DemoData => ({
   contactMessages: seed.contactMessages,
   cmsUsers: seed.cmsUsers,
   ranking: seed.ranking,
-  flaggedRows: seed.flaggedRows,
   quizQuestions: seed.quizQuestions,
   quizResultTypes: seed.quizResultTypes,
   financeParams: seed.financeParams,
@@ -84,7 +82,7 @@ interface StoreValue {
 
 const Ctx = createContext<StoreValue | null>(null);
 /** Đổi số này mỗi lần sửa seed để phiên cũ trong sessionStorage không che dữ liệu mới */
-const SEED_VERSION = "2026-09-16a";
+const SEED_VERSION = "2026-09-16b";
 const KEY_DATA = `ecard2-demo-data-${SEED_VERSION}`;
 const KEY_SESSION = "ecard2-demo-session";
 const GUEST: Session = { role: "guest" };

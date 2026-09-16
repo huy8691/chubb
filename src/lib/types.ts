@@ -274,21 +274,6 @@ export interface RankingRow {
   moTuLink: number;
 }
 
-export interface FlaggedRow {
-  id: string;
-  advisorMa: string;
-  lyDo: string;
-  soLuot: number;
-  ip: string;
-  nut: string;
-  thoiGian: string;
-  /** Số lượt người nhận mở từ link chia sẻ trong khoảng bị gắn cờ (dấu hiệu trên H08a) */
-  luotMo?: number;
-  /** Phân bố lượt theo nút (H08a "THEO NÚT") */
-  theoNut?: { nut: string; so: number }[];
-  daXuLy?: { quyetDinh: "loai" | "hop-le"; soLuotLoai: number; boi: string; ngay: string; ghiChu?: string };
-}
-
 export interface QuizQuestion {
   id: string;
   cauHoi: string;

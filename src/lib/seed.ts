@@ -1,6 +1,6 @@
 import type {
   Advisor, Article, Candidate, ChuyenDe, CmsUser, ContactMessage, DocType, Document, FAQ,
-  FinanceParams, FlaggedRow, HangMuc, HonorMonth, NguoiDat, Notification, QuizQuestion, QuizResultType,
+  FinanceParams, HangMuc, HonorMonth, NguoiDat, Notification, QuizQuestion, QuizResultType,
   RankingRow, SavedItem, StudioImage, StudioTemplate, Office } from "./types";
 
 /* ---------- Tư vấn viên ---------- */
@@ -378,13 +378,6 @@ export const ranking: RankingRow[] = advisors.map((a, i) => ({
   nutBamNhieuNhat: NUT[i % 4],
   moTuLink: a.moTuLinkThangNay,
 }));
-export const flaggedRows: FlaggedRow[] = [
-  { id: "cờ1", advisorMa: advisors[4].ma, lyDo: "Cùng IP bấm 38 lượt trong 5 phút", soLuot: 38, ip: "113.161.xx.xx", nut: "Sao chép link", thoiGian: "2026-09-06 21:14–21:19", luotMo: 3, theoNut: [{ nut: "Sao chép liên kết", so: 36 }, { nut: "Zalo", so: 2 }, { nut: "Facebook", so: 0 }, { nut: "Tải ảnh", so: 0 }, { nut: "QR", so: 0 }] },
-  { id: "cờ2", advisorMa: advisors[9].ma, lyDo: "Vượt ngưỡng 200 lượt/ngày", soLuot: 212, ip: "nhiều IP", nut: "Zalo", thoiGian: "2026-09-05 21:10–21:50", luotMo: 0, theoNut: [{ nut: "Zalo", so: 198 }, { nut: "Facebook", so: 10 }, { nut: "Sao chép liên kết", so: 4 }, { nut: "Tải ảnh", so: 0 }, { nut: "QR", so: 0 }] },
-  { id: "cờ3", advisorMa: advisors[13].ma, lyDo: "Lượt từ thiết bị test nội bộ", soLuot: 12, ip: "10.0.0.x", nut: "QR", thoiGian: "2026-09-02 09:00–09:03", luotMo: 0, theoNut: [{ nut: "QR", so: 12 }, { nut: "Zalo", so: 0 }, { nut: "Facebook", so: 0 }, { nut: "Sao chép liên kết", so: 0 }, { nut: "Tải ảnh", so: 0 }] },
-  { id: "cờ0", advisorMa: advisors[2].ma, lyDo: "Cùng thiết bị lặp 20 lượt", soLuot: 20, ip: "171.244.xx.xx", nut: "Facebook", thoiGian: "2026-09-01", daXuLy: { quyetDinh: "loai", soLuotLoai: 20, boi: "Trần Thu Hà", ngay: "2026-09-02", ghiChu: "Lặp liên tục, không có lượt mở." } },
-];
-
 /* ---------- Trắc nghiệm ---------- */
 export const quizResultTypes: QuizResultType[] = [
   { id: "dong-hanh", ten: "Người đồng hành", huyHieu: "🤝", diemManh: "Lắng nghe, kiên nhẫn, xây dựng niềm tin lâu dài.", phongCach: "Chăm sóc khách hàng bền bỉ", phuHopVoi: "Tư vấn cá nhân và gia đình", dinhHuong: "Bạn phù hợp với lộ trình Tư vấn tài chính, phát triển tệp khách hàng thân thiết." },
