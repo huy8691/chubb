@@ -1,6 +1,6 @@
 "use client";
 /**
- * Popup Chia sẻ danh thiếp (mở từ E03 · E02 · G02a). Mỗi lần bấm một nút = 1 lượt được tính
+ * Popup Chia sẻ danh thiếp (mở từ E03 · E02 · G02a). Mỗi lần bấm một nút = 1 lượt chia sẻ
  * cho danh thiếp đang mở (§10: lượt thuộc về danh thiếp, không thuộc người bấm).
  * Link chia sẻ mang ?ref=zalo|fb|copy|qr để đối soát lượt mở.
  */

@@ -99,7 +99,7 @@ export default function Page() {
       <div className="flex flex-wrap items-start justify-between gap-4 mb-8">
         <div>
           <div className="flex items-center gap-3"><h2 className="font-serif font-semibold text-[18px] text-den">Lượt xem danh thiếp tháng này: {tvv.luotXemThangNay ?? 0}</h2>{tvv.theCongKhai ? <Chip tone="green">Đang hiện</Chip> : <Chip tone="grey">Tạm ẩn</Chip>}</div>
-          <div className="text-[12.5px] text-ink2 mt-1">Lượt chia sẻ được tính tháng này: {tvv.luotChiaSeThangNay} · Hạng {hang || "—"}/{bxh.length} Tư vấn viên · <Link href={R.S03} className="text-blue font-bold">Cách đếm</Link>{!tvv.theCongKhai && <> · <Link href={R.G06} className="text-blue font-bold">Bật hiện thẻ ở Tài khoản & cài đặt</Link></>}</div>
+          <div className="text-[12.5px] text-ink2 mt-1">Lượt chia sẻ tháng này: {tvv.luotChiaSeThangNay} · Hạng {hang || "—"}/{bxh.length} Tư vấn viên · <Link href={R.S03} className="text-blue font-bold">Cách đếm</Link>{!tvv.theCongKhai && <> · <Link href={R.G06} className="text-blue font-bold">Bật hiện thẻ ở Tài khoản & cài đặt</Link></>}</div>
         </div>
         <Button kind="secondary" onClick={() => window.open(R.E03(tvv.ma), "_blank")}>Xem danh thiếp của tôi</Button>
       </div>

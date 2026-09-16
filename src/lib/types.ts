@@ -269,6 +269,7 @@ export interface CmsUser {
 export interface RankingRow {
   advisorMa: string;
   luotDuocTinh: number;
+  /** 16/09: không còn hiện trên CMS (bỏ khái niệm hợp lệ / không hợp lệ) — giữ trường để khử trùng phía hệ thống */
   luotKhongHopLe: number;
   nutBamNhieuNhat: "Zalo" | "Facebook" | "Sao chép link" | "QR";
   moTuLink: number;

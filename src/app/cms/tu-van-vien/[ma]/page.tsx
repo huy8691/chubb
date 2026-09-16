@@ -92,7 +92,7 @@ function ChiTiet({ ma }: { ma: string }) {
           <Row l="Đường dẫn thẻ" v={<Link href={R.E03(a.ma)} target="_blank" className="font-bold text-blue hover:underline">{duongDan}</Link>} />
           <Row l="Hồ sơ năng lực" v={a.hoSoNangLuc ? `Đã điền${a.hoSoNangLuc.capNhat ? ` · cập nhật ${fmtDate(a.hoSoNangLuc.capNhat)}` : ""}` : "Chưa có"} />
           <Row l="Ảnh Studio" v={<Link href={`${R.H07}?tvv=${a.ma}`} className="font-bold text-blue hover:underline">{anh.length} ảnh{anhCho ? ` · ${anhCho} chờ duyệt` : ""}</Link>} />
-          <Row l={`Lượt chia sẻ tháng ${THANG_BXH}`} v={rank ? `${fmtNum(rank.luotDuocTinh)} lượt được tính · ${fmtNum(rank.luotKhongHopLe)} lượt không hợp lệ · ${fmtNum(rank.moTuLink)} lượt mở từ link` : "Chưa có lượt"} />
+          <Row l={`Lượt chia sẻ tháng ${THANG_BXH}`} v={rank ? `${fmtNum(rank.luotDuocTinh)} lượt chia sẻ` : "Chưa có lượt"} />
           <Row l="Vinh danh" v={dh.length ? dh.join(" · ") : "Chưa có"} />
         </CmsCard>
       </div>

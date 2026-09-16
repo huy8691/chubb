@@ -46,7 +46,7 @@ export default function Page() {
             </Table>
           </div>
           <div className="mt-3 flex items-center justify-between gap-4 flex-wrap">
-            <Muted className="text-[12.5px]">1 lượt = 1 lần bấm nút Chia sẻ trên danh thiếp. Đã loại lưu lượng nội bộ và các lượt trùng.</Muted>
+            <Muted className="text-[12.5px]">1 lượt = 1 lần bấm nút Chia sẻ trên danh thiếp.</Muted>
             {bxh.length > 5 && <button type="button" onClick={() => setMoRong(!moRong)} className="link-more">{moRong ? "Thu gọn" : "Xem đầy đủ"}</button>}
           </div>
         </section>
