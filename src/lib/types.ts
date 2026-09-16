@@ -10,13 +10,11 @@ export interface Session {
   email?: string;
 }
 
-/** Văn phòng Chubb — thực thể phụ của Tư vấn viên (H11 popup H11c, 09/09): marker trên bản đồ "Tìm Tư vấn viên gần bạn" (E01) */
+/** Văn phòng Chubb — thực thể phụ của Tư vấn viên (H11 popup H11c): ô chọn Văn phòng trên H11b và bộ lọc Danh bạ E01 (bản đồ bỏ 15/09) */
 export interface Office {
   id: string;
   ten: string; // trùng với Advisor.vanPhong
   diaChi: string;
-  lat: number;
-  lng: number;
 }
 
 export interface Advisor {
@@ -58,7 +56,7 @@ export interface Advisor {
     namKinhNghiem?: number;
     namMDRT?: number;
     /** E04 — "Hiện từng phần trên trang công khai" */
-    hienPhan?: { hanhTrinh: boolean; nhanXet: boolean; linhVuc: boolean; google: boolean };
+    hienPhan?: { hanhTrinh: boolean; linhVuc: boolean; google: boolean };
   };
   danhHieu: DanhHieu[];
   luotChiaSeThangNay: number;
@@ -330,37 +328,6 @@ export interface Notification {
   ngay: string;
   daDoc: boolean;
   href?: string;
-}
-
-/** Lời chúc TVV gửi nhau trên trang Thành tích (09/09, phương án B): hiện ngay, bộ lọc tự gắn cờ, Quản trị ẩn */
-export type TrangThaiLoiChuc = "hien" | "gan-co" | "da-an";
-export interface LoiChuc {
-  id: string;
-  nguoiGuiMa: string;
-  nguoiNhanMa: string;
-  thangId: string;
-  hangMucId: string;
-  noiDung: string;
-  ngay: string;
-  trangThai: TrangThaiLoiChuc;
-  /** lý do gắn cờ (tự động) hoặc lý do ẩn (Quản trị / người nhận) */
-  lyDoCo?: string;
-}
-
-/** Bình luận khách để lại trên danh thiếp TVV (10/09): khách nhập tên+SĐT không OTP,
- *  TVV duyệt trước mới hiện công khai, Quản trị gắn cờ/ẩn. SĐT chỉ TVV/Quản trị thấy. */
-export type TrangThaiBinhLuan = "cho-duyet" | "dang-hien" | "da-an";
-export interface BinhLuan {
-  id: string;
-  advisorMa: string; // danh thiếp nào
-  tenKhach: string;
-  sdt: string; // chỉ Quản trị (CMS) thấy — KHÔNG hiện cho TVV (PII do Chubb giữ)
-  noiDung: string;
-  ngay: string;
-  trangThai: TrangThaiBinhLuan;
-  /** Quản trị / bộ lọc gắn cờ (chỉ hiện phía CMS) */
-  ganCo?: boolean;
-  lyDoCo?: string;
 }
 
 export interface SavedItem {

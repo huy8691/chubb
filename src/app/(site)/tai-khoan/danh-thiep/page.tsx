@@ -28,7 +28,7 @@ function formTu(a: Advisor) {
     vaiTro: hs?.vaiTro ?? "", gioiThieu: hs?.gioiThieu ?? "",
     theManh: hs?.theManh ?? [], namKinhNghiem: hs?.namKinhNghiem?.toString() ?? "", namMDRT: hs?.namMDRT?.toString() ?? "", chungChi: hs?.chungChi ?? [],
     hanhTrinh: (hs?.hanhTrinh ?? []) as Moc[],
-    hienPhan: hs?.hienPhan ?? { hanhTrinh: true, nhanXet: true, linhVuc: true, google: false },
+    hienPhan: hs?.hienPhan ?? { hanhTrinh: true, linhVuc: true, google: false },
   };
 }
 type Form = ReturnType<typeof formTu>;
@@ -170,7 +170,6 @@ export default function Page() {
                 <div className="font-bold text-[14px] text-den mb-3">Hiện từng phần trên trang công khai</div>
                 <div className="space-y-3">
                   <Checkbox label="Hành trình nghề nghiệp" checked={form.hienPhan.hanhTrinh} onChange={(e) => set("hienPhan", { ...form.hienPhan, hanhTrinh: e.target.checked })} />
-                  <Checkbox label="Bình luận" checked={form.hienPhan.nhanXet} onChange={(e) => set("hienPhan", { ...form.hienPhan, nhanXet: e.target.checked })} />
                   <Checkbox label="Lĩnh vực chuyên môn" checked={form.hienPhan.linhVuc} onChange={(e) => set("hienPhan", { ...form.hienPhan, linhVuc: e.target.checked })} />
                   <Checkbox label="Cho phép trang xuất hiện trên Google (mặc định tắt)" checked={form.hienPhan.google} onChange={(e) => set("hienPhan", { ...form.hienPhan, google: e.target.checked })} />
                 </div>

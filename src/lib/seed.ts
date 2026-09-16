@@ -1,7 +1,7 @@
 import type {
   Advisor, Article, Candidate, ChuyenDe, CmsUser, ContactMessage, DocType, Document, FAQ,
   FinanceParams, FlaggedRow, HangMuc, HonorMonth, NguoiDat, Notification, QuizQuestion, QuizResultType,
-  RankingRow, SavedItem, StudioImage, StudioTemplate, LoiChuc, BinhLuan, Office } from "./types";
+  RankingRow, SavedItem, StudioImage, StudioTemplate, Office } from "./types";
 
 /* ---------- Tư vấn viên ---------- */
 const HO_TEN = [
@@ -13,11 +13,11 @@ const HO_TEN = [
 const VAN_PHONG = ["TP. Hồ Chí Minh — Q.1", "Hà Nội — Cầu Giấy", "Đà Nẵng — Hải Châu", "Cần Thơ — Ninh Kiều", "Hải Phòng — Lê Chân"];
 /** 5 văn phòng (H11c) — toạ độ để tính "gần bạn" trên E01 */
 export const offices: Office[] = [
-  { id: "vp-hcm-q1", ten: "TP. Hồ Chí Minh — Q.1", diaChi: "115 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh", lat: 10.7743, lng: 106.7021 },
-  { id: "vp-hn-cg", ten: "Hà Nội — Cầu Giấy", diaChi: "Tầng 12, 144 Xuân Thuỷ, Cầu Giấy, Hà Nội", lat: 21.0367, lng: 105.7826 },
-  { id: "vp-dn-hc", ten: "Đà Nẵng — Hải Châu", diaChi: "38 Bạch Đằng, Hải Châu, Đà Nẵng", lat: 16.0678, lng: 108.2208 },
-  { id: "vp-ct-nk", ten: "Cần Thơ — Ninh Kiều", diaChi: "209 đường 30/4, Ninh Kiều, Cần Thơ", lat: 10.0341, lng: 105.7784 },
-  { id: "vp-hp-lc", ten: "Hải Phòng — Lê Chân", diaChi: "1 Lê Hồng Phong, Lê Chân, Hải Phòng", lat: 20.8449, lng: 106.6881 },
+  { id: "vp-hcm-q1", ten: "TP. Hồ Chí Minh — Q.1", diaChi: "115 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh" },
+  { id: "vp-hn-cg", ten: "Hà Nội — Cầu Giấy", diaChi: "Tầng 12, 144 Xuân Thuỷ, Cầu Giấy, Hà Nội" },
+  { id: "vp-dn-hc", ten: "Đà Nẵng — Hải Châu", diaChi: "38 Bạch Đằng, Hải Châu, Đà Nẵng" },
+  { id: "vp-ct-nk", ten: "Cần Thơ — Ninh Kiều", diaChi: "209 đường 30/4, Ninh Kiều, Cần Thơ" },
+  { id: "vp-hp-lc", ten: "Hải Phòng — Lê Chân", diaChi: "1 Lê Hồng Phong, Lê Chân, Hải Phòng" },
 ];
 const CHUC_DANH = ["Tư vấn tài chính", "Trưởng nhóm kinh doanh", "Giám đốc kinh doanh khu vực", "Tư vấn tài chính cao cấp"];
 
@@ -50,7 +50,7 @@ function hoSoMau(i: number, hoTen: string): NonNullable<Advisor["hoSoNangLuc"]> 
     vaiTro: VAI_TRO[i % VAI_TRO.length],
     namKinhNghiem: nam,
     namMDRT: mdrt || undefined,
-    hienPhan: { hanhTrinh: true, nhanXet: true, linhVuc: true, google: false },
+    hienPhan: { hanhTrinh: true, linhVuc: true, google: false },
     capNhat: `2026-08-${String(10 + (i % 18)).padStart(2, "0")}T10:00:00`,
   };
 }
@@ -100,7 +100,7 @@ advisors[0].hoSoNangLuc = {
   vaiTro: "Người đồng hành cùng gia đình trẻ",
   namKinhNghiem: 15,
   namMDRT: 10,
-  hienPhan: { hanhTrinh: true, nhanXet: true, linhVuc: true, google: false },
+  hienPhan: { hanhTrinh: true, linhVuc: true, google: false },
   capNhat: "2026-09-04T10:00:00",
 };
 
@@ -443,8 +443,6 @@ export const financeParams: FinanceParams = {
 /* ---------- Thông báo · Đã lưu (TVV demo) ---------- */
 export const notifications: Notification[] = [
   { id: "n1", advisorMa: TVV_DEMO.ma, noiDung: "Bạn được vinh danh Chubb Chiến · Tháng 8/2026 — bảng đã công bố.", ngay: "2026-09-06T09:00:00", daDoc: false, href: "/tai-khoan" },
-  { id: "n6", advisorMa: TVV_DEMO.ma, noiDung: "3 bình luận mới trên danh thiếp — chờ bạn duyệt", ngay: "2026-08-12T10:20:00", daDoc: false, href: "/tai-khoan/binh-luan" },
-  { id: "n5", advisorMa: TVV_DEMO.ma, noiDung: `${advisors[1].hoTen} gửi lời chúc cho danh hiệu MDRT · Tháng 8/2026`, ngay: "2026-09-03T14:20:00", daDoc: false, href: `/toan-tam-dan-dau/hang-muc/${TVV_DEMO.ma}?thang=2026-08&hm=mdrt` },
   { id: "n2", advisorMa: TVV_DEMO.ma, noiDung: 'Ảnh "Ưu đãi tháng 8" bị từ chối · xem lý do', ngay: "2026-09-04T15:20:00", daDoc: false, href: "/tai-khoan/da-luu" },
   { id: "n3", advisorMa: TVV_DEMO.ma, noiDung: "Bảng xếp hạng tháng 8/2026 đã chốt: bạn xếp hạng 1.", ngay: "2026-09-01T08:00:00", daDoc: true, href: "/toan-tam-ket-noi" },
   { id: "n4", advisorMa: TVV_DEMO.ma, noiDung: "Tài liệu mới: Brochure Chubb Bảo An Toàn Diện v2.1", ngay: "2026-08-28T10:00:00", daDoc: true, href: "/tai-khoan/tai-lieu" },
@@ -455,29 +453,6 @@ export const savedItems: SavedItem[] = [
   { id: "s2", advisorMa: TVV_DEMO.ma, loai: "bai-viet", refId: "bv6", ngay: "2026-08-30" },
   { id: "s3", advisorMa: TVV_DEMO.ma, loai: "tai-lieu", refId: "tl3", ngay: "2026-08-25" },
   { id: "s4", advisorMa: TVV_DEMO.ma, loai: "danh-thiep", refId: advisors[3].ma, ngay: "2026-08-20" },
-];
-
-/* ---------- Lời chúc (09/09, phương án B) ---------- */
-export const loiChuc: LoiChuc[] = [
-  { id: "lc1", nguoiGuiMa: advisors[1].ma, nguoiNhanMa: TVV_DEMO.ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: `Chúc mừng ${TVV_DEMO.hoTen} đạt MDRT tháng 8! Cả văn phòng tự hào về bạn.`, ngay: "2026-09-03T14:20:00", trangThai: "hien" },
-  { id: "lc2", nguoiGuiMa: advisors[2].ma, nguoiNhanMa: TVV_DEMO.ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: "10 năm liên tiếp, quá nể. Chúc bạn giữ vững phong độ!", ngay: "2026-09-03T09:05:00", trangThai: "hien" },
-  { id: "lc3", nguoiGuiMa: advisors[3].ma, nguoiNhanMa: TVV_DEMO.ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: "Cảm ơn bạn đã truyền cảm hứng cho cả đội. Chúc mừng!", ngay: "2026-09-02T17:40:00", trangThai: "hien" },
-  { id: "lc3b", nguoiGuiMa: advisors[6].ma, nguoiNhanMa: TVV_DEMO.ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: "Đàn anh đi trước luôn tận tình chỉ bảo. Chúc mừng chị!", ngay: "2026-09-02T10:15:00", trangThai: "hien" },
-  { id: "lc3c", nguoiGuiMa: advisors[7].ma, nguoiNhanMa: TVV_DEMO.ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: "Tháng nào cũng thấy tên chị trên bảng, quá đỉnh.", ngay: "2026-08-05T08:40:00", trangThai: "hien" },
-  { id: "lc3d", nguoiGuiMa: advisors[8].ma, nguoiNhanMa: TVV_DEMO.ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: "Chúc chị tháng mới bùng nổ hơn nữa nhé!", ngay: "2026-08-04T14:00:00", trangThai: "hien" },
-  { id: "lc4", nguoiGuiMa: advisors[4].ma, nguoiNhanMa: advisors[1].ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: "Chúc mừng bạn! Xem thêm tại bit.ly/xyz để nhận ưu đãi từ đội mình nhé.", ngay: "2026-09-02T11:12:00", trangThai: "gan-co", lyDoCo: "Chứa liên kết ngoài (bit.ly)" },
-  { id: "lc5", nguoiGuiMa: advisors[5].ma, nguoiNhanMa: advisors[2].ma, thangId: "2026-08", hangMucId: "mdrt", noiDung: "Chúc mừng em!", ngay: "2026-09-01T08:30:00", trangThai: "da-an", lyDoCo: "Người nhận ẩn" },
-];
-
-/* ---------- Bình luận khách trên danh thiếp (10/09) ---------- */
-export const binhLuan: BinhLuan[] = [
-  { id: "bl1", advisorMa: TVV_DEMO.ma, tenKhach: "Chị Hồng", sdt: "0901 234 567", noiDung: "Chị An tư vấn rất tận tình, không giục tôi quyết định. Ba năm sau tôi vẫn thấy đó là lựa chọn đúng.", ngay: "2026-08-12T10:20:00", trangThai: "cho-duyet" },
-  { id: "bl2", advisorMa: TVV_DEMO.ma, tenKhach: "Anh Tuấn", sdt: "0912 888 777", noiDung: "Cảm ơn em đã hỗ trợ hồ sơ nhanh gọn, chu đáo.", ngay: "2026-08-11T16:05:00", trangThai: "cho-duyet" },
-  { id: "bl3", advisorMa: TVV_DEMO.ma, tenKhach: "Chị H., Quận 7", sdt: "0987 111 222", noiDung: "Điều tôi yên tâm nhất là mỗi lần cần hỏi gì, gọi là có người nghe máy.", ngay: "2026-08-05T09:12:00", trangThai: "dang-hien" },
-  { id: "bl4", advisorMa: TVV_DEMO.ma, tenKhach: "Cô L., Thủ Đức", sdt: "0933 444 555", noiDung: "Hồ sơ của gia đình tôi được hỗ trợ đến khi xong, không phải tự mò mẫm.", ngay: "2026-07-28T14:40:00", trangThai: "dang-hien" },
-  { id: "bl5", advisorMa: TVV_DEMO.ma, tenKhach: "Anh M.", sdt: "0900 000 000", noiDung: "Nội dung đã được ẩn.", ngay: "2026-07-20T08:30:00", trangThai: "da-an", lyDoCo: "Tư vấn viên ẩn" },
-  { id: "bl6", advisorMa: TVV_DEMO.ma, tenKhach: "(khách)", sdt: "0900 111 111", noiDung: "Mua ngay kẻo lỡ! Xem bit.ly/xyz để nhận ưu đãi.", ngay: "2026-08-02T11:12:00", trangThai: "cho-duyet", ganCo: true, lyDoCo: "Chứa liên kết ngoài (bit.ly)" },
-  { id: "bl7", advisorMa: advisors[1].ma, tenKhach: "Chị Vân", sdt: "0908 222 333", noiDung: "Bạn tư vấn dễ hiểu, cảm ơn nhiều.", ngay: "2026-08-09T10:00:00", trangThai: "dang-hien" },
 ];
 
 /* ---------- Tiện ích ---------- */

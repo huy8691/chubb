@@ -4,7 +4,7 @@
  * bao nhiêu khách hàng, bao nhiêu hợp đồng" — không lặp hồ sơ năng lực của danh thiếp).
  * [id] = mã TVV; ?thang=2026-08&hm=mdrt (thiếu thì lấy tháng đã công bố gần nhất có người này).
  * Bố cục bám Figma C02 (10/09): masthead một thẻ trắng — ảnh chân dung lớn bên trái + hạng mục · tên · dòng thông tin ·
- * 3 chỉ số · Xem danh thiếp điện tử · Chia sẻ; rồi "Tư vấn viên cùng hạng mục" (Xem danh thiếp → E03) · Lời chúc.
+ * 3 chỉ số · Xem danh thiếp điện tử · Chia sẻ; rồi "Tư vấn viên cùng hạng mục" (Xem danh thiếp → E03). Lời chúc bỏ 16/09.
  */
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -14,7 +14,7 @@ import { fmtNum, thangLabel } from "@/lib/seed";
 import type { NguoiDat } from "@/lib/types";
 import { Button, Card, Chip, EmptyState, H1, H2, ImageBox, useFlash } from "@/components/ui";
 import { XemNhanhButton } from "@/components/danh-thiep/XemNhanh";
-import { LoiChucBlock, ShareButtons, TheTVV, anhTVV, fmtTien, useHonor } from "@/components/vinh-danh/honor";
+import { ShareButtons, TheTVV, anhTVV, fmtTien, useHonor } from "@/components/vinh-danh/honor";
 
 
 function ChiSo({ label, value }: { label: string; value: string }) {
@@ -86,7 +86,6 @@ function ChiTiet({ ma }: { ma: string }) {
             {cungHangMuc.map((x) => <TheTVV key={x.ma} v={x} sub={`${hm.ten} ${m.nam} · ${x.vanPhong}`} thangId={m.id} hangMucId={h.id} danhThiep />)}
           </div>
         )}
-        <LoiChucBlock nguoiNhan={{ ma: v.ma, hoTen: v.hoTen }} thangId={m.id} hangMucId={h.id} onDone={flash} />
       </div>
       {node}
     </>
