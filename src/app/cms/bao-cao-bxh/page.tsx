@@ -1,7 +1,7 @@
 "use client";
 /**
  * H08 · CMS — Bảng xếp hạng chia sẻ danh thiếp (hiện Top 5 trên E01 sau khi chốt).
- * (16/09: bỏ popup và khối hàng chờ Quản trị xử lý — lượt bất thường do hệ thống tự đánh không hợp lệ.)
+ * (16/09: chỉ còn Lượt chia sẻ — bỏ cột/thẻ phụ và hộp quy tắc; khử trùng lặp là việc kỹ thuật, chốt với Chubb.)
  */
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -28,8 +28,6 @@ export default function Page() {
   const view = rows.slice((p - 1) * PAGE, p * PAGE);
 
   const tongTinh = data.ranking.reduce((s, r) => s + r.luotDuocTinh, 0);
-  const tongKhongHopLe = data.ranking.reduce((s, r) => s + r.luotKhongHopLe, 0);
-  const tongMo = data.ranking.reduce((s, r) => s + r.moTuLink, 0);
   const soChiaSe = data.ranking.filter((r) => r.luotDuocTinh > 0).length;
   const daChot = isThangChot(data);
 
@@ -63,45 +61,29 @@ export default function Page() {
       </div>
 
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-        <Stat value={fmtNum(tongTinh)} label="lượt được tính trong tháng" />
-        <Stat value={fmtNum(tongKhongHopLe)} label="lượt không hợp lệ" />
+        <Stat value={fmtNum(tongTinh)} label="lượt chia sẻ trong tháng" />
         <Stat value={`${soChiaSe} / ${fmtNum(data.advisors.length)}`} label="danh thiếp được chia sẻ" />
-        <Stat value={fmtNum(tongMo)} label="lượt mở từ link chia sẻ · để đối soát" />
       </div>
 
       <CmsCard>
         <div className="mb-4"><SearchBox value={q} onChange={(v) => { setQ(v); setPage(1); }} placeholder="Tìm theo mã hoặc họ tên Tư vấn viên…" className="w-[360px]" /></div>
-        <Table head={["Hạng", "Tư vấn viên", "Lượt được tính", "Lượt không hợp lệ", "Mở từ link", "Nút bấm nhiều nhất", "Danh thiếp"]}>
+        <Table head={["Hạng", "Tư vấn viên", "Lượt chia sẻ", "Nút bấm nhiều nhất", "Danh thiếp"]}>
           {view.map(({ r, a, hang }) => (
             <tr key={a.ma}>
               <td className="font-bold">{hang}</td>
               <td>{a.hoTen} · {tinhThanh(a.vanPhong)} · <span className="font-mono text-[13px]">{a.ma}</span></td>
               <td className="font-bold">{fmtNum(r.luotDuocTinh)}</td>
-              <td>{fmtNum(r.luotKhongHopLe)}</td>
-              <td>{fmtNum(r.moTuLink)}</td>
               <td>{NUT_LABEL[r.nutBamNhieuNhat] ?? r.nutBamNhieuNhat}</td>
               <td><Link href={R.E03(a.ma)} target="_blank" className="font-bold text-blue hover:underline">Mở</Link></td>
             </tr>
           ))}
-          {view.length === 0 && <tr><td colSpan={7} className="text-center text-mut py-10">Không có Tư vấn viên nào khớp</td></tr>}
+          {view.length === 0 && <tr><td colSpan={5} className="text-center text-mut py-10">Không có Tư vấn viên nào khớp</td></tr>}
         </Table>
         <div className="flex items-center justify-between mt-4 text-[12.5px] text-ink2">
           <span>Hiện {rows.length === 0 ? 0 : (p - 1) * PAGE + 1}–{Math.min(p * PAGE, rows.length)} / {fmtNum(rows.length)}</span>
           <Pagination page={p} pages={pages} onChange={setPage} />
         </div>
       </CmsCard>
-
-      <div className="mt-6">
-        <CmsCard title="Cách đếm">
-          <ol className="space-y-2.5 text-[13.5px] text-den list-decimal pl-5">
-            <li>Cùng một thiết bị bấm cùng một nút nhiều lần trong 30 phút chỉ tính 1 lượt.</li>
-            <li>Không tính lượt từ mạng nội bộ Chubb, tài khoản test, hoặc bấm trước ngày 1 của tháng.</li>
-            <li>Tháng khoá lúc 23:59 ngày cuối tháng. Quản trị có 3 ngày rà soát rồi bấm &quot;Chốt tháng &amp; công bố&quot; để hiện Top 5 trên trang Danh thiếp.</li>
-            <li>Lượt tăng bất thường trong ngày (cùng thiết bị, cùng IP, vượt ngưỡng) được hệ thống tự đánh là không hợp lệ và không tính.</li>
-            <li>Link chia sẻ mang tham số nguồn (?ref=zalo · fb · copy · qr). Người nhận mở link thì hệ thống ghi &quot;lượt mở từ link chia sẻ&quot; — chỉ dùng đối soát, không dùng xếp hạng.</li>
-          </ol>
-        </CmsCard>
-      </div>
 
       {node}
     </>
