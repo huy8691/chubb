@@ -327,7 +327,7 @@ export const faqs: FAQ[] = [
   { id: "f8", trang: "lien-he", doiTuong: "ung-vien", cauHoi: "Tôi muốn bắt đầu nghề Tư vấn viên thì làm gì?", traLoi: "Gửi thông tin ở Toàn Tâm Tuyển Dụng, đội Tuyển dụng sẽ liên hệ.", thuTu: 3, trangThai: "da-xuat-ban", capNhat: "2026-08-15" },
   { id: "f9", trang: "lien-he", doiTuong: "tu-van-vien", cauHoi: "Không nhận được mã đăng nhập?", traLoi: "Kiểm tra thư rác; sau 3 lần sai hệ thống khoá 15 phút. Bấm Gửi lại mã hoặc gọi hotline TVV.", thuTu: 4, trangThai: "da-xuat-ban", capNhat: "2026-08-15" },
   { id: "f10", trang: "lien-he", doiTuong: "tu-van-vien", cauHoi: "Thứ hạng chia sẻ được tính thế nào?", traLoi: "1 lượt = 1 lần bấm một nút trong popup Chia sẻ trên danh thiếp của bạn, dù người bấm là bạn hay khách. Bảng xếp hạng chốt theo tháng.", thuTu: 5, trangThai: "da-xuat-ban", capNhat: "2026-08-15" },
-  { id: "f11", trang: "lien-he", doiTuong: "tu-van-vien", cauHoi: "Ảnh Studio của tôi bao lâu được duyệt để hiển thị công khai?", traLoi: "Quản trị duyệt trong 2 ngày làm việc; ảnh vào mục Ảnh thực tế từ Tư vấn viên, kết quả báo ở Thông báo.", thuTu: 6, trangThai: "da-xuat-ban", capNhat: "2026-08-15" },
+  { id: "f11", trang: "lien-he", doiTuong: "tu-van-vien", cauHoi: "Ảnh Studio của tôi bao lâu được duyệt để hiển thị công khai?", traLoi: "Quản trị duyệt trong 2 ngày làm việc; ảnh vào mục Ảnh thực tế từ Tư vấn viên, kết quả báo qua email.", thuTu: 6, trangThai: "da-xuat-ban", capNhat: "2026-08-15" },
 ];
 
 /* ---------- Ứng viên · Liên hệ ---------- */

@@ -90,7 +90,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
       {moTuChoi && a.trangThai === "cho-duyet" && (
         <CmsCard className="mt-6">
-          <TuChoiForm onHuy={() => setMoTuChoi(false)} onGui={(lyDo) => { tuChoi(a, lyDo); setMoTuChoi(false); flash("Đã gửi từ chối — Tư vấn viên thấy lý do trong Thông báo"); }} />
+          <TuChoiForm onHuy={() => setMoTuChoi(false)} onGui={(lyDo) => { tuChoi(a, lyDo); setMoTuChoi(false); flash("Đã gửi từ chối — Tư vấn viên thấy lý do qua email"); }} />
         </CmsCard>
       )}
 

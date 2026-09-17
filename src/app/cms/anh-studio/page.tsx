@@ -94,7 +94,7 @@ function DanhSach() {
       </CmsCard>
 
       <Modal open={!!tuChoiAnh} onClose={() => setTuChoiAnh(null)} title={tuChoiAnh ? `Từ chối ảnh · ${advisor(tuChoiAnh.advisorMa)?.hoTen ?? tuChoiAnh.advisorMa} · ${tenMau(tuChoiAnh)}` : ""} width={720}>
-        {tuChoiAnh && <TuChoiForm onHuy={() => setTuChoiAnh(null)} onGui={(lyDo) => { tuChoi(tuChoiAnh, lyDo); setTuChoiAnh(null); flash("Đã gửi từ chối — Tư vấn viên thấy lý do trong Thông báo"); }} />}
+        {tuChoiAnh && <TuChoiForm onHuy={() => setTuChoiAnh(null)} onGui={(lyDo) => { tuChoi(tuChoiAnh, lyDo); setTuChoiAnh(null); flash("Đã gửi từ chối — Tư vấn viên thấy lý do qua email"); }} />}
       </Modal>
       {node}
     </>

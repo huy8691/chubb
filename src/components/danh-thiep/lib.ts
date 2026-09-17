@@ -66,7 +66,7 @@ export function taiVCard(a: Advisor) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-/** Bảng xếp hạng sắp theo Lượt được tính; `congKhai` = chỉ TVV hiện trên BXH và thẻ công khai (E01) */
+/** Bảng xếp hạng sắp theo Lượt chia sẻ; `congKhai` = chỉ TVV hiện trên BXH và thẻ công khai (E01) */
 export function xepHang(data: DemoData, congKhai: boolean) {
   const byMa = new Map(data.advisors.map((a) => [a.ma, a]));
   return data.ranking

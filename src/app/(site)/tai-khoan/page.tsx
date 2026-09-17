@@ -44,7 +44,7 @@ export default function Page() {
         <Stat value={tvv.luotXemThangNay ?? 0} label="lượt xem danh thiếp tháng này" href={R.E04} />
         <div className="bg-white border border-vien rounded-sm p-4 sm:p-5">
           <div className="font-serif font-semibold text-[34px] text-blue leading-none">{data.ranking.find((r) => r.advisorMa === tvv.ma)?.luotDuocTinh ?? tvv.luotChiaSeThangNay}</div>
-          <div className="mt-2 text-[14px] text-ink2">lượt chia sẻ tháng này · <Link href={R.S03} className="text-blue font-bold hover:underline">Cách đếm</Link></div>
+          <div className="mt-2 text-[14px] text-ink2">lượt chia sẻ tháng này</div>
         </div>
         <Stat value={anhStudio.length} label={`Ảnh Studio · ${choDuyet} chờ duyệt · ${tuChoi.length} từ chối`} href={R.G02} />
         <Stat value={baiDaLuu} label="bài viết đã lưu" href={R.G02} />
