@@ -5,7 +5,6 @@
  * Bước 1 thông tin cá nhân · Bước 2 dấu ấn · Bước 3 hồ sơ năng lực · cột phải xem trước thẻ (cập nhật ngay khi nhập).
  * Lưu và xuất bản ghi thẳng vào advisors — hồ sơ hiện ngay trên danh thiếp công khai, không có bước duyệt.
  */
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { R } from "@/lib/routes";
@@ -99,7 +98,7 @@ export default function Page() {
       <div className="flex flex-wrap items-start justify-between gap-4 mb-8">
         <div>
           <div className="flex items-center gap-3"><h2 className="font-serif font-semibold text-[18px] text-den">Lượt xem danh thiếp tháng này: {tvv.luotXemThangNay ?? 0}</h2>{tvv.theCongKhai ? <Chip tone="green">Đang hiện</Chip> : <Chip tone="grey">Tạm ẩn</Chip>}</div>
-          <div className="text-[12.5px] text-ink2 mt-1">Lượt chia sẻ tháng này: {tvv.luotChiaSeThangNay} · Hạng {hang || "—"}/{bxh.length} Tư vấn viên{!tvv.theCongKhai && <> · <Link href={R.G06} className="text-blue font-bold">Bật hiện thẻ ở Tài khoản & cài đặt</Link></>}</div>
+          <div className="text-[12.5px] text-ink2 mt-1">Lượt chia sẻ tháng này: {tvv.luotChiaSeThangNay} · Hạng {hang || "—"}/{bxh.length} Tư vấn viên{!tvv.theCongKhai && <> · Thẻ đang tạm ẩn (liên hệ Quản trị để hiện)</>}</div>
         </div>
         <Button kind="secondary" onClick={() => window.open(R.E03(tvv.ma), "_blank")}>Xem danh thiếp của tôi</Button>
       </div>

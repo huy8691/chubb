@@ -1,16 +1,15 @@
 "use client";
 /**
  * G06 · Trang cá nhân › Tài khoản & cài đặt.
- * Khối Tài khoản đăng nhập (họ tên · mã · ảnh đại diện · email · SĐT nội bộ · văn phòng · Lưu thay đổi · Huỷ)
- * · Cài đặt: 4 công tắc ghi thẳng vào store.advisors.
- * (Đăng xuất nằm ở menu tài khoản trên nav — khớp wireframe G06.)
+ * Khối Tài khoản đăng nhập (họ tên · mã · ảnh đại diện · email · SĐT nội bộ · văn phòng · Lưu thay đổi · Huỷ).
+ * (Mục Cài đặt/công tắc và Đăng xuất đã bỏ — khớp wireframe G06; Đăng xuất ở menu nav.)
  */
 import Link from "next/link";
 import { useState } from "react";
 import { R } from "@/lib/routes";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
 import type { Advisor } from "@/lib/types";
-import { Avatar, Button, Card, Field, H2, Input, Muted, Select, Toggle, useFlash } from "@/components/ui";
+import { Avatar, Button, Field, H2, Input, Muted, Select, useFlash } from "@/components/ui";
 
 const VAN_PHONG = ["TP. Hồ Chí Minh — Q.1", "Hà Nội — Cầu Giấy", "Đà Nẵng — Hải Châu", "Cần Thơ — Ninh Kiều", "Hải Phòng — Lê Chân"];
 
@@ -33,17 +32,6 @@ export default function Page() {
     flash("Đã lưu thay đổi tài khoản");
   };
   const huy = () => { setSdt(null); setVp(null); };
-
-  const datCongTac = (key: "theCongKhai" | "hienTrenBXH" | "nhanThongBaoEmail" | "nhanBanTin", v: boolean) => {
-    ghi((a) => key === "theCongKhai" ? { ...a, theCongKhai: v, theAnBoi: v ? undefined : "tvv" } : { ...a, [key]: v });
-    const nhan: Record<typeof key, [string, string]> = {
-      theCongKhai: ["Danh thiếp đang hiện trên trang công khai", "Danh thiếp đã tạm ẩn — khách quét QR sẽ thấy trang “đã tạm ẩn”"],
-      hienTrenBXH: ["Bạn sẽ hiện trên bảng xếp hạng chia sẻ danh thiếp", "Bạn đã ẩn khỏi bảng xếp hạng chia sẻ danh thiếp"],
-      nhanThongBaoEmail: ["Đã bật nhận thông báo qua email", "Đã tắt nhận thông báo qua email"],
-      nhanBanTin: ["Đã đăng ký bản tin nội bộ hàng tháng", "Đã huỷ bản tin nội bộ hàng tháng"],
-    };
-    flash(v ? nhan[key][0] : nhan[key][1]);
-  };
 
   return (
     <div className="space-y-12 max-w-[1100px]">
@@ -79,16 +67,6 @@ export default function Page() {
           <Button kind="secondary" onClick={huy} disabled={!coThayDoi}>Huỷ</Button>
           <Link href={R.S03} className="ml-auto text-[13px] font-bold text-blue hover:underline">Liên hệ & trợ giúp</Link>
         </div>
-      </section>
-
-      <section>
-        <H2>Cài đặt</H2>
-        <Card className="mt-6 px-6">
-          <Toggle checked={tvv.theCongKhai} onChange={(v) => datCongTac("theCongKhai", v)} label="Hiện danh thiếp của tôi trên trang công khai" />
-          <Toggle checked={tvv.hienTrenBXH} onChange={(v) => datCongTac("hienTrenBXH", v)} label="Hiện tôi trên bảng xếp hạng chia sẻ danh thiếp" />
-          <Toggle checked={tvv.nhanThongBaoEmail} onChange={(v) => datCongTac("nhanThongBaoEmail", v)} label="Nhận thông báo qua email (ảnh Studio được duyệt · tháng vinh danh mới · bài viết mới)" />
-          <Toggle checked={tvv.nhanBanTin ?? false} onChange={(v) => datCongTac("nhanBanTin", v)} label="Nhận bản tin nội bộ hàng tháng" />
-        </Card>
       </section>
     </div>
   );
