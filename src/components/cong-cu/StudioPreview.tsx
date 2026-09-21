@@ -144,7 +144,8 @@ export function StudioPreview({ template, portrait, zoom = 1, offsetX = 0, offse
     return (
       <div className={cx("relative w-full overflow-hidden rounded-sm select-none [container-type:inline-size]", className)} style={{ aspectRatio: ratio }} aria-label="Xem trước ảnh Studio">
         {behind && photoLayer}
-        <img src={template.anhNen} alt="" draggable={false} className="absolute inset-0 w-full h-full object-cover" />
+        {/* PNG nền không nhận chuột → để kéo được lớp ảnh chân dung nằm SAU (mẫu khung) */}
+        <img src={template.anhNen} alt="" draggable={false} className="absolute inset-0 w-full h-full object-cover pointer-events-none" />
         {!behind && photoLayer}
         {/* Field chữ Tư vấn viên điền — đặt tuyệt đối theo toạ độ mẫu, khớp bản tải (canvas). Font sans (Lato, kế thừa body). */}
         {fields.map((fd, i) => {
