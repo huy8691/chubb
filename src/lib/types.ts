@@ -319,7 +319,7 @@ export interface Notification {
 export interface SavedItem {
   id: string;
   advisorMa: string;
-  loai: "bai-viet" | "tai-lieu" | "danh-thiep";
+  loai: "bai-viet";
   refId: string;
   ngay: string;
 }

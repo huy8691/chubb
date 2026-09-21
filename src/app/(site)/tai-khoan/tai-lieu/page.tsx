@@ -1,7 +1,7 @@
 "use client";
 /**
  * G10 · Trang cá nhân › Tài liệu — MỘT bảng tệp dành cho Tư vấn viên (Phần "Dành cho Tư vấn viên", Đã xuất bản, chưa hết hạn).
- * Chip lọc Loại kèm số · tìm · sắp xếp · đếm · Tải cả bộ (.zip) · Xem/Tải · Lưu (→ Đã lưu) · trạng thái rỗng · phân trang.
+ * Chip lọc Loại kèm số · tìm · sắp xếp · đếm · Tải cả bộ (.zip) · Xem/Tải · trạng thái rỗng · phân trang.
  * Tài liệu công khai vẫn ở G04 (tab Công cụ); trang này chỉ có tệp nội bộ.
  */
 import { useMemo, useState } from "react";
@@ -15,7 +15,7 @@ type Sap = "moi" | "ten";
 const HOM_NAY = new Date().toISOString().slice(0, 10);
 
 export default function Page() {
-  const { data, actions } = useStore();
+  const { data } = useStore();
   const tvv = useCurrentAdvisor();
   const { flash, node } = useFlash();
   const [loai, setLoai] = useState("tat-ca");
@@ -44,16 +44,6 @@ export default function Page() {
   const capNhatGanNhat = noiBo.reduce((m, d) => (d.capNhat > m ? d.capNhat : m), "");
 
   if (!tvv) return null;
-  const daLuu = (id: string) => data.savedItems.some((s) => s.advisorMa === tvv.ma && s.loai === "tai-lieu" && s.refId === id);
-  const toggleLuu = (id: string, ten: string) => {
-    if (daLuu(id)) {
-      actions.update("savedItems", (l) => l.filter((s) => !(s.advisorMa === tvv.ma && s.loai === "tai-lieu" && s.refId === id)));
-      flash(`Đã bỏ lưu “${ten}”`);
-    } else {
-      actions.update("savedItems", (l) => [{ id: `s${Date.now()}`, advisorMa: tvv.ma, loai: "tai-lieu", refId: id, ngay: new Date().toISOString().slice(0, 10) }, ...l]);
-      flash(`Đã lưu “${ten}” vào Đã lưu`);
-    }
-  };
 
   return (
     <div>
@@ -84,7 +74,7 @@ export default function Page() {
         </div>
       ) : (
         <Card className="mt-6 p-2">
-          <Table head={["Tên tệp", "Loại", "Định dạng", "Kích cỡ", "Phiên bản", "Cập nhật", "", "", ""]}>
+          <Table head={["Tên tệp", "Loại", "Định dạng", "Kích cỡ", "Phiên bản", "Cập nhật", "", ""]}>
             {hien.map((d) => (
               <tr key={d.id}>
                 <td className="font-bold text-den">
@@ -103,11 +93,6 @@ export default function Page() {
                 <td className="text-ink2 whitespace-nowrap">{fmtDate(d.capNhat)}</td>
                 <td><Button size="sm" kind="secondary" href={R.G04a(d.id)}>Xem</Button></td>
                 <td><Button size="sm" onClick={() => flash(`Đã tải “${d.ten}” (${d.dinhDang} · ${d.kichCo})`)}>Tải</Button></td>
-                <td>
-                  <button type="button" onClick={() => toggleLuu(d.id, d.ten)} className={daLuu(d.id) ? "text-[13px] font-bold text-ink2 hover:text-red-fg whitespace-nowrap" : "text-[13px] font-bold text-blue hover:underline whitespace-nowrap"}>
-                    {daLuu(d.id) ? "Đã lưu" : "Lưu"}
-                  </button>
-                </td>
               </tr>
             ))}
           </Table>

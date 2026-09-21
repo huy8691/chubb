@@ -39,7 +39,7 @@ export function KhongXemDuoc() {
 function TheDayDu({ a }: { a: Advisor }) {
   const sp = useSearchParams();
   const ref = sp.get("ref");
-  const { data, actions } = useStore();
+  const { actions } = useStore();
   const tvv = useCurrentAdvisor();
   const { flash, node } = useFlash();
   const { chiaSe, flashNode } = useChiaSe(a);
@@ -55,14 +55,6 @@ function TheDayDu({ a }: { a: Advisor }) {
 
   const dh = danhHieuCongKhai(a);
   const hs = a.hoSoNangLuc;
-  const daLuu = !!tvv && data.savedItems.some((s) => s.advisorMa === tvv.ma && s.loai === "danh-thiep" && s.refId === a.ma);
-  const toggleLuu = () => {
-    if (!tvv) return;
-    actions.update("savedItems", (list) => daLuu
-      ? list.filter((s) => !(s.advisorMa === tvv.ma && s.loai === "danh-thiep" && s.refId === a.ma))
-      : [...list, { id: `s${Date.now()}`, advisorMa: tvv.ma, loai: "danh-thiep", refId: a.ma, ngay: new Date().toISOString() }]);
-    flash(daLuu ? "Đã bỏ lưu danh thiếp" : "Đã lưu danh thiếp vào Đã lưu");
-  };
   const zaloHref = `https://zalo.me/${a.zalo ?? a.soDienThoai}`;
   const btnA = "inline-flex items-center justify-center h-11 px-5 rounded-sm font-bold text-[14px] whitespace-nowrap";
 
@@ -81,7 +73,6 @@ function TheDayDu({ a }: { a: Advisor }) {
           </div>
           <div className="flex flex-row flex-wrap sm:flex-col sm:items-end gap-3 sm:gap-2 shrink-0">
             <a href={zaloHref} target="_blank" rel="noopener" className={`${btnA} bg-blue text-white border border-blue hover:bg-blue2`}>Kết nối Zalo</a>
-            {tvv && tvv.ma !== a.ma && <Button kind="ghost" size="sm" onClick={toggleLuu}>{daLuu ? "Đã lưu" : "Lưu danh thiếp"}</Button>}
             {tvv && tvv.ma === a.ma && <Button kind="ghost" size="sm" href={R.E04}>Sửa danh thiếp của tôi</Button>}
           </div>
         </div>

@@ -444,8 +444,6 @@ export const notifications: Notification[] = [
 export const savedItems: SavedItem[] = [
   { id: "s1", advisorMa: TVV_DEMO.ma, loai: "bai-viet", refId: "bv1", ngay: "2026-09-02" },
   { id: "s2", advisorMa: TVV_DEMO.ma, loai: "bai-viet", refId: "bv6", ngay: "2026-08-30" },
-  { id: "s3", advisorMa: TVV_DEMO.ma, loai: "tai-lieu", refId: "tl3", ngay: "2026-08-25" },
-  { id: "s4", advisorMa: TVV_DEMO.ma, loai: "danh-thiep", refId: advisors[3].ma, ngay: "2026-08-20" },
 ];
 
 /* ---------- Tiện ích ---------- */

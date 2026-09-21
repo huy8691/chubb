@@ -1,7 +1,8 @@
 "use client";
 /* eslint-disable react-hooks/static-components -- component trình bày cục bộ, không giữ state; đủ cho demo */
 /**
- * G02 · Trang cá nhân › Đã lưu — bài viết · tài liệu · danh thiếp đã lưu + Ảnh Studio của tôi.
+ * G02 · Trang cá nhân › Đã lưu — bài viết đã lưu + Ảnh Studio của tôi.
+ * (Wireframe chỉ đặc tả luồng "Lưu bài" T6 → G02; lưu tài liệu/danh thiếp không có trong wireframe → đã gỡ 21/09.)
  * Mỗi mục: Mở · Bỏ lưu. Ảnh Studio: năm trạng thái (Riêng tư · Chờ duyệt · Đang công khai · Từ chối kèm lý do · Đã ngừng công khai); mọi thẻ Mở · Tải ảnh · Xoá (xác nhận: mất cả hai nơi);
  * Riêng tư có "Hiển thị công khai" (gửi MỘT lần), Đang công khai có "Ngừng hiển thị công khai" (ảnh giữ lại, không gửi lại). 09/09: khớp wireframe G02.
  */
@@ -13,7 +14,7 @@ import { fmtDate } from "@/lib/seed";
 import type { StudioImage } from "@/lib/types";
 import { Button, Card, EmptyState, FilterChips, ImageBox, Modal, StatusChip, useFlash } from "@/components/ui";
 
-type Loc = "tat-ca" | "bai-viet" | "tai-lieu" | "danh-thiep" | "anh-studio";
+type Loc = "tat-ca" | "bai-viet" | "anh-studio";
 
 export default function Page() {
   const { data, actions } = useStore();
@@ -25,8 +26,6 @@ export default function Page() {
 
   const saved = data.savedItems.filter((s) => s.advisorMa === tvv.ma);
   const baiViet = saved.filter((s) => s.loai === "bai-viet").map((s) => ({ s, b: data.articles.find((a) => a.id === s.refId) })).filter((x) => x.b);
-  const taiLieu = saved.filter((s) => s.loai === "tai-lieu").map((s) => ({ s, t: data.documents.find((a) => a.id === s.refId) })).filter((x) => x.t);
-  const danhThiep = saved.filter((s) => s.loai === "danh-thiep").map((s) => ({ s, a: data.advisors.find((a) => a.ma === s.refId) })).filter((x) => x.a);
   const anh = data.studioImages.filter((a) => a.advisorMa === tvv.ma).sort((a, b) => b.tao.localeCompare(a.tao));
   const tenMau = (id: string) => data.studioTemplates.find((m) => m.id === id)?.ten ?? "Ảnh Studio";
   const boLuu = (id: string) => { actions.update("savedItems", (l) => l.filter((x) => x.id !== id)); flash("Đã bỏ lưu"); };
@@ -49,8 +48,6 @@ export default function Page() {
       <FilterChips<Loc> value={loc} onChange={setLoc} options={[
         { value: "tat-ca", label: "Tất cả", count: saved.length + anh.length },
         { value: "bai-viet", label: "Bài viết", count: baiViet.length },
-        { value: "tai-lieu", label: "Tài liệu", count: taiLieu.length },
-        { value: "danh-thiep", label: "Danh thiếp", count: danhThiep.length },
         { value: "anh-studio", label: "Ảnh Studio của tôi", count: anh.length },
       ]} />
 
@@ -62,28 +59,6 @@ export default function Page() {
           {baiViet.length === 0 ? <EmptyState title="Chưa có bài viết nào được lưu" action={<Button kind="secondary" href={R.F01}>Khám phá thư viện</Button>} /> : (
             <Card><ul>{baiViet.map(({ s, b }) => b && (
               <Row key={s.id} thumb={<ImageBox src={b.anh} alt={b.altAnh} />} title={b.tieuDe} sub={data.chuyenDe.find((c) => c.id === b.chuyenDeId)?.ten ?? ""} ngay={s.ngay} boLuuId={s.id} mo={<Link href={R.F02(b.slug)} className="text-blue">Mở</Link>} />
-            ))}</ul></Card>
-          )}
-        </section>
-      )}
-
-      {show("tai-lieu") && !trong && (
-        <section>
-          <Title>Tài liệu đã lưu ({taiLieu.length})</Title>
-          {taiLieu.length === 0 ? <EmptyState title="Chưa có tài liệu nào được lưu" action={<Button kind="secondary" href={R.G10}>Xem Tài liệu</Button>} /> : (
-            <Card><ul>{taiLieu.map(({ s, t }) => t && (
-              <Row key={s.id} thumb={<div className="h-[54px] rounded-sm bg-xam flex items-center justify-center text-[12px] font-bold text-ink2">{t.dinhDang}</div>} title={t.ten} sub={`${data.docTypes.find((d) => d.id === t.loaiId)?.ten ?? ""} · ${t.kichCo} · ${t.phienBan}`} ngay={s.ngay} boLuuId={s.id} mo={<button type="button" onClick={() => flash(`Đã mở "${t.ten}"`)} className="text-blue">Mở</button>} />
-            ))}</ul></Card>
-          )}
-        </section>
-      )}
-
-      {show("danh-thiep") && !trong && (
-        <section>
-          <Title>Danh thiếp đã lưu ({danhThiep.length})</Title>
-          {danhThiep.length === 0 ? <EmptyState title="Chưa có danh thiếp nào được lưu" action={<Button kind="secondary" href={R.E01}>Tìm Tư vấn viên</Button>} /> : (
-            <Card><ul>{danhThiep.map(({ s, a }) => a && (
-              <Row key={s.id} thumb={<div className="h-[54px] rounded-sm bg-blue-soft text-blue font-bold flex items-center justify-center">{a.hoTen.split(" ").slice(-2).map((x) => x[0]).join("")}</div>} title={a.hoTen} sub={`Mã ${a.ma} · ${a.chucDanh} · ${a.vanPhong}`} ngay={s.ngay} boLuuId={s.id} mo={<Link href={R.E03(a.ma)} className="text-blue">Mở</Link>} />
             ))}</ul></Card>
           )}
         </section>
