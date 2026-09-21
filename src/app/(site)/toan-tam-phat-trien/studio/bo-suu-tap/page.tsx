@@ -58,7 +58,7 @@ export default function Page() {
                     <Avatar name={t?.hoTen ?? "Tư vấn viên"} size={28} src={t?.avatar} />
                     <div className="min-w-0"><div className="text-[13px] font-bold text-den truncate">{t?.hoTen ?? "Tư vấn viên"}</div><div className="text-[11px] text-mut truncate">Mã {a.advisorMa}</div></div>
                   </div>
-                  <div className="text-[12px] text-ink2 mt-2 truncate">Mẫu: {tenMau(a.templateId)} · v{a.phienBanMau ?? 1}</div>
+                  <div className="text-[12px] text-ink2 mt-2 truncate">Mẫu: {tenMau(a.templateId)}</div>
                   <div className="text-[12px] text-mut">Đăng {fmtDate(a.ngayDuyet ?? a.tao)}</div>
                   <Button size="sm" kind="secondary" className="mt-3 w-full" href={hrefStudio(a.templateId)}>Tạo ảnh tương tự</Button>
                 </Card>); })}

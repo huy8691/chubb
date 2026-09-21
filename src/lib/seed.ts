@@ -253,27 +253,52 @@ export const articles: Article[] = BAI.map((b, i) => {
   };
 });
 
-/* ---------- Studio ---------- */
-const studioTemplatesGoc: StudioTemplate[] = [
-  { id: "m1", ten: "Chúc mừng năm mới", anh: "/img/d01-m1.jpg", tiLe: "4:5", trangThai: "da-xuat-ban", soAnhDaTao: 214, capNhat: "2026-08-01T09:00:00", phienBan: 3, disclaimer: "Sản phẩm bảo hiểm do Chubb Life Việt Nam cung cấp. Thông tin mang tính tham khảo.", mauNen: "#000ECC", khungAnh: "tron", tiLeKhung: 40, truong: { hoTen: true, chucDanh: true, soDienThoai: true, gioiThieu: false } },
-  { id: "m2", ten: "Cảm ơn khách hàng", anh: "/img/d01-m2.jpg", tiLe: "1:1", trangThai: "da-xuat-ban", soAnhDaTao: 98, capNhat: "2026-07-12T09:00:00", phienBan: 2, disclaimer: "Sản phẩm bảo hiểm do Chubb Life Việt Nam cung cấp. Thông tin mang tính tham khảo.", mauNen: "#000066", khungAnh: "vuong", tiLeKhung: 45, truong: { hoTen: true, chucDanh: true, soDienThoai: true, gioiThieu: false } },
-  { id: "m3", ten: "Tôi là Tư vấn viên Chubb Life", anh: "/img/d01-m3.jpg", tiLe: "9:16", trangThai: "nhap", soAnhDaTao: 0, capNhat: "2026-09-02T09:00:00", phienBan: 1, disclaimer: "Sản phẩm bảo hiểm do Chubb Life Việt Nam cung cấp. Thông tin mang tính tham khảo.", mauNen: "#FC0386", khungAnh: "tron", tiLeKhung: 40, truong: { hoTen: true, chucDanh: true, soDienThoai: true, gioiThieu: true } },
-  { id: "m4", ten: "Vinh danh tháng", anh: "/img/d01-m4.jpg", tiLe: "1:1", trangThai: "luu-tru", soAnhDaTao: 41, capNhat: "2026-05-20T09:00:00", phienBan: 1, disclaimer: "Sản phẩm bảo hiểm do Chubb Life Việt Nam cung cấp. Thông tin mang tính tham khảo.", mauNen: "#FFA300", khungAnh: "tron", tiLeKhung: 40, truong: { hoTen: true, chucDanh: false, soDienThoai: false, gioiThieu: false } },
-  // Mẫu thiết kế (kiểu Canva): nền hoạ tiết + ruy-băng nhãn + màu nhấn + bố cục (viền / dải dưới)
-  { id: "mh1", ten: "Chúc mừng đạt MDRT", anh: "/img/d01-m1.jpg", tiLe: "4:5", trangThai: "da-xuat-ban", soAnhDaTao: 176, capNhat: "2026-09-09T09:00:00", phienBan: 1, disclaimer: "Sản phẩm bảo hiểm do Chubb Life Việt Nam cung cấp. Thông tin mang tính tham khảo.", mauNen: "#000066", khungAnh: "tron", tiLeKhung: 42, hoaTiet: 1, nhan: "★ MDRT 2026 ★", mauNhan: "#FFC53D", boCuc: "vien", truong: { hoTen: true, chucDanh: true, soDienThoai: true, gioiThieu: false } },
-  { id: "mh2", ten: "Danh thiếp — dải nền dưới", anh: "/img/d01-m2.jpg", tiLe: "3:4", trangThai: "da-xuat-ban", soAnhDaTao: 132, capNhat: "2026-09-08T09:00:00", phienBan: 2, disclaimer: "Sản phẩm bảo hiểm do Chubb Life Việt Nam cung cấp. Thông tin mang tính tham khảo.", mauNen: "#000ECC", khungAnh: "tron", tiLeKhung: 40, hoaTiet: 3, mauNhan: "#4BCCE5", boCuc: "dai-duoi", truong: { hoTen: true, chucDanh: true, soDienThoai: true, gioiThieu: false } },
-  { id: "mh3", ten: "Tân binh xuất sắc — khung viền", anh: "/img/d01-m3.jpg", tiLe: "1:1", trangThai: "da-xuat-ban", soAnhDaTao: 88, capNhat: "2026-09-07T09:00:00", phienBan: 1, disclaimer: "Sản phẩm bảo hiểm do Chubb Life Việt Nam cung cấp. Thông tin mang tính tham khảo.", mauNen: "#1a1a6b", khungAnh: "vuong", tiLeKhung: 46, hoaTiet: 4, nhan: "TÂN BINH XUẤT SẮC", mauNhan: "#FFA300", boCuc: "vien", truong: { hoTen: true, chucDanh: true, soDienThoai: true, gioiThieu: false } },
-  { id: "mh4", ten: "Chúc mừng sinh nhật khách hàng", anh: "/img/d01-m1.jpg", tiLe: "4:5", trangThai: "da-xuat-ban", soAnhDaTao: 64, capNhat: "2026-09-06T09:00:00", phienBan: 1, disclaimer: "Sản phẩm bảo hiểm do Chubb Life Việt Nam cung cấp. Thông tin mang tính tham khảo.", mauNen: "#8a0f52", khungAnh: "tron", tiLeKhung: 42, hoaTiet: 1, nhan: "CHÚC MỪNG SINH NHẬT", mauNhan: "#FFC53D", boCuc: "dai-duoi", truong: { hoTen: true, chucDanh: true, soDienThoai: true, gioiThieu: false } },
+/* ---------- Studio ----------
+ * Mô hình mới (theo wireframe H02a): một mẫu = MỘT ảnh nền PNG (toàn bộ thiết kế đã nung vào ảnh:
+ * màu, hoạ tiết, bố cục, logo) + các field chữ đặt theo toạ độ + ô ảnh chân dung trong lỗ trong suốt
+ * của PNG. Không còn tham số hoá (màu nền, hoạ tiết, khung, tỉ lệ khung, ruy-băng) và không có lịch sử phiên bản.
+ * Toạ độ chuẩn lấy từ mẫu prototype "Chubb – Tự Do An Phúc".
+ */
+const DISCLAIMER_STUDIO = "Sản phẩm bảo hiểm do Chubb Life Việt Nam cung cấp. Thông tin mang tính tham khảo.";
+type FStudio = NonNullable<StudioTemplate["fields"]>;
+/** An Phúc (16:9 ngang): ô chân dung trái, 3 field navy bên dưới-trái, SĐT có ☎ xanh */
+const O_ANPHUC: NonNullable<StudioTemplate["anhChanDung"]> = { xPct: 25.1, yPct: 34.5, dPct: 27.6 };
+const FIELDS_ANPHUC: FStudio = [
+  { loai: "hoTen", xPct: 24.7, yPct: 66.5, size: 2.8, mau: "#13235f", canLe: "center", gioiHan: 40, dam: true },
+  { loai: "chucDanh", xPct: 24.7, yPct: 72.8, size: 1.8, mau: "#5b6270", canLe: "center", gioiHan: 30 },
+  { loai: "soDienThoai", xPct: 24.7, yPct: 79.2, size: 2.2, mau: "#13235f", canLe: "center", gioiHan: 15, dam: true, icon: true },
 ];
-/** 09/09: Chubb sẽ có nhiều mẫu → D08 là trang danh sách mẫu; sinh thêm 20 mẫu từ 4 mẫu gốc */
-const TEN_MAU_THEM = ["Danh thiếp dọc — Xanh", "Giới thiệu bản thân", "Ưu đãi tháng", "Sự kiện đào tạo", "Thiệp chúc mừng MDRT", "Chào mừng thành viên mới", "Lời chúc sinh nhật khách hàng", "Tổng kết quý", "Tri ân ngày 20/10", "Hẹn gặp tại hội thảo", "Kỷ niệm ngày vào nghề", "Đồng hành cùng gia đình", "Bảo vệ tương lai con", "Câu chuyện nghề của tôi", "Tết Trung thu", "Chúc mừng đạt chỉ tiêu", "Mời tham gia sự kiện", "Lời cảm ơn cuối năm", "Tôi là Tư vấn viên Chubb Life", "Danh thiếp ngang — Trắng"];
-const TI_LE_THEM: StudioTemplate["tiLe"][] = ["3:4", "1:1", "4:5", "9:16"];
+/** Mẫu dọc 4:5 (banner nền brand): ô chân dung trên-giữa, 3 field trắng dưới-giữa, tên serif HOA */
+const O_DOC: NonNullable<StudioTemplate["anhChanDung"]> = { xPct: 50, yPct: 30, dPct: 41 };
+const FIELDS_DOC: FStudio = [
+  { loai: "hoTen", xPct: 50, yPct: 73.5, size: 5.4, mau: "#ffffff", canLe: "center", gioiHan: 40, dam: true, serif: true, hoa: true },
+  { loai: "chucDanh", xPct: 50, yPct: 82, size: 2.6, mau: "#e6eaf5", canLe: "center", gioiHan: 30 },
+  { loai: "soDienThoai", xPct: 50, yPct: 86.5, size: 2.8, mau: "#ffffff", canLe: "center", gioiHan: 15, dam: true },
+];
+/** Field mặc định cho mẫu KHUNG (ảnh + slogan): Họ tên · Chức danh · SĐT đặt ở vùng trống dưới ô ảnh, căn giữa.
+ * mau/mauPhu tuỳ nền sáng-tối (nền sáng → chữ đậm màu; nền tối → trắng). Admin kéo tinh chỉnh trong CMS. */
+const khungFields = (mau: string, mauPhu: string): FStudio => [
+  { loai: "hoTen", xPct: 50, yPct: 53, size: 4.4, mau, canLe: "center", gioiHan: 40, dam: true },
+  { loai: "chucDanh", xPct: 50, yPct: 59, size: 2.5, mau: mauPhu, canLe: "center", gioiHan: 30 },
+  { loai: "soDienThoai", xPct: 50, yPct: 65, size: 2.7, mau, canLe: "center", gioiHan: 15, dam: true },
+];
+/** Helper tạo một mẫu mô hình mới — PNG nền + field + ô chân dung, không tham số hoá */
+const mauStudio = (o: { id: string; ten: string; anhNen: string; anh?: string; tiLe?: StudioTemplate["tiLe"]; tyLe?: number; anhSauNen?: boolean; hole?: StudioTemplate["anhChanDung"]; fields?: FStudio; trangThai?: StudioTemplate["trangThai"]; soAnhDaTao?: number; capNhat: string }): StudioTemplate => ({
+  id: o.id, ten: o.ten, anh: o.anh ?? o.anhNen, anhNen: o.anhNen, tiLe: o.tiLe ?? "4:5", tyLe: o.tyLe, anhSauNen: o.anhSauNen,
+  trangThai: o.trangThai ?? "da-xuat-ban", soAnhDaTao: o.soAnhDaTao ?? 0, capNhat: o.capNhat, phienBan: 1,
+  disclaimer: DISCLAIMER_STUDIO, anhChanDung: { ...(o.hole ?? O_DOC) }, fields: (o.fields ?? FIELDS_DOC).map((x) => ({ ...x })),
+});
 export const studioTemplates: StudioTemplate[] = [
-  ...studioTemplatesGoc,
-  ...TEN_MAU_THEM.map((ten, i) => ({
-    ...studioTemplatesGoc[i % 4], id: `m${i + 5}`, ten, tiLe: TI_LE_THEM[i % 4], anh: `/img/d01-m${(i % 4) + 1}.jpg`, trangThai: "da-xuat-ban" as const,
-    soAnhDaTao: 214 - i * 9, capNhat: `2026-0${8 - (i % 3)}-${String(28 - i).padStart(2, "0")}T09:00:00`, phienBan: (i % 3) + 1,
-  })),
+  mauStudio({ id: "m-anphuc", ten: "Chubb – Tự Do An Phúc", anhNen: "/studio/tu-do-an-phuc.png", anh: "/studio/tu-do-an-phuc-mau.png", tiLe: "16:9", hole: O_ANPHUC, fields: FIELDS_ANPHUC, soAnhDaTao: 0, capNhat: "2026-09-21T09:00:00" }),
+  mauStudio({ id: "m-antam", ten: "An tâm hôm nay — Vững vàng tương lai", anhNen: "/studio/khung-antam.png", tiLe: "9:16", tyLe: 1019 / 1543, anhSauNen: true, hole: { xPct: 49.8, yPct: 30.8, dPct: 45.9 }, fields: khungFields("#13235f", "#5b6270"), soAnhDaTao: 156, capNhat: "2026-09-21T10:00:00" }),
+  mauStudio({ id: "m-giaiphap", ten: "Giải pháp hôm nay cho cuộc sống tốt đẹp hơn", anhNen: "/studio/khung-giaiphap.png", tiLe: "9:16", tyLe: 466 / 767, anhSauNen: true, hole: { xPct: 56, yPct: 29.5, dPct: 52.2 }, fields: khungFields("#ffffff", "#e6eaf5"), soAnhDaTao: 92, capNhat: "2026-09-21T10:05:00" }),
+  mauStudio({ id: "m-baove", ten: "Bảo vệ điều quan trọng", anhNen: "/studio/khung-baove.png", tiLe: "9:16", tyLe: 1019 / 1543, anhSauNen: true, hole: { xPct: 49.9, yPct: 30, dPct: 52 }, fields: khungFields("#ffffff", "#ffe0f0"), soAnhDaTao: 74, capNhat: "2026-09-21T10:10:00" }),
+  mauStudio({ id: "m-songantam", ten: "Sống an tâm — Trọn vẹn hơn", anhNen: "/studio/khung-songantam.png", tiLe: "9:16", tyLe: 475 / 769, anhSauNen: true, hole: { xPct: 48.3, yPct: 29.6, dPct: 57.5 }, fields: khungFields("#215c3a", "#5a7a63"), soAnhDaTao: 51, capNhat: "2026-09-21T10:15:00" }),
+  mauStudio({ id: "m-gioi-thieu", ten: "Giới thiệu bản thân", anhNen: "/studio/mau-1.png", soAnhDaTao: 214, capNhat: "2026-09-18T09:00:00" }),
+  mauStudio({ id: "m-uu-dai", ten: "Ưu đãi tháng", anhNen: "/studio/mau-2.png", soAnhDaTao: 132, capNhat: "2026-09-16T09:00:00" }),
+  mauStudio({ id: "m-su-kien", ten: "Sự kiện & hội thảo", anhNen: "/studio/mau-3.png", soAnhDaTao: 88, capNhat: "2026-09-12T09:00:00" }),
+  mauStudio({ id: "m-cam-on", ten: "Cảm ơn khách hàng", anhNen: "/studio/mau-4.png", soAnhDaTao: 64, capNhat: "2026-09-10T09:00:00" }),
+  mauStudio({ id: "m-la-tvv", ten: "Tôi là Tư vấn viên Chubb Life", anhNen: "/studio/mau-1.png", trangThai: "nhap", soAnhDaTao: 0, capNhat: "2026-09-08T09:00:00" }),
 ];
 
 export const studioImages: StudioImage[] = Array.from({ length: 41 }, (_, i) => ({

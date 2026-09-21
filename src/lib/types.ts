@@ -103,11 +103,37 @@ export interface Article {
   luotXem: number;
 }
 
+/** Một field chữ Tư vấn viên điền, đặt tuyệt đối trên ảnh nền PNG (H02a). Toạ độ tâm theo % bề rộng/chiều cao. */
+export interface StudioField {
+  loai: "hoTen" | "chucDanh" | "soDienThoai" | "gioiThieu";
+  xPct: number; yPct: number;      // tâm field, % bề rộng/chiều cao
+  size: number;                    // cỡ chữ theo % bề rộng (vd 2.8)
+  mau: string;                     // màu chữ
+  canLe: "left" | "center" | "right";
+  gioiHan: number;                 // giới hạn ký tự
+  dam?: boolean;                   // in đậm
+  serif?: boolean;                 // dùng font serif (Publico) thay Lato
+  hoa?: boolean;                   // viết HOA
+  icon?: boolean;                  // (soDienThoai) hiện biểu tượng ☎ tròn xanh phía trước
+}
+/** Ô ảnh chân dung — vòng tròn trong suốt của ảnh nền PNG. Tâm + đường kính theo % bề rộng. */
+export interface StudioPortraitHole { xPct: number; yPct: number; dPct: number }
+
 export interface StudioTemplate {
   id: string;
   ten: string;
   anh: string;
-  tiLe: "1:1" | "3:4" | "4:5" | "9:16";
+  tiLe: "1:1" | "3:4" | "4:5" | "9:16" | "16:9";
+  /** Mẫu nền-ảnh-thật: PNG nền có sẵn toàn bộ thiết kế (màu, hoạ tiết, bố cục, logo); overlay ảnh chân dung + các field chữ theo toạ độ. */
+  anhNen?: string;
+  /** Field chữ đặt trên ảnh nền (mô hình mới PNG + field) */
+  fields?: StudioField[];
+  /** Tỉ lệ thật (rộng/cao) — cho mẫu khung PNG kích thước bất kỳ; override tiLe khi render */
+  tyLe?: number;
+  /** Ảnh chân dung vẽ SAU ảnh nền (lỗ trong suốt của PNG tự cắt hình) — mẫu "khung ảnh + slogan", không field */
+  anhSauNen?: boolean;
+  /** Ô ảnh chân dung trong suốt của ảnh nền (mô hình mới) */
+  anhChanDung?: StudioPortraitHole;
   /** Thêm cho H02a (cụm Công cụ) — tuỳ chọn để không phá seed cụm khác */
   phienBan?: number;
   disclaimer?: string;

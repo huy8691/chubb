@@ -11,7 +11,7 @@ import { fmtDate, fmtNum } from "@/lib/seed";
 import type { StudioTemplate } from "@/lib/types";
 import { Button, EmptyState, FilterChips, ImageBox, Pagination, SearchBox, StatusChip, Table, useFlash } from "@/components/ui";
 import { CmsCard, CmsHeader } from "@/components/cms/CmsShell";
-import { tiLeLabel, tiLeToRatio } from "@/components/cong-cu/StudioPreview";
+import { tiLeToRatio } from "@/components/cong-cu/StudioPreview";
 
 const PER_PAGE = 10;
 type Loc = "tat-ca" | StudioTemplate["trangThai"];
@@ -56,17 +56,16 @@ export default function Page() {
           />
         </div>
         {shown.length === 0 ? <EmptyState title="Không có mẫu phù hợp" desc="Đổi bộ lọc hoặc tạo mẫu mới." action={<Button href={R.H02a("moi")}>+ Tạo mẫu mới</Button>} /> : (
-          <Table head={["Mẫu", "Định dạng", "Phiên bản · cập nhật", "Ảnh đã tạo", "Trạng thái", ""]}>
+          <Table head={["Mẫu", "Cập nhật", "Ảnh đã tạo", "Trạng thái", ""]}>
             {shown.map((m) => (
               <tr key={m.id}>
                 <td>
                   <Link href={R.H02a(m.id)} className="flex items-center gap-3 hover:text-blue">
-                    <ImageBox ratio={tiLeToRatio(m.tiLe)} className="w-[48px] shrink-0" />
+                    <ImageBox src={m.anh} ratio={tiLeToRatio(m.tiLe)} className="w-[48px] shrink-0" />
                     <span className="font-bold text-den">{m.ten}</span>
                   </Link>
                 </td>
-                <td className="whitespace-nowrap">{tiLeLabel(m.tiLe)}</td>
-                <td className="whitespace-nowrap text-ink2">v{m.phienBan ?? 1} · {fmtDate(m.capNhat)}</td>
+                <td className="whitespace-nowrap text-ink2">{fmtDate(m.capNhat)}</td>
                 <td className="text-right tabular-nums">{fmtNum(soAnh(m.id) || m.soAnhDaTao)}</td>
                 <td><StatusChip s={m.trangThai} /></td>
                 <td className="text-right whitespace-nowrap">

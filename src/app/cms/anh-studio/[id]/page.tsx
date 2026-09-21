@@ -43,7 +43,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const m = data.studioTemplates.find((t) => t.id === a.templateId);
   const tenMau = m?.ten ?? "Mẫu Studio";
   const pb = a.phienBanMau ?? m?.phienBan ?? 1;
-  const truong = m?.truong ? [m.truong.hoTen && "Họ tên", m.truong.chucDanh && "Chức danh", m.truong.soDienThoai && "SĐT", m.truong.gioiThieu && "Câu giới thiệu"].filter(Boolean).join(" · ") : "Họ tên · Chức danh · SĐT";
+  const LOAI_TEN: Record<string, string> = { hoTen: "Họ tên", chucDanh: "Chức danh", soDienThoai: "SĐT", gioiThieu: "Câu giới thiệu" };
+  const truong = m?.fields?.length ? m.fields.map((fd) => LOAI_TEN[fd.loai]).join(" · ") : "Họ tên · Chức danh · SĐT";
   const daDuyetKhac = data.studioImages.filter((x) => x.trangThai === "da-duyet" && x.id !== a.id).sort((x, y) => (y.ngayDuyet ?? "").localeCompare(x.ngayDuyet ?? "")).slice(0, 5);
   const tongDaDuyet = data.studioImages.filter((x) => x.trangThai === "da-duyet").length;
 

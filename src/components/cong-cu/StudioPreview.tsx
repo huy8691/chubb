@@ -4,15 +4,35 @@
  * Ghép đơn giản bằng CSS overlay: ảnh nền mẫu + khung chân dung + họ tên/chức danh/SĐT + dòng disclaimer + logo.
  * Không phải chất lượng in — ngoài phạm vi demo.
  */
-import { useRef } from "react";
-import type { StudioTemplate } from "@/lib/types";
+import { useEffect, useRef, useState } from "react";
+import type { StudioField, StudioTemplate } from "@/lib/types";
 import { cx } from "@/components/ui";
 
 export function tiLeToRatio(tiLe: StudioTemplate["tiLe"]) {
-  return tiLe === "1:1" ? "1/1" : tiLe === "4:5" ? "4/5" : tiLe === "9:16" ? "9/16" : "3/4";
+  return tiLe === "1:1" ? "1/1" : tiLe === "4:5" ? "4/5" : tiLe === "9:16" ? "9/16" : tiLe === "16:9" ? "16/9" : "3/4";
+}
+/** [w,h] số cho canvas */
+function tiLeWH(tiLe: StudioTemplate["tiLe"]): [number, number] {
+  return tiLe === "1:1" ? [1, 1] : tiLe === "4:5" ? [4, 5] : tiLe === "9:16" ? [9, 16] : tiLe === "16:9" ? [16, 9] : [3, 4];
+}
+
+/* ---- Mặc định mô hình PNG + field (khi mẫu chưa có dữ liệu) — trùng "Chubb – Tự Do An Phúc" ---- */
+const O_CHAN_DUNG_MD = { xPct: 25.1, yPct: 34.5, dPct: 27.6 };
+const FIELDS_MD: StudioField[] = [
+  { loai: "hoTen", xPct: 24.7, yPct: 66.5, size: 2.8, mau: "#13235f", canLe: "center", gioiHan: 40, dam: true },
+  { loai: "chucDanh", xPct: 24.7, yPct: 72.8, size: 1.8, mau: "#5b6270", canLe: "center", gioiHan: 30, dam: false },
+  { loai: "soDienThoai", xPct: 24.7, yPct: 79.2, size: 2.2, mau: "#13235f", canLe: "center", gioiHan: 15, dam: true },
+];
+/** Chữ mẫu khi Tư vấn viên chưa nhập */
+function fieldPlaceholder(loai: StudioField["loai"]) {
+  return loai === "hoTen" ? "Họ tên tư vấn viên" : loai === "chucDanh" ? "Chức danh" : loai === "soDienThoai" ? "0903 xxx xxx" : "…";
+}
+/** Dịch tâm/anchor theo căn lề (xPct là điểm neo) */
+function alignTranslateX(canLe: StudioField["canLe"]) {
+  return canLe === "center" ? "-50%" : canLe === "right" ? "-100%" : "0%";
 }
 export function tiLeLabel(tiLe: StudioTemplate["tiLe"]) {
-  return tiLe === "1:1" ? "Vuông 1:1" : tiLe === "4:5" ? "Dọc 4:5" : tiLe === "9:16" ? "Dọc 9:16" : "Dọc 3:4";
+  return tiLe === "1:1" ? "Vuông 1:1" : tiLe === "4:5" ? "Dọc 4:5" : tiLe === "9:16" ? "Dọc 9:16" : tiLe === "16:9" ? "Ngang 16:9" : "Dọc 3:4";
 }
 
 /** Hoạ tiết thương hiệu phủ lên nền màu (CSS thuần, không cần ảnh) — cho khách hình dung mẫu có thiết kế thật */
@@ -29,10 +49,48 @@ function hoaTietCss(h: number): string {
   }
 }
 
-export function StudioPreview({ template, portrait, zoom = 1, offsetX = 0, offsetY = 0, onOffsetChange, hoTen, chucDanh, soDienThoai, className }: {
-  template?: Pick<StudioTemplate, "anh" | "tiLe" | "mauNen" | "khungAnh" | "tiLeKhung" | "disclaimer" | "hoaTiet" | "nhan" | "mauNhan" | "boCuc">;
+/** Tự dò lỗ trong suốt của ảnh nền PNG (quét alpha) → ô ảnh chân dung; null nếu ảnh không có vùng trong suốt đáng kể.
+ * Admin chỉ cần upload PNG chừa lỗ trong suốt — không cần nhập toạ độ. Kết quả cache theo src. */
+type Hole = { xPct: number; yPct: number; dPct: number };
+/** Kết quả tự dò: lỗ trong suốt (null nếu không có) + tỉ lệ thật rộng/cao của ảnh nền */
+type Detected = { hole: Hole | null; ratio: number };
+const holeCache = new Map<string, Detected>();
+function detectHole(src: string): Promise<Detected> {
+  const cached = holeCache.get(src);
+  if (cached !== undefined) return Promise.resolve(cached);
+  return new Promise<Detected>((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const ratio = img.height ? img.width / img.height : 1;
+      let hole: Hole | null = null;
+      try {
+        const cw = 160, ch = Math.max(1, Math.round((cw * img.height) / img.width));
+        const c = document.createElement("canvas"); c.width = cw; c.height = ch;
+        const ctx = c.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, cw, ch);
+          const d = ctx.getImageData(0, 0, cw, ch).data;
+          let minx = cw, miny = ch, maxx = -1, maxy = -1, cnt = 0;
+          for (let y = 0; y < ch; y++) for (let x = 0; x < cw; x++) {
+            if (d[(y * cw + x) * 4 + 3] < 20) { cnt++; if (x < minx) minx = x; if (x > maxx) maxx = x; if (y < miny) miny = y; if (y > maxy) maxy = y; }
+          }
+          if (cnt >= cw * ch * 0.004 && maxx >= 0) {
+            const w = maxx - minx + 1, h = maxy - miny + 1;
+            hole = { xPct: (((minx + maxx) / 2) / cw) * 100, yPct: (((miny + maxy) / 2) / ch) * 100, dPct: (Math.max(w, h) / cw) * 100 };
+          }
+        }
+      } catch { hole = null; }
+      const res: Detected = { hole, ratio }; holeCache.set(src, res); resolve(res);
+    };
+    img.onerror = () => { const res: Detected = { hole: null, ratio: 0 }; holeCache.set(src, res); resolve(res); };
+    img.src = src;
+  });
+}
+
+export function StudioPreview({ template, portrait, zoom = 1, offsetX = 0, offsetY = 0, onOffsetChange, hoTen, chucDanh, soDienThoai, gioiThieu, className }: {
+  template?: Pick<StudioTemplate, "anh" | "anhNen" | "tiLe" | "tyLe" | "anhSauNen" | "fields" | "anhChanDung" | "mauNen" | "khungAnh" | "tiLeKhung" | "disclaimer" | "hoaTiet" | "nhan" | "mauNhan" | "boCuc">;
   portrait?: string; zoom?: number; offsetX?: number; offsetY?: number; onOffsetChange?: (x: number, y: number) => void;
-  hoTen?: string; chucDanh?: string; soDienThoai?: string; className?: string;
+  hoTen?: string; chucDanh?: string; soDienThoai?: string; gioiThieu?: string; className?: string;
 }) {
   const ratio = tiLeToRatio(template?.tiLe ?? "3:4");
   const khung = template?.tiLeKhung ?? 40;
@@ -56,6 +114,54 @@ export function StudioPreview({ template, portrait, zoom = 1, offsetX = 0, offse
     onOffsetChange(clamp(d.ox + ((e.clientX - d.x) / d.w) * 100), clamp(d.oy + ((e.clientY - d.y) / d.h) * 100));
   };
   const onUp = (e: React.PointerEvent<HTMLDivElement>) => { if (drag.current) { try { e.currentTarget.releasePointerCapture(e.pointerId); } catch {} drag.current = null; } };
+
+  // Tự dò lỗ trong suốt của ảnh nền (thuật toán) — admin chỉ upload PNG có lỗ, không nhập toạ độ
+  const [detected, setDetected] = useState<Detected | undefined>(undefined);
+  useEffect(() => {
+    const s = template?.anhNen; if (!s) { setDetected(undefined); return; }
+    let ok = true; detectHole(s).then((d) => { if (ok) setDetected(d); }); return () => { ok = false; };
+  }, [template?.anhNen]);
+
+  // Mẫu nền-ảnh-thật (mô hình PNG + field): ảnh nền PNG chứa toàn bộ thiết kế + ảnh chân dung (tự dò lỗ trong suốt) + field chữ.
+  if (template?.anhNen) {
+    const fields = template.fields ?? FIELDS_MD;
+    // Có lỗ trong suốt → ảnh nằm SAU nền, lỗ tự cắt đúng hình. Không có (An Phúc vòng đục) → vẽ đè, dùng toạ độ mẫu.
+    const behind = detected?.hole ? true : (detected === undefined ? !!template.anhSauNen : false);
+    const hole = detected?.hole ?? template.anhChanDung ?? O_CHAN_DUNG_MD;
+    const ratio = detected?.ratio ? String(detected.ratio) : (template.tyLe ? String(template.tyLe) : tiLeToRatio(template.tiLe ?? "16:9"));
+    const val = (loai: StudioField["loai"]) => {
+      const v = loai === "hoTen" ? hoTen : loai === "chucDanh" ? chucDanh : loai === "soDienThoai" ? soDienThoai : gioiThieu;
+      return (v ?? "") || fieldPlaceholder(loai);
+    };
+    // Lớp ảnh chân dung — chỉ vẽ khi có ảnh; chưa có thì để ô trong suốt của PNG lộ ra (không placeholder giả).
+    // behind: không bo tròn (để lỗ PNG cắt đúng hình vuông/lục giác/blob); on-top: bo tròn như cũ.
+    const photoLayer = portrait ? (
+      <div className={cx("absolute overflow-hidden", !behind && "rounded-full", canDrag && "cursor-move touch-none")} style={{ left: `${hole.xPct}%`, top: `${hole.yPct}%`, width: `${hole.dPct}%`, aspectRatio: "1/1", transform: "translate(-50%,-50%)" }}
+        onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}>
+        <img src={portrait} alt="" draggable={false} className="w-full h-full object-cover" style={{ transform: `translate(${ax}%, ${ay}%) scale(${zoom})` }} />
+      </div>
+    ) : null;
+    return (
+      <div className={cx("relative w-full overflow-hidden rounded-sm select-none [container-type:inline-size]", className)} style={{ aspectRatio: ratio }} aria-label="Xem trước ảnh Studio">
+        {behind && photoLayer}
+        <img src={template.anhNen} alt="" draggable={false} className="absolute inset-0 w-full h-full object-cover" />
+        {!behind && photoLayer}
+        {/* Field chữ Tư vấn viên điền — đặt tuyệt đối theo toạ độ mẫu, khớp bản tải (canvas). Font sans (Lato, kế thừa body). */}
+        {fields.map((fd, i) => {
+          const base: React.CSSProperties = { left: `${fd.xPct}%`, top: `${fd.yPct}%`, transform: `translate(${alignTranslateX(fd.canLe)}, -50%)`, color: fd.mau, fontSize: `${fd.size}cqw`, fontWeight: fd.dam ? 700 : 400, fontFamily: fd.serif ? '"Publico", Georgia, "Times New Roman", serif' : undefined, textTransform: fd.hoa ? "uppercase" : undefined };
+          return fd.loai === "soDienThoai" && fd.icon ? (
+            <div key={i} data-fld={fd.loai} className="absolute flex items-center whitespace-nowrap leading-none" style={{ ...base, gap: `${fd.size * 0.35}cqw` }}>
+              <span className="inline-flex items-center justify-center rounded-full bg-[#7FCD32] text-white shrink-0" style={{ width: `${fd.size * 1.2}cqw`, height: `${fd.size * 1.2}cqw`, fontSize: `${fd.size * 0.7}cqw` }}>☎</span>
+              {val("soDienThoai")}
+            </div>
+          ) : (
+            <div key={i} data-fld={fd.loai} className="absolute whitespace-nowrap leading-none" style={{ ...base, textAlign: fd.canLe }}>{val(fd.loai)}</div>
+          );
+        })}
+      </div>
+    );
+  }
+
   return (
     <div className={cx("relative w-full overflow-hidden rounded-sm text-white select-none", className)} style={{ aspectRatio: ratio, background: template?.mauNen ?? "#000ECC" }} aria-label="Xem trước ảnh Studio">
 
@@ -106,10 +212,61 @@ function wrapText(ctx: CanvasRenderingContext2D, text: string, cx: number, y: nu
 }
 
 export async function taiAnhStudio(opts: {
-  template?: Pick<StudioTemplate, "tiLe" | "mauNen" | "khungAnh" | "tiLeKhung" | "disclaimer" | "hoaTiet" | "nhan" | "mauNhan" | "boCuc">;
-  portrait?: string; zoom?: number; offsetX?: number; offsetY?: number; hoTen?: string; chucDanh?: string; soDienThoai?: string;
+  template?: Pick<StudioTemplate, "tiLe" | "tyLe" | "anhSauNen" | "anhNen" | "fields" | "anhChanDung" | "mauNen" | "khungAnh" | "tiLeKhung" | "disclaimer" | "hoaTiet" | "nhan" | "mauNhan" | "boCuc">;
+  portrait?: string; zoom?: number; offsetX?: number; offsetY?: number; hoTen?: string; chucDanh?: string; soDienThoai?: string; gioiThieu?: string;
 }) {
-  const { template, portrait, zoom = 1, offsetX = 0, offsetY = 0, hoTen, chucDanh, soDienThoai } = opts;
+  const { template, portrait, zoom = 1, offsetX = 0, offsetY = 0, hoTen, chucDanh, soDienThoai, gioiThieu } = opts;
+
+  // Mẫu nền-ảnh-thật (mô hình PNG + field): vẽ ảnh nền + overlay ảnh chân dung + các field theo dữ liệu mẫu
+  if (template?.anhNen) {
+    const detected = await detectHole(template.anhNen); // tự dò lỗ trong suốt + tỉ lệ thật
+    const behind = detected.hole ? true : !!template.anhSauNen;
+    const [rw, rh] = tiLeWH(template.tiLe ?? "16:9");
+    const W = 1080, H = detected.ratio ? Math.round(W / detected.ratio) : (template.tyLe ? Math.round(W / template.tyLe) : Math.round((W * rh) / rw));
+    const c = document.createElement("canvas"); c.width = W; c.height = H;
+    const ctx = c.getContext("2d"); if (!ctx) return;
+    const hole = detected.hole ?? template.anhChanDung ?? O_CHAN_DUNG_MD;
+    const pcx = (hole.xPct / 100) * W, pcy = (hole.yPct / 100) * H, r = ((hole.dPct / 100) * W) / 2;
+    // Vẽ ảnh chân dung — behind: vẽ TRƯỚC nền (clip ô vuông; PNG đè lên tự cắt hình); on-top: vẽ SAU nền (clip vòng tròn)
+    const veAnh = async (tron: boolean) => {
+      if (!portrait) return;
+      ctx.save(); ctx.beginPath();
+      if (tron) ctx.arc(pcx, pcy, r, 0, Math.PI * 2); else ctx.rect(pcx - r, pcy - r, 2 * r, 2 * r);
+      ctx.closePath(); ctx.clip();
+      try { const img = await loadImg(portrait); const s = Math.max((2 * r) / img.width, (2 * r) / img.height) * zoom; const dw = img.width * s, dh = img.height * s; ctx.drawImage(img, pcx - dw / 2 + (offsetX / 100) * 2 * r, pcy - dh / 2 + (offsetY / 100) * 2 * r, dw, dh); } catch {}
+      ctx.restore();
+    };
+    if (behind) await veAnh(false);
+    try { const bg = await loadImg(template.anhNen); ctx.drawImage(bg, 0, 0, W, H); } catch {}
+    if (!behind) await veAnh(true);
+    // Cùng font (Lato sans) như bản xem trước — nạp trước khi vẽ để canvas không rơi về fallback
+    const SANS = `Lato, Arial, sans-serif`, SERIF = `"Publico", Georgia, "Times New Roman", serif`;
+    const fields = template.fields ?? FIELDS_MD;
+    try { await Promise.all(fields.flatMap((fd) => { const sz = (W * fd.size) / 100, w = fd.dam ? "bold " : ""; return [document.fonts.load(`${w}${sz}px Lato`), fd.serif ? document.fonts.load(`${w}${sz}px "Publico"`) : Promise.resolve()]; })); } catch {}
+    ctx.textBaseline = "middle";
+    const valOf = (loai: StudioField["loai"], hoa?: boolean) => {
+      const v = loai === "hoTen" ? hoTen : loai === "chucDanh" ? chucDanh : loai === "soDienThoai" ? soDienThoai : gioiThieu;
+      const s = (v ?? "") || fieldPlaceholder(loai);
+      return hoa ? s.toUpperCase() : s;
+    };
+    for (const fd of fields) {
+      const fs = (W * fd.size) / 100, x = (fd.xPct / 100) * W, y = (fd.yPct / 100) * H;
+      const fontDecl = `${fd.dam ? "bold " : ""}${fs}px ${fd.serif ? SERIF : SANS}`;
+      if (fd.loai === "soDienThoai" && fd.icon) {
+        const ph = valOf("soDienThoai", fd.hoa), icon = fs * 1.2, gap = fs * 0.35; ctx.font = fontDecl;
+        const phw = ctx.measureText(ph).width, groupW = icon + gap + phw;
+        const left = fd.canLe === "center" ? x - groupW / 2 : fd.canLe === "right" ? x - groupW : x;
+        ctx.textAlign = "center"; ctx.fillStyle = "#7FCD32"; ctx.beginPath(); ctx.arc(left + icon / 2, y, icon / 2, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#fff"; ctx.font = `${icon * 0.62}px ${SANS}`; ctx.fillText("☎", left + icon / 2, y);
+        ctx.textAlign = "left"; ctx.fillStyle = fd.mau; ctx.font = fontDecl; ctx.fillText(ph, left + icon + gap, y);
+      } else {
+        ctx.textAlign = fd.canLe; ctx.fillStyle = fd.mau; ctx.font = fontDecl; ctx.fillText(valOf(fd.loai, fd.hoa), x, y);
+      }
+    }
+    const a = document.createElement("a"); a.href = c.toDataURL("image/png"); a.download = `anh-studio-${Date.now()}.png`; document.body.appendChild(a); a.click(); a.remove();
+    return;
+  }
+
   const accent = template?.mauNhan ?? "#FFA300", nhan = template?.nhan, band = template?.boCuc === "dai-duoi", vien = template?.boCuc === "vien";
   const tiLe = template?.tiLe ?? "3:4";
   const [rw, rh] = tiLe === "1:1" ? [1, 1] : tiLe === "4:5" ? [4, 5] : tiLe === "9:16" ? [9, 16] : [3, 4];

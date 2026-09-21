@@ -9,8 +9,8 @@ import { useCurrentAdvisor, useStore } from "@/lib/store";
 import { fmtDate } from "@/lib/seed";
 import type { StudioImage } from "@/lib/types";
 import { RequireTVV } from "@/components/site/AccountShell";
-import { Button, Card, Checkbox, Chip, Eyebrow, Field, H1, H2, ImageBox, Input, MoreLink, Muted, cx, useFlash } from "@/components/ui";
-import { StudioPreview, tiLeLabel, taiAnhStudio } from "@/components/cong-cu/StudioPreview";
+import { Button, Card, Checkbox, Eyebrow, Field, H1, H2, ImageBox, Input, MoreLink, Muted, cx, useFlash } from "@/components/ui";
+import { StudioPreview, taiAnhStudio } from "@/components/cong-cu/StudioPreview";
 import { MauStudioCard } from "@/components/cong-cu/MauStudioCard";
 
 const GIOI_HAN = 32;
@@ -26,6 +26,13 @@ function docAnhThuNho(file: File): Promise<string> {
     };
     r.onerror = rej; r.readAsDataURL(file);
   });
+}
+
+/** Thumbnail mẫu đã chọn: ảnh thật hiển thị theo ĐÚNG tỉ lệ tự nhiên của ảnh (không ép khung/cắt); rơi về ô xám ImageBox nếu ảnh thiếu/hỏng. */
+function TemplateThumb({ src, tiLe }: { src?: string; tiLe: string }) {
+  const [loi, setLoi] = useState(false);
+  if (!src || loi) return <ImageBox src={src} ratio={tiLe.replace(":", "/")} />;
+  return <img src={src} alt="" className="block w-full h-auto rounded-sm border border-[#D6D6D6] bg-vien2" onError={() => setLoi(true)} />;
 }
 
 function Studio() {
@@ -79,12 +86,12 @@ function Studio() {
             <div className="font-bold text-[16px] text-den">Bước 1 — Mẫu đã chọn</div>
             <div className="mt-4 flex items-start gap-5">
               <div className="w-[130px] shrink-0 rounded-sm border border-blue bg-blue-soft p-2">
-                <ImageBox src={m.anh} ratio="3/4" />
+                <TemplateThumb key={m.anh} src={m.anh} tiLe={m.tiLe} />
                 <div className="mt-2 text-[11px] text-blue font-bold">Đã chọn</div>
               </div>
               <div>
                 <div className="font-bold text-[15px] text-den">{m.ten}</div>
-                <Muted className="mt-1 text-[12.5px]">{tiLeLabel(m.tiLe)} · phiên bản v{m.phienBan ?? 1} · cập nhật {fmtDate(m.capNhat)}</Muted>
+                <Muted className="mt-1 text-[12.5px]">Cập nhật {fmtDate(m.capNhat)}</Muted>
                 <Link href={R.D08} className="mt-3 inline-block text-[13px] font-bold text-blue hover:underline">Đổi mẫu</Link>
               </div>
             </div>
@@ -107,10 +114,7 @@ function Studio() {
               <Field label="Chức danh" count={`${chucDanh.length}/${GIOI_HAN}`}><Input value={chucDanh} maxLength={GIOI_HAN} onChange={(e) => setChucDanh(e.target.value)} /></Field>
               <Field label="Số điện thoại" count={`${sdt.length}/${GIOI_HAN}`}><Input value={sdt} maxLength={GIOI_HAN} onChange={(e) => setSdt(e.target.value)} /></Field>
             </div>
-            <div className="mt-6 pt-5 border-t border-vien2">
-              <div className="text-[12px] font-bold text-ink2 mb-2">Không sửa được</div>
-              <div className="flex flex-wrap gap-2">{["Logo Chubb + ®", "Màu nền", "Bố cục", "Dòng disclaimer", "Font chữ"].map((c) => <Chip key={c}>{c}</Chip>)}</div>
-            </div>
+            <div className="mt-6 pt-5 border-t border-vien2 text-[12px] text-ink2 leading-relaxed">Chỉ điền được thông tin và ảnh chân dung — phần còn lại (nền, bố cục, logo…) nằm trong mẫu.</div>
           </Card>
         </div>
 
@@ -123,7 +127,7 @@ function Studio() {
               {(offset.x !== 0 || offset.y !== 0) && <button type="button" className="text-blue font-bold hover:underline" onClick={() => setOffset({ x: 0, y: 0 })}>Đặt lại vị trí</button>}
             </div>
           )}
-          <Muted className="mt-3 text-[12px] text-center">Phiên bản mẫu v{m.phienBan ?? 1} · cập nhật {fmtDate(m.capNhat)}</Muted>
+          <Muted className="mt-3 text-[12px] text-center">Cập nhật {fmtDate(m.capNhat)}</Muted>
           <div className="mt-5">
             <div className="text-[11.5px] font-bold tracking-wider text-mut">LƯU CHO RIÊNG BẠN</div>
             <div className="mt-2 flex flex-wrap items-center gap-2">

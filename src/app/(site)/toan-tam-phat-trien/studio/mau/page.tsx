@@ -5,29 +5,23 @@ import { useMemo, useState } from "react";
 import { R } from "@/lib/routes";
 import { useStore } from "@/lib/store";
 import { fmtNum } from "@/lib/seed";
-import type { StudioTemplate } from "@/lib/types";
 import { MauStudioCard } from "@/components/cong-cu/MauStudioCard";
-import { Breadcrumb, Button, Card, EmptyState, FilterChips, H1, H3, Muted, Pagination, SearchBox, Select } from "@/components/ui";
+import { Breadcrumb, Button, Card, EmptyState, H1, H3, Muted, Pagination, SearchBox, Select } from "@/components/ui";
 
 const MOI_TRANG = 8;
 type Sap = "moi" | "cu" | "dung-nhieu";
-type Loc = "tat-ca" | "doc" | "vuong" | "story";
-const NHOM: Record<Exclude<Loc, "tat-ca">, StudioTemplate["tiLe"][]> = { doc: ["3:4", "4:5"], vuong: ["1:1"], story: ["9:16"] };
-const NHAN: Record<Loc, string> = { "tat-ca": "Tất cả", doc: "Dọc 3:4 · 4:5", vuong: "Vuông 1:1", story: "Story 9:16" };
 
 export default function Page() {
   const { data, session } = useStore();
-  const [loc, setLoc] = useState<Loc>("tat-ca");
   const [sap, setSap] = useState<Sap>("moi");
   const [q, setQ] = useState("");
   const [trang, setTrang] = useState(1);
   const tatCa = useMemo(() => data.studioTemplates.filter((m) => m.trangThai === "da-xuat-ban"), [data.studioTemplates]);
-  const dem = (l: Loc) => (l === "tat-ca" ? tatCa : tatCa.filter((m) => NHOM[l].includes(m.tiLe))).length;
   const list = useMemo(() => {
     const k = q.trim().toLowerCase();
-    const l = tatCa.filter((m) => (loc === "tat-ca" || NHOM[loc].includes(m.tiLe)) && (!k || m.ten.toLowerCase().includes(k)));
-    return l.sort((a, b) => sap === "dung-nhieu" ? b.soAnhDaTao - a.soAnhDaTao : sap === "cu" ? a.capNhat.localeCompare(b.capNhat) : b.capNhat.localeCompare(a.capNhat));
-  }, [tatCa, loc, q, sap]);
+    const l = tatCa.filter((m) => (!k || m.ten.toLowerCase().includes(k)));
+    return [...l].sort((a, b) => sap === "dung-nhieu" ? b.soAnhDaTao - a.soAnhDaTao : sap === "cu" ? a.capNhat.localeCompare(b.capNhat) : b.capNhat.localeCompare(a.capNhat));
+  }, [tatCa, q, sap]);
   const pages = Math.max(1, Math.ceil(list.length / MOI_TRANG));
   const p = Math.min(trang, pages);
   const hien = list.slice((p - 1) * MOI_TRANG, p * MOI_TRANG);
@@ -46,12 +40,11 @@ export default function Page() {
 
       <section className="wrap py-10 grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-10 items-start">
         <div>
-          <div className="flex flex-wrap items-center gap-3 justify-between">
-            <FilterChips<Loc> options={(["tat-ca", "doc", "vuong", "story"] as Loc[]).map((l) => ({ value: l, label: NHAN[l], count: dem(l) }))} value={loc} onChange={(v) => { setLoc(v); setTrang(1); }} />
+          <div className="flex flex-wrap items-center gap-3 justify-end">
             <Select value={sap} onChange={(e) => setSap(e.target.value as Sap)} className="w-[180px]"><option value="moi">Mới nhất</option><option value="cu">Cũ nhất</option><option value="dung-nhieu">Dùng nhiều nhất</option></Select>
           </div>
           <Muted className="mt-4 text-[13px]">Hiện {list.length === 0 ? 0 : (p - 1) * MOI_TRANG + 1}–{Math.min(p * MOI_TRANG, list.length)} / {list.length} mẫu</Muted>
-          {hien.length === 0 ? <div className="mt-4"><EmptyState title="Không có mẫu khớp" desc="Thử từ khoá khác hoặc bỏ bộ lọc tỉ lệ." action={<Button kind="secondary" onClick={() => { setQ(""); setLoc("tat-ca"); }}>Bỏ bộ lọc</Button>} /></div> : (
+          {hien.length === 0 ? <div className="mt-4"><EmptyState title="Không có mẫu khớp" desc="Thử từ khoá khác." action={<Button kind="secondary" onClick={() => setQ("")}>Xoá tìm kiếm</Button>} /></div> : (
             <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-5">
               {hien.map((m) => <MauStudioCard key={m.id} m={m} />)}
             </div>
