@@ -12,6 +12,8 @@ import { useCurrentAdvisor, useStore } from "@/lib/store";
 import type { Advisor, StudioTemplate } from "@/lib/types";
 import { Button, Chip, Field, Input, Radio, Select, Textarea, cx, useFlash } from "@/components/ui";
 import { StudioPreview, taiAnhStudio } from "@/components/cong-cu/StudioPreview";
+import { QrBox } from "@/components/danh-thiep/QrBox";
+import { effectiveOrigin, linkDanhThiep, useSiteOrigin } from "@/components/danh-thiep/lib";
 
 const VAI_TRO = ["Chuyên gia hoạch định tài chính", "Người đồng hành cùng gia đình trẻ", "Chuyên gia bảo vệ thu nhập", "Người bạn của khách hàng lâu năm"];
 const LINH_VUC = ["Bảo vệ gia đình", "Kế hoạch cho con", "Hoạch định tài chính", "Chuẩn bị hưu trí", "Doanh nghiệp", "Sức khoẻ"];
@@ -23,10 +25,11 @@ type Moc = { nam: string; tieuDe: string; moTa: string };
 
 /** Thẻ xem trước danh thiếp — component ổn định ở module scope (không tạo lại mỗi lần Page render)
  * nên state zoom/offset của khung ảnh chân dung giữ nguyên và kéo ảnh không bị đứt giữa chừng. */
-function TheCard({ mau, form, ma, danhHieu, url, flash, onZoom, onOffset }: {
-  mau?: StudioTemplate; form: Form; ma: string; danhHieu?: string; url: string; flash: (m: string) => void;
+function TheCard({ mau, form, ma, danhHieu, flash, onZoom, onOffset }: {
+  mau?: StudioTemplate; form: Form; ma: string; danhHieu?: string; flash: (m: string) => void;
   onZoom: (z: number) => void; onOffset: (x: number, y: number) => void;
 }) {
+  const origin = useSiteOrigin();
   const zoom = form.avatarZoom;
   const offset = { x: form.avatarX, y: form.avatarY };
   const noiBat = [form.namKinhNghiem && `${form.namKinhNghiem} năm kinh nghiệm`, form.namMDRT && `${form.namMDRT} năm liên tiếp MDRT`].filter(Boolean) as string[];
@@ -56,8 +59,8 @@ function TheCard({ mau, form, ma, danhHieu, url, flash, onZoom, onOffset }: {
       {noiBat.length > 0 && <div className="mt-4 flex flex-wrap gap-2">{noiBat.map((n) => <Chip key={n} tone="blue">{n}</Chip>)}</div>}
       <div className="mt-5 flex gap-3"><Button size="sm" onClick={() => flash("Đã mở Zalo")}>Kết nối Zalo</Button><Button kind="secondary" size="sm" onClick={() => flash(`Đang gọi ${form.soDienThoai}`)}>Gọi điện</Button></div>
       <div className="mt-5 flex items-center gap-3 text-[12px] text-ink2">
-        <div className="size-14 shrink-0 border border-vien rounded-sm flex items-center justify-center text-[10px] font-bold text-mut">QR</div>
-        <div>Danh thiếp công khai tại {url}<br /><button type="button" className="text-blue font-bold" onClick={() => { try { navigator.clipboard?.writeText(`https://${url}`); } catch {} flash("Đã sao chép link danh thiếp"); }}>Sao chép link</button></div>
+        <QrBox value={linkDanhThiep(ma, "qr", origin)} size={56} />
+        <div>Danh thiếp công khai tại {linkDanhThiep(ma, undefined, origin).replace(/^https?:\/\//, "")}<br /><button type="button" className="text-blue font-bold" onClick={() => { try { navigator.clipboard?.writeText(linkDanhThiep(ma, "copy", effectiveOrigin())); } catch {} flash("Đã sao chép link danh thiếp"); }}>Sao chép link</button></div>
       </div>
     </div>
   );
@@ -88,7 +91,6 @@ export default function Page() {
 
   const bxh = [...data.ranking].filter((r) => data.advisors.find((a) => a.ma === r.advisorMa)?.hienTrenBXH).sort((a, b) => b.luotDuocTinh - a.luotDuocTinh);
   const hang = bxh.findIndex((r) => r.advisorMa === tvv.ma) + 1;
-  const url = `chubblife.vn/${tvv.ma}`;
 
   const kiemTra = () => {
     const e: Record<string, string> = {};
@@ -116,7 +118,7 @@ export default function Page() {
   };
   const chipToggle = (list: string[], v: string, max?: number) => list.includes(v) ? list.filter((x) => x !== v) : max && list.length >= max ? list : [...list, v];
   const mauSel = data.profileTemplates.find((t) => t.id === form.mauProfile);
-  const theCard = <TheCard mau={mauSel} form={form} ma={tvv.ma} danhHieu={tvv.danhHieu[0]?.ten} url={url} flash={flash} onZoom={(z) => set("avatarZoom", z)} onOffset={(x, y) => setF((p) => ({ ...(p ?? formTu(tvv)), avatarX: x, avatarY: y }))} />;
+  const theCard = <TheCard mau={mauSel} form={form} ma={tvv.ma} danhHieu={tvv.danhHieu[0]?.ten} flash={flash} onZoom={(z) => set("avatarZoom", z)} onOffset={(x, y) => setF((p) => ({ ...(p ?? formTu(tvv)), avatarX: x, avatarY: y }))} />;
 
   // Upload ảnh chân dung thật từ máy → đọc base64 (dataURL) để xem trước & lồng vào khung mẫu
   const chonAnh = (file: File) => {

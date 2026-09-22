@@ -1,6 +1,9 @@
-/** Tên miền công khai dùng cho link chia sẻ, QR, đường dẫn thẻ — hằng số để server và trình duyệt vẽ giống nhau (tránh lệch hydration) */
-export const SITE_ORIGIN = "https://toantam.chubblife.vn";
-export const SITE_HOST = "toantam.chubblife.vn";
+/** Tên miền công khai dùng cho link chia sẻ, QR, đường dẫn thẻ.
+ * Kiểm soát bằng env NEXT_PUBLIC_SITE_ORIGIN (đặt trên Vercel = URL deploy thật) — baked lúc build nên
+ * server và trình duyệt vẽ giống nhau (tránh lệch hydration). Không đặt env thì dùng fallback dưới đây;
+ * lúc chạy trên client, effectiveOrigin()/useSiteOrigin() sẽ lấy window.location.origin để QR/link mở đúng trang. */
+export const SITE_ORIGIN = (process.env.NEXT_PUBLIC_SITE_ORIGIN || "https://toantam.chubblife.vn").replace(/\/+$/, "");
+export const SITE_HOST = SITE_ORIGIN.replace(/^https?:\/\//, "");
 
 /**
  * Bảng mã màn (wireframe Figma page 11/13) → đường dẫn trong demo.

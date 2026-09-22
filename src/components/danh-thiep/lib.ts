@@ -2,9 +2,25 @@
  * Tiện ích dùng chung cho cụm Danh thiếp (E01 · E02 · E03 · E06 · E07 · H11 · H08).
  * Không có state riêng — mọi dữ liệu đọc/ghi qua useStore().
  */
+import { useEffect, useState } from "react";
 import { SITE_ORIGIN } from "@/lib/routes";
 import type { DemoData } from "@/lib/store";
 import type { Advisor } from "@/lib/types";
+
+/** Origin dùng thật cho QR/link/chia sẻ — ưu tiên env (kiểm soát), sau đó origin trang đang mở (để quét QR mở đúng),
+ * cuối cùng là fallback hằng. Dùng trong handler click (không phải lúc render SSR). */
+export const effectiveOrigin = () =>
+  (process.env.NEXT_PUBLIC_SITE_ORIGIN?.replace(/\/+$/, "")) ||
+  (typeof window !== "undefined" ? window.location.origin : SITE_ORIGIN);
+
+/** Origin an toàn cho render (SSR = hằng, sau khi mount trên client = origin thật nếu không đặt env) — tránh lệch hydration */
+export function useSiteOrigin() {
+  const [o, setO] = useState(SITE_ORIGIN);
+  useEffect(() => {
+    if (!process.env.NEXT_PUBLIC_SITE_ORIGIN && typeof window !== "undefined" && window.location.origin !== o) setO(window.location.origin);
+  }, [o]);
+  return o;
+}
 
 /** Tháng đang tính bảng xếp hạng chia sẻ (H08 · E01) */
 export const THANG_BXH = "9/2026";
@@ -42,9 +58,10 @@ export const danhHieuCongKhai = (a: Advisor) => a.danhHieu.map((d) => d.ten);
 /** Định dạng SĐT 0901 234 567 */
 export const fmtPhone = (p: string) => p.replace(/^(\d{4})(\d{3})(\d{3,4})$/, "$1 $2 $3");
 
-/** Link danh thiếp tuyệt đối, kèm tham số nguồn để đối soát lượt mở */
-export const linkDanhThiep = (ma: string, ref?: "zalo" | "fb" | "copy" | "qr") => {
-  return `${SITE_ORIGIN}/${ma}${ref ? `?ref=${ref}` : ""}`;
+/** Link danh thiếp tuyệt đối, kèm tham số nguồn để đối soát lượt mở.
+ * `origin` mặc định hằng SITE_ORIGIN (an toàn SSR); truyền useSiteOrigin()/effectiveOrigin() để ra link mở được thật. */
+export const linkDanhThiep = (ma: string, ref?: "zalo" | "fb" | "copy" | "qr", origin: string = SITE_ORIGIN) => {
+  return `${origin}/${ma}${ref ? `?ref=${ref}` : ""}`;
 };
 
 /** Tải vCard (.vcf) về máy */
@@ -55,7 +72,7 @@ export function taiVCard(a: Advisor) {
     `ORG:Chubb Life Việt Nam`, `TITLE:${a.chucDanh}`,
     `TEL;TYPE=CELL:${a.soDienThoai}`, `EMAIL:${a.email}`,
     `ADR;TYPE=WORK:;;${a.vanPhong};;;;Việt Nam`,
-    `URL:${linkDanhThiep(a.ma)}`, `NOTE:Mã Tư vấn viên ${a.ma}`,
+    `URL:${linkDanhThiep(a.ma, undefined, effectiveOrigin())}`, `NOTE:Mã Tư vấn viên ${a.ma}`,
     "END:VCARD",
   ];
   const blob = new Blob([lines.join("\r\n")], { type: "text/vcard;charset=utf-8" });

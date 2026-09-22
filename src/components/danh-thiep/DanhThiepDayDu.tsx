@@ -12,7 +12,7 @@ import type { Advisor } from "@/lib/types";
 import { StudioPreview } from "@/components/cong-cu/StudioPreview";
 import { QrBox } from "./QrBox";
 import { SharePopup, useChiaSe } from "./SharePopup";
-import { danhHieuCongKhai, fmtPhone, linkDanhThiep, taiVCard, theXemDuoc } from "./lib";
+import { danhHieuCongKhai, fmtPhone, linkDanhThiep, taiVCard, theXemDuoc, useSiteOrigin } from "./lib";
 
 export function DanhThiepDayDu({ ma }: { ma: string }) {
   const { data, ready } = useStore();
@@ -54,6 +54,7 @@ function TheDayDu({ a }: { a: Advisor }) {
     actions.update("ranking", (rows) => rows.map((r) => (r.advisorMa === a.ma ? { ...r, moTuLink: r.moTuLink + 1 } : r)));
   }, [ref, a.ma, actions]);
 
+  const origin = useSiteOrigin();
   const dh = danhHieuCongKhai(a);
   const hs = a.hoSoNangLuc;
   const mauProfile = a.mauProfile ? data.profileTemplates.find((t) => t.id === a.mauProfile) : undefined;
@@ -149,7 +150,7 @@ function TheDayDu({ a }: { a: Advisor }) {
               <Button kind="ghost" size="sm" onClick={() => chiaSe("Tải ảnh")}>Tải ảnh thẻ (PNG)</Button>
             </div>
           </div>
-          <QrBox value={linkDanhThiep(a.ma, "qr")} size={140} caption="Quét để mở danh thiếp này" />
+          <QrBox value={linkDanhThiep(a.ma, "qr", origin)} size={140} caption="Quét để mở danh thiếp này" />
         </section>
       </div>
 

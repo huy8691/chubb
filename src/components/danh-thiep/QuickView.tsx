@@ -9,7 +9,7 @@ import { useStore } from "@/lib/store";
 import type { Advisor } from "@/lib/types";
 import { QrBox } from "./QrBox";
 import { useChiaSe } from "./SharePopup";
-import { danhHieuCongKhai, fmtPhone, linkDanhThiep, taiVCard } from "./lib";
+import { danhHieuCongKhai, fmtPhone, linkDanhThiep, taiVCard, useSiteOrigin } from "./lib";
 
 export function QuickView({ ma, onClose }: { ma?: string; onClose: () => void }) {
   const { data } = useStore();
@@ -21,6 +21,7 @@ export function QuickView({ ma, onClose }: { ma?: string; onClose: () => void })
 function QuickViewInner({ a, onClose }: { a: Advisor; onClose: () => void }) {
   const { chiaSe, flashNode } = useChiaSe(a);
   const { flash, node } = useFlash();
+  const origin = useSiteOrigin();
   const dh = danhHieuCongKhai(a);
   const hs = a.hoSoNangLuc;
   return (
@@ -43,7 +44,7 @@ function QuickViewInner({ a, onClose }: { a: Advisor; onClose: () => void }) {
           <a href={`https://zalo.me/${a.zalo ?? a.soDienThoai}`} target="_blank" rel="noopener" className="inline-flex items-center justify-center h-11 px-5 rounded-sm font-bold text-[14px] bg-blue text-white border border-blue hover:bg-blue2">Kết nối Zalo</a>
           <a href={`tel:${a.soDienThoai}`} className="inline-flex items-center justify-center h-11 px-5 rounded-sm font-bold text-[14px] bg-white text-blue border border-blue hover:bg-blue-soft" onClick={() => flash("Đang gọi " + fmtPhone(a.soDienThoai))}>Gọi điện</a>
           <Button kind="secondary" onClick={() => { taiVCard(a); flash("Đã tải vCard về máy"); }}>Lưu danh bạ (vCard)</Button>
-          <div className="ml-auto"><QrBox value={linkDanhThiep(a.ma, "qr")} size={96} caption="Quét để mở trang danh thiếp đầy đủ" /></div>
+          <div className="ml-auto"><QrBox value={linkDanhThiep(a.ma, "qr", origin)} size={96} caption="Quét để mở trang danh thiếp đầy đủ" /></div>
         </div>
 
         {hs && hs.theManh.length > 0 && (
