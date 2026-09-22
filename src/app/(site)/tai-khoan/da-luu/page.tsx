@@ -11,7 +11,7 @@ import { R } from "@/lib/routes";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
 import { fmtDate } from "@/lib/seed";
 import type { StudioImage } from "@/lib/types";
-import { Button, Card, EmptyState, FilterChips, ImageBox, Modal, StatusChip, useFlash } from "@/components/ui";
+import { Button, Card, EmptyState, FilterChips, ImageBox, Modal, useFlash } from "@/components/ui";
 
 type Loc = "tat-ca" | "bai-viet" | "anh-studio";
 
@@ -70,13 +70,12 @@ export default function Page() {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {anh.map((a) => (
                 <Card key={a.id} className="p-3 flex flex-col gap-3">
-                  <div className="relative"><ImageBox src={a.anh} alt={tenMau(a.templateId)} ratio="3/4" /><span className="absolute top-2 left-2"><StatusChip s={a.trangThai} /></span></div>
+                  <ImageBox src={a.anh} alt={tenMau(a.templateId)} ratio="3/4" />
                   <div>
                     <div className="font-bold text-[13.5px] text-den">{tenMau(a.templateId)}</div>
                     <div className="text-[11.5px] text-ink2 mt-0.5">Từ mẫu v{a.phienBanMau ?? 1} · lưu {fmtDate(a.tao).slice(0, 5)}</div>
                   </div>
                   <div className="flex flex-wrap gap-x-4 gap-y-1 text-[12px] font-bold mt-auto">
-                    <Link href={`${R.D02}?mau=${a.templateId}`} className="text-blue">Mở</Link>
                     <button type="button" className="text-blue" onClick={() => flash(`Đã tải ảnh "${tenMau(a.templateId)}" về máy`)}>Tải ảnh</button>
                     <button type="button" className="text-ink2 hover:text-red-fg" onClick={() => setXoa(a)}>Xoá</button>
                   </div>
