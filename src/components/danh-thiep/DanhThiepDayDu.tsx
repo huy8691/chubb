@@ -74,6 +74,7 @@ function TheDayDu({ a }: { a: Advisor }) {
             <div className="min-w-0">
               <h1 className="font-serif font-semibold text-[24px] leading-tight text-den uppercase">{a.hoTen}</h1>
               <p className="text-[14px] text-ink2 mt-2">{[a.chucDanh, ...dh, `Mã ${a.ma}`].join(" · ")}</p>
+              {hs?.vaiTro && <p className="text-[14px] font-bold text-blue mt-2">{hs.vaiTro}</p>}
               <p className="text-[12.5px] text-mut mt-2">Danh thiếp thật của Chubb Life Việt Nam — mã {a.ma}</p>
             </div>
           </div>
@@ -97,14 +98,21 @@ function TheDayDu({ a }: { a: Advisor }) {
           </section>
         )}
 
-        {hs && hs.theManh.length > 0 && (
+        {hs && hs.theManh.length > 0 && (hs.hienPhan?.linhVuc ?? true) && (
           <section>
             <H2 className="text-[22px]">Lĩnh vực chuyên môn</H2>
             <div className="mt-5 flex flex-wrap gap-3">{hs.theManh.map((t) => <Chip key={t} tone="blue" className="h-9 px-4 text-[14px] font-normal">{t}</Chip>)}</div>
           </section>
         )}
 
-        {hs?.hanhTrinh && hs.hanhTrinh.length > 0 && (
+        {hs && hs.chungChi.length > 0 && (
+          <section>
+            <H2 className="text-[22px]">Chứng chỉ &amp; bằng cấp</H2>
+            <div className="mt-5 flex flex-wrap gap-3">{hs.chungChi.map((c) => <Chip key={c} tone="grey" className="h-9 px-4 text-[14px] font-normal">{c}</Chip>)}</div>
+          </section>
+        )}
+
+        {hs?.hanhTrinh && hs.hanhTrinh.length > 0 && (hs.hienPhan?.hanhTrinh ?? true) && (
           <section>
             <H2 className="text-[22px]">Hành trình nghề nghiệp</H2>
             <p className="mt-4 font-bold text-[17px] text-den">Hành trình {hs.noiBat?.[0] ?? ""} — từ những ngày đầu đến hôm nay</p>

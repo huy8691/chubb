@@ -23,8 +23,8 @@ type Moc = { nam: string; tieuDe: string; moTa: string };
 
 /** Thẻ xem trước danh thiếp — component ổn định ở module scope (không tạo lại mỗi lần Page render)
  * nên state zoom/offset của khung ảnh chân dung giữ nguyên và kéo ảnh không bị đứt giữa chừng. */
-function TheCard({ mau, form, danhHieu, url, flash }: {
-  mau?: StudioTemplate; form: Form; danhHieu?: string; url: string; flash: (m: string) => void;
+function TheCard({ mau, form, ma, danhHieu, url, flash }: {
+  mau?: StudioTemplate; form: Form; ma: string; danhHieu?: string; url: string; flash: (m: string) => void;
 }) {
   const [zoom, setZoom] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -49,8 +49,9 @@ function TheCard({ mau, form, danhHieu, url, flash }: {
         <div className="mb-4 aspect-[4/3] bg-xam rounded-sm overflow-hidden flex items-center justify-center text-mut text-[12px]">{form.avatar ? <img src={form.avatar} alt="Ảnh chân dung" className="w-full h-full object-cover" /> : "Ảnh chân dung"}</div>
       )}
       <div className="mt-4 font-serif font-semibold text-[22px] text-den uppercase leading-tight">{form.hoTen || "Họ và tên"}</div>
-      <div className="text-[13px] text-ink2 mt-1">{form.chucDanh}{danhHieu ? ` · ${danhHieu}` : ""}</div>
-      <div className="mt-4 space-y-1.5 text-[13px] text-den"><div>{form.soDienThoai}</div><div>{form.email}</div><div>VP Chubb Life · {form.vanPhong}</div></div>
+      <div className="text-[13px] text-ink2 mt-1">{[form.chucDanh, danhHieu, `Mã ${ma}`].filter(Boolean).join(" · ")}</div>
+      {form.vaiTro && <div className="text-[13px] font-bold text-blue mt-1">{form.vaiTro}</div>}
+      <div className="text-[12px] text-mut mt-1">Danh thiếp thật của Chubb Life Việt Nam</div>
       {noiBat.length > 0 && <div className="mt-4 flex flex-wrap gap-2">{noiBat.map((n) => <Chip key={n} tone="blue">{n}</Chip>)}</div>}
       <div className="mt-5 flex gap-3"><Button size="sm" onClick={() => flash("Đã mở Zalo")}>Kết nối Zalo</Button><Button kind="secondary" size="sm" onClick={() => flash(`Đang gọi ${form.soDienThoai}`)}>Gọi điện</Button></div>
       <div className="mt-5 flex items-center gap-3 text-[12px] text-ink2">
@@ -65,7 +66,7 @@ function formTu(a: Advisor) {
   const hs = a.hoSoNangLuc;
   return {
     hoTen: a.hoTen, avatar: a.avatar ?? "", mauProfile: a.mauProfile ?? "", chucDanh: a.chucDanh, soDienThoai: a.soDienThoai, zalo: a.zalo ?? "", email: a.email, vanPhong: a.vanPhong,
-    vaiTro: hs?.vaiTro ?? "", gioiThieu: hs?.gioiThieu ?? "",
+    vaiTro: hs?.vaiTro ?? "", gioiThieu: hs?.gioiThieu ?? "", loiNhan: hs?.loiNhan ?? "",
     theManh: hs?.theManh ?? [], namKinhNghiem: hs?.namKinhNghiem?.toString() ?? "", namMDRT: hs?.namMDRT?.toString() ?? "", chungChi: hs?.chungChi ?? [],
     hanhTrinh: (hs?.hanhTrinh ?? []) as Moc[],
     hienPhan: hs?.hienPhan ?? { hanhTrinh: true, linhVuc: true, google: false },
@@ -103,7 +104,7 @@ export default function Page() {
     actions.update("advisors", (l) => l.map((a) => a.ma !== tvv.ma ? a : {
       ...a, hoTen: form.hoTen.trim(), avatar: form.avatar || undefined, mauProfile: form.mauProfile || undefined, chucDanh: form.chucDanh, soDienThoai: form.soDienThoai, zalo: form.zalo || undefined, email: form.email, vanPhong: form.vanPhong,
       hoSoNangLuc: {
-        ...a.hoSoNangLuc, gioiThieu: form.gioiThieu, theManh: form.theManh, chungChi: form.chungChi, vaiTro: form.vaiTro || undefined,
+        ...a.hoSoNangLuc, gioiThieu: form.gioiThieu, theManh: form.theManh, chungChi: form.chungChi, vaiTro: form.vaiTro || undefined, loiNhan: form.loiNhan || undefined,
         namKinhNghiem: form.namKinhNghiem ? Number(form.namKinhNghiem) : undefined, namMDRT: form.namMDRT ? Number(form.namMDRT) : undefined,
         noiBat: [form.namKinhNghiem && `${form.namKinhNghiem} năm kinh nghiệm`, form.namMDRT && `${form.namMDRT} năm liên tiếp MDRT`, form.chungChi[0]].filter(Boolean) as string[],
         hanhTrinh: form.hanhTrinh.filter((m) => m.nam || m.tieuDe),
@@ -115,7 +116,7 @@ export default function Page() {
   };
   const chipToggle = (list: string[], v: string, max?: number) => list.includes(v) ? list.filter((x) => x !== v) : max && list.length >= max ? list : [...list, v];
   const mauSel = data.profileTemplates.find((t) => t.id === form.mauProfile);
-  const theCard = <TheCard mau={mauSel} form={form} danhHieu={tvv.danhHieu[0]?.ten} url={url} flash={flash} />;
+  const theCard = <TheCard mau={mauSel} form={form} ma={tvv.ma} danhHieu={tvv.danhHieu[0]?.ten} url={url} flash={flash} />;
 
   // Upload ảnh chân dung thật từ máy → đọc base64 (dataURL) để xem trước & lồng vào khung mẫu
   const chonAnh = (file: File) => {
@@ -197,6 +198,9 @@ export default function Page() {
             <div className="space-y-2.5 mb-6">{VAI_TRO.map((v) => <Radio key={v} name="vaiTro" label={v} checked={form.vaiTro === v} onChange={() => set("vaiTro", v)} />)}</div>
             <Field label="Giới thiệu ngắn về bạn" count={`${form.gioiThieu.length}/${MAX_GIOI_THIEU}`} error={loi.gioiThieu}>
               <Textarea value={form.gioiThieu} onChange={(e) => set("gioiThieu", e.target.value)} placeholder="Viết 2–3 câu về cách bạn đồng hành với khách hàng…" />
+            </Field>
+            <Field label="Một điều tôi muốn nhắn người mới vào nghề" hint="Hiện trong khối Hành trình nghề nghiệp trên danh thiếp công khai — để trống nếu không dùng" className="mt-5">
+              <Textarea value={form.loiNhan} onChange={(e) => set("loiNhan", e.target.value)} placeholder="Một câu nhắn gửi ngắn…" />
             </Field>
           </Step>
 
