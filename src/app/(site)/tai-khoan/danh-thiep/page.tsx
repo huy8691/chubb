@@ -134,23 +134,26 @@ export default function Page() {
 
           <Step title="Bước 2 — Mẫu danh thiếp">
             <p className="text-[13px] text-ink2 mb-4">Chọn một khung ảnh chân dung Chubb thiết kế — ảnh của bạn tự lồng vào ô trong khung, hiển thị trên danh thiếp công khai; hoặc tải về máy. Không bắt buộc.</p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {data.profileTemplates.map((t) => {
                 const dung = form.mauProfile === t.id;
                 return (
-                  <div key={t.id} className={cx("border rounded-sm overflow-hidden", dung ? "border-blue ring-1 ring-blue" : "border-vien")}>
-                    <StudioPreview template={t} portrait={form.avatar || undefined} hoTen={form.hoTen} chucDanh={form.chucDanh} soDienThoai={form.soDienThoai} />
-                    <div className="px-2.5 pt-2 pb-2.5">
-                      <div className="text-[12px] font-bold text-den truncate">{t.ten}</div>
-                      <div className="mt-1.5 flex items-center gap-3 text-[12px] font-bold">
-                        {dung ? <Chip tone="green">Đang dùng</Chip> : <button type="button" className="text-blue hover:underline" onClick={() => set("mauProfile", t.id)}>Dùng mẫu này</button>}
-                        <button type="button" className="text-ink2 hover:text-blue" onClick={() => flash(`Đã tải mẫu "${t.ten}" về máy`)}>Tải</button>
-                      </div>
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => set("mauProfile", dung ? "" : t.id)}
+                    className={cx("group text-left border rounded-sm overflow-hidden transition cursor-pointer", dung ? "border-blue ring-2 ring-blue" : "border-vien hover:border-blue")}
+                  >
+                    <StudioPreview template={t} portrait={form.avatar || undefined} />
+                    <div className="px-2.5 pt-2 pb-2.5 flex items-center justify-between gap-2">
+                      <span className="text-[12px] font-bold text-den truncate">{t.ten}</span>
+                      {dung ? <Chip tone="green">Đang dùng</Chip> : <span className="text-[12px] font-bold text-ink2 group-hover:text-blue" onClick={(e) => { e.stopPropagation(); flash(`Đã tải mẫu "${t.ten}" về máy`); }}>Tải</span>}
                     </div>
-                  </div>
+                  </button>
                 );
               })}
             </div>
+            <p className="mt-2 text-[12px] text-ink2">Bấm vào một khung để chọn · bấm lại để bỏ chọn.</p>
             {form.mauProfile && <button type="button" className="mt-3 text-[13px] font-bold text-ink2 hover:text-red-fg" onClick={() => set("mauProfile", "")}>Không dùng mẫu</button>}
           </Step>
 

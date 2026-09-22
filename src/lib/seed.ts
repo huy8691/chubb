@@ -301,11 +301,6 @@ export const profileTemplates: StudioTemplate[] = [
   mauStudio({ id: "m-giaiphap", ten: "Giải pháp hôm nay cho cuộc sống tốt đẹp hơn", anhNen: "/studio/khung-giaiphap.png", tiLe: "9:16", tyLe: 466 / 767, anhSauNen: true, hole: { xPct: 56, yPct: 29.5, dPct: 52.2 }, fields: [], soAnhDaTao: 92, capNhat: "2026-09-21T10:05:00" }),
   mauStudio({ id: "m-baove", ten: "Bảo vệ điều quan trọng", anhNen: "/studio/khung-baove.png", tiLe: "9:16", tyLe: 1019 / 1543, anhSauNen: true, hole: { xPct: 49.9, yPct: 30, dPct: 52 }, fields: [], soAnhDaTao: 74, capNhat: "2026-09-21T10:10:00" }),
   mauStudio({ id: "m-songantam", ten: "Sống an tâm — Trọn vẹn hơn", anhNen: "/studio/khung-songantam.png", tiLe: "9:16", tyLe: 475 / 769, anhSauNen: true, hole: { xPct: 48.3, yPct: 29.6, dPct: 57.5 }, fields: [], soAnhDaTao: 51, capNhat: "2026-09-21T10:15:00" }),
-  mauStudio({ id: "m-gioi-thieu", ten: "Giới thiệu bản thân", anhNen: "/studio/mau-1.png", fields: [], soAnhDaTao: 214, capNhat: "2026-09-18T09:00:00" }),
-  mauStudio({ id: "m-uu-dai", ten: "Ưu đãi tháng", anhNen: "/studio/mau-2.png", fields: [], soAnhDaTao: 132, capNhat: "2026-09-16T09:00:00" }),
-  mauStudio({ id: "m-su-kien", ten: "Sự kiện & hội thảo", anhNen: "/studio/mau-3.png", fields: [], soAnhDaTao: 88, capNhat: "2026-09-12T09:00:00" }),
-  mauStudio({ id: "m-cam-on", ten: "Cảm ơn khách hàng", anhNen: "/studio/mau-4.png", fields: [], soAnhDaTao: 64, capNhat: "2026-09-10T09:00:00" }),
-  mauStudio({ id: "m-la-tvv", ten: "Tôi là Tư vấn viên Chubb Life", anhNen: "/studio/mau-1.png", fields: [], soAnhDaTao: 0, capNhat: "2026-09-08T09:00:00" }),
 ];
 
 export const studioImages: StudioImage[] = Array.from({ length: 41 }, (_, i) => ({
