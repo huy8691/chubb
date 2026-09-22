@@ -290,7 +290,14 @@ const mauStudio = (o: { id: string; ten: string; anhNen: string; anh?: string; t
   trangThai: o.trangThai ?? "da-xuat-ban", soAnhDaTao: o.soAnhDaTao ?? 0, capNhat: o.capNhat, phienBan: 1,
   disclaimer: DISCLAIMER_STUDIO, anhChanDung: { ...(o.hole ?? O_DOC) }, fields: (o.fields ?? FIELDS_DOC).map((x) => ({ ...x })),
 });
+/** Chuẩn Mới — Mở Lối (KV chiến dịch ngang 1.915): ô chân dung TRÒN bên phải (trong vòng sáng), 3 field navy dưới vòng */
+const FIELDS_CHUANMOI: FStudio = [
+  { loai: "hoTen", xPct: 76, yPct: 69, size: 3.4, mau: "#13235f", canLe: "center", gioiHan: 40, dam: true },
+  { loai: "chucDanh", xPct: 76, yPct: 75, size: 2.1, mau: "#13235f", canLe: "center", gioiHan: 30 },
+  { loai: "soDienThoai", xPct: 76, yPct: 80, size: 2.5, mau: "#13235f", canLe: "center", gioiHan: 15, dam: true, icon: true },
+];
 export const studioTemplates: StudioTemplate[] = [
+  mauStudio({ id: "m-chuan-moi", ten: "Chuẩn Mới — Mở Lối", anhNen: "/studio/mau-chuan-moi.png", tiLe: "16:9", tyLe: 1735 / 906, anhSauNen: true, hole: { xPct: 76, yPct: 39, dPct: 25.1 }, fields: FIELDS_CHUANMOI, soAnhDaTao: 0, capNhat: "2026-09-22T09:44:00" }),
   mauStudio({ id: "m-anphuc", ten: "Chubb – Tự Do An Phúc", anhNen: "/studio/tu-do-an-phuc.png", anh: "/studio/tu-do-an-phuc-mau.png", tiLe: "16:9", hole: O_ANPHUC, fields: FIELDS_ANPHUC, soAnhDaTao: 0, capNhat: "2026-09-21T09:00:00" }),
   mauStudio({ id: "m-antam", ten: "An tâm hôm nay — Vững vàng tương lai", anhNen: "/studio/khung-antam.png", tiLe: "9:16", tyLe: 1019 / 1543, anhSauNen: true, hole: { xPct: 49.8, yPct: 30.8, dPct: 45.9 }, fields: khungFields("#13235f", "#5b6270"), soAnhDaTao: 156, capNhat: "2026-09-21T10:00:00" }),
   mauStudio({ id: "m-giaiphap", ten: "Giải pháp hôm nay cho cuộc sống tốt đẹp hơn", anhNen: "/studio/khung-giaiphap.png", tiLe: "9:16", tyLe: 466 / 767, anhSauNen: true, hole: { xPct: 56, yPct: 29.5, dPct: 52.2 }, fields: khungFields("#ffffff", "#e6eaf5"), soAnhDaTao: 92, capNhat: "2026-09-21T10:05:00" }),
