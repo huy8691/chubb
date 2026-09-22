@@ -10,7 +10,7 @@ import { useState } from "react";
 import { R } from "@/lib/routes";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
 import type { Advisor, StudioTemplate } from "@/lib/types";
-import { Button, Chip, Field, Input, Modal, Radio, Select, Textarea, cx, useFlash } from "@/components/ui";
+import { Button, Chip, Field, Input, Radio, Select, Textarea, cx, useFlash } from "@/components/ui";
 import { StudioPreview, taiAnhStudio } from "@/components/cong-cu/StudioPreview";
 
 const VAI_TRO = ["Chuyên gia hoạch định tài chính", "Người đồng hành cùng gia đình trẻ", "Chuyên gia bảo vệ thu nhập", "Người bạn của khách hàng lâu năm"];
@@ -81,7 +81,6 @@ export default function Page() {
   const { flash, node } = useFlash();
   const [f, setF] = useState<Form | null>(null);
   const [loi, setLoi] = useState<Record<string, string>>({});
-  const [xemTruoc, setXemTruoc] = useState(false);
   if (!tvv) return null;
   const form = f ?? formTu(tvv);
   const set = <K extends keyof Form>(k: K, v: Form[K]) => setF({ ...form, [k]: v });
@@ -233,11 +232,8 @@ export default function Page() {
 
           <div className="flex flex-wrap gap-3 pt-6 border-t border-vien2">
             <Button onClick={luu}>Lưu và xuất bản</Button>
-            <Button kind="secondary" onClick={() => setXemTruoc(true)}>Xem trước</Button>
             <Button kind="secondary" onClick={() => flash("Đã tải mã QR (PNG)")}>Tải mã QR (PNG)</Button>
-            <Button kind="secondary" onClick={() => flash("Đã tải ảnh thẻ (PNG)")}>Tải ảnh thẻ (PNG)</Button>
             <Button kind="secondary" onClick={() => { setF(null); setLoi({}); router.push(R.G02a); }}>Huỷ</Button>
-            <Button kind="secondary" onClick={() => flash("Đã lưu nháp — danh thiếp công khai chưa đổi")}>Lưu nháp</Button>
           </div>
         </div>
 
@@ -247,10 +243,6 @@ export default function Page() {
           <div className="text-[12.5px] text-ink2 mt-3">Cập nhật ngay khi bạn nhập</div>
         </aside>
       </div>
-
-      <Modal open={xemTruoc} onClose={() => setXemTruoc(false)} title="Xem trước danh thiếp" width={480} footer={<><Button kind="secondary" onClick={() => setXemTruoc(false)}>Đóng</Button><Button onClick={() => window.open(R.E03(tvv.ma), "_blank")}>Xem đầy đủ</Button></>}>
-        {theCard}
-      </Modal>
     </div>
   );
 }
