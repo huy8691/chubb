@@ -3,7 +3,7 @@
  * H21a · CMS — Mẫu danh thiếp — tạo / sửa (id "moi" = mẫu mới).
  * Mẫu = MỘT ảnh nền PNG (toàn bộ thiết kế nung vào ảnh) chừa một ô TRONG SUỐT cho ảnh chân dung Tư vấn viên.
  * KHÁC Mẫu Studio: KHÔNG có field chữ (tên/chức danh/SĐT) — profile chỉ trang trí ảnh chân dung.
- * Trái: Tên mẫu · Ảnh nền (kéo thả PNG) · Dòng disclaimer. Phải: xem trước + trạng thái.
+ * Trái: Tên mẫu · Ảnh nền (kéo thả PNG). Phải: xem trước + trạng thái. Disclaimer nằm sẵn trong ảnh design, không nhập.
  */
 import { useRouter } from "next/navigation";
 import { use, useRef, useState } from "react";
@@ -11,7 +11,7 @@ import { R } from "@/lib/routes";
 import { useStore } from "@/lib/store";
 import { fmtDate, fmtDateTime } from "@/lib/seed";
 import type { StudioTemplate } from "@/lib/types";
-import { Button, Field, Input, StatusChip, Textarea, cx, useFlash } from "@/components/ui";
+import { Button, Field, Input, StatusChip, cx, useFlash } from "@/components/ui";
 import { CmsCard, CmsFormActions, CmsHeader } from "@/components/cms/CmsShell";
 import { StudioPreview } from "@/components/cong-cu/StudioPreview";
 
@@ -60,7 +60,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     if (!f.ten.trim()) e.ten = "Nhập tên mẫu.";
     else if (f.ten.length > 60) e.ten = "Tên mẫu tối đa 60 ký tự.";
     if (data.profileTemplates.some((x) => x.ten.trim().toLowerCase() === f.ten.trim().toLowerCase() && x.id !== f.id)) e.ten = "Đã có mẫu khác cùng tên.";
-    if (!(f.disclaimer ?? "").trim()) e.disclaimer = "Dòng disclaimer bắt buộc — in cố định trong ảnh nền.";
     if (publishing && !f.anhNen) e.anh = "Mẫu xuất bản cần ảnh nền.";
     setErr(e);
     return Object.keys(e).length === 0;
@@ -98,10 +97,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                   Kéo thả hoặc bấm chọn ảnh nền · PNG · tỉ lệ nào cũng được{tenTep ? <> · đã có <b className="text-den">{tenTep}</b></> : <> · <span className="text-mut">chưa có ảnh nền</span></>}
                 </button>
                 <input ref={fileRef} type="file" accept="image/png,image/jpeg" className="hidden" onChange={(e) => chonTep(e.target.files?.[0])} />
-                <div className="mt-1.5 text-[12px] text-mut">Toàn bộ thiết kế (màu, hoạ tiết, slogan, logo) nằm trong ảnh nền. Chừa một <b className="text-ink2">ô trong suốt</b> cho ảnh chân dung — hệ thống tự nhận diện, không cần nhập toạ độ.</div>
-              </Field>
-              <Field label="Dòng disclaimer (in trong ảnh nền)" count={`${(f.disclaimer ?? "").length}/120`} error={err.disclaimer}>
-                <Textarea value={f.disclaimer ?? ""} onChange={(e) => set({ disclaimer: e.target.value.slice(0, 120) })} className="min-h-[64px]" />
+                <div className="mt-1.5 text-[12px] text-mut">Toàn bộ thiết kế (màu, hoạ tiết, slogan, logo, dòng disclaimer) nằm sẵn trong ảnh nền. Chừa một <b className="text-ink2">ô trong suốt</b> cho ảnh chân dung — hệ thống tự nhận diện, không cần nhập toạ độ.</div>
               </Field>
             </div>
           </CmsCard>
