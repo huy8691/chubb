@@ -143,21 +143,6 @@ export default function Page() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <Field label="Họ và tên" error={loi.hoTen}><Input value={form.hoTen} onChange={(e) => set("hoTen", e.target.value)} /></Field>
               <Field label="Mã số Tư vấn viên" hint="Do Chubb cấp — không sửa được"><Input value={tvv.ma} disabled /></Field>
-              <Field label="Ảnh chân dung" className="md:col-span-2">
-                <div className="border border-dashed border-vien rounded-sm p-4 sm:p-5 flex items-center justify-between gap-4" onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files?.[0]; if (f) chonAnh(f); }}>
-                  <div className="flex items-center gap-4">
-                    <div className="size-16 rounded-sm bg-xam overflow-hidden flex items-center justify-center text-[11px] text-mut">{form.avatar ? <img src={form.avatar} alt="" className="w-full h-full object-cover" /> : "Ảnh"}</div>
-                    <span className="text-[12.5px] text-ink2">Kéo thả ảnh vào đây · JPG/PNG · tỉ lệ 4:3</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <label className="inline-flex items-center h-9 px-3.5 rounded-sm bg-white text-blue border border-blue text-[13px] font-bold cursor-pointer hover:bg-blue-soft">
-                      Tải file lên
-                      <input type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) chonAnh(f); e.target.value = ""; }} />
-                    </label>
-                    {form.avatar && <Button kind="ghost" size="sm" onClick={() => set("avatar", "")}>Bỏ ảnh</Button>}
-                  </div>
-                </div>
-              </Field>
               <Field label="Chức danh"><Input value={form.chucDanh} onChange={(e) => set("chucDanh", e.target.value)} /></Field>
               <Field label="Số điện thoại" error={loi.soDienThoai}><Input value={form.soDienThoai} onChange={(e) => set("soDienThoai", e.target.value)} /></Field>
               <Field label="Zalo" hint="Để trống nếu dùng chung số điện thoại"><Input value={form.zalo} onChange={(e) => set("zalo", e.target.value)} placeholder={form.soDienThoai} /></Field>
@@ -166,8 +151,23 @@ export default function Page() {
             </div>
           </Step>
 
-          <Step title="Bước 2 — Mẫu danh thiếp">
-            <p className="text-[13px] text-ink2 mb-4">Chọn một khung ảnh chân dung Chubb thiết kế — ảnh của bạn tự lồng vào ô trong khung, hiển thị trên danh thiếp công khai; hoặc tải về máy. Không bắt buộc.</p>
+          <Step title="Bước 2 — Ảnh chân dung & mẫu danh thiếp">
+            <Field label="Ảnh chân dung">
+              <div className="border border-dashed border-vien rounded-sm p-4 sm:p-5 flex items-center justify-between gap-4" onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files?.[0]; if (f) chonAnh(f); }}>
+                <div className="flex items-center gap-4">
+                  <div className="size-16 rounded-sm bg-xam overflow-hidden flex items-center justify-center text-[11px] text-mut">{form.avatar ? <img src={form.avatar} alt="" className="w-full h-full object-cover" /> : "Ảnh"}</div>
+                  <span className="text-[12.5px] text-ink2">Kéo thả ảnh vào đây · JPG/PNG · ảnh sẽ lồng vào ô trong khung mẫu</span>
+                </div>
+                <div className="flex gap-2">
+                  <label className="inline-flex items-center h-9 px-3.5 rounded-sm bg-white text-blue border border-blue text-[13px] font-bold cursor-pointer hover:bg-blue-soft">
+                    Tải file lên
+                    <input type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) chonAnh(f); e.target.value = ""; }} />
+                  </label>
+                  {form.avatar && <Button kind="ghost" size="sm" onClick={() => set("avatar", "")}>Bỏ ảnh</Button>}
+                </div>
+              </div>
+            </Field>
+            <p className="text-[13px] text-ink2 mt-6 mb-4">Chọn một khung Chubb thiết kế để hiển thị ảnh chân dung trên danh thiếp công khai — ảnh của bạn tự lồng vào ô trong khung; hoặc tải về máy. Không bắt buộc.</p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {data.profileTemplates.map((t) => {
                 const dung = form.mauProfile === t.id;
