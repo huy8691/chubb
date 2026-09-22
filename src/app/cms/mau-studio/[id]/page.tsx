@@ -11,7 +11,7 @@ import { R } from "@/lib/routes";
 import { useStore } from "@/lib/store";
 import { fmtDate, fmtDateTime } from "@/lib/seed";
 import type { StudioField, StudioTemplate } from "@/lib/types";
-import { Button, Field, Input, Select, StatusChip, Textarea, cx, useFlash } from "@/components/ui";
+import { Button, Field, Input, Select, StatusChip, cx, useFlash } from "@/components/ui";
 import { CmsCard, CmsFormActions, CmsHeader } from "@/components/cms/CmsShell";
 import { StudioPreview } from "@/components/cong-cu/StudioPreview";
 
@@ -102,7 +102,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     if (!f.ten.trim()) e.ten = "Nhập tên mẫu.";
     else if (f.ten.length > 60) e.ten = "Tên mẫu tối đa 60 ký tự.";
     if (data.studioTemplates.some((x) => x.ten.trim().toLowerCase() === f.ten.trim().toLowerCase() && x.id !== f.id)) e.ten = "Đã có mẫu khác cùng tên.";
-    if (!(f.disclaimer ?? "").trim()) e.disclaimer = "Dòng disclaimer bắt buộc — in cố định dưới ảnh.";
     if (publishing && !f.anhNen) e.anh = "Mẫu xuất bản cần ảnh nền.";
     if (publishing && fields.length === 0) e.fields = "Thêm ít nhất một field cho Tư vấn viên điền.";
     setErr(e);
@@ -142,10 +141,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                   Kéo thả hoặc bấm chọn ảnh nền · PNG · tỉ lệ nào cũng được{tenTep ? <> · đã có <b className="text-den">{tenTep}</b></> : <> · <span className="text-mut">chưa có ảnh nền</span></>}
                 </button>
                 <input ref={fileRef} type="file" accept="image/png,image/jpeg" className="hidden" onChange={(e) => chonTep(e.target.files?.[0])} />
-                <div className="mt-1.5 text-[12px] text-mut">Toàn bộ thiết kế (màu, hoạ tiết, bố cục, logo) nằm trong ảnh nền. Chừa một ô tròn trong suốt cho ảnh chân dung.</div>
-              </Field>
-              <Field label="Dòng disclaimer (in trong ảnh nền)" count={`${(f.disclaimer ?? "").length}/120`} error={err.disclaimer}>
-                <Textarea value={f.disclaimer ?? ""} onChange={(e) => set({ disclaimer: e.target.value.slice(0, 120) })} className="min-h-[64px]" />
+                <div className="mt-1.5 text-[12px] text-mut">Toàn bộ thiết kế (màu, hoạ tiết, bố cục, logo, dòng disclaimer) nằm sẵn trong ảnh nền. Chừa một ô tròn trong suốt cho ảnh chân dung.</div>
               </Field>
 
               <Field label="Field đặt trên ảnh" error={err.fields}>
