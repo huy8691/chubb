@@ -125,12 +125,6 @@ function TheDayDu({ a }: { a: Advisor }) {
                 </li>
               ))}
             </ol>
-            {hs.loiNhan && (
-              <blockquote className="mt-8 bg-xam rounded-sm px-6 py-5 max-w-[1100px]">
-                <div className="font-bold text-[14px] text-den">Một điều tôi muốn nhắn người mới vào nghề</div>
-                <p className="text-[14px] text-ink2 mt-1">{hs.loiNhan}</p>
-              </blockquote>
-            )}
           </section>
         )}
 

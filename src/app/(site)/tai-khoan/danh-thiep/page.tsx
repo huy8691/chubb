@@ -66,7 +66,7 @@ function formTu(a: Advisor) {
   const hs = a.hoSoNangLuc;
   return {
     hoTen: a.hoTen, avatar: a.avatar ?? "", mauProfile: a.mauProfile ?? "", chucDanh: a.chucDanh, soDienThoai: a.soDienThoai, zalo: a.zalo ?? "", email: a.email, vanPhong: a.vanPhong,
-    vaiTro: hs?.vaiTro ?? "", gioiThieu: hs?.gioiThieu ?? "", loiNhan: hs?.loiNhan ?? "",
+    vaiTro: hs?.vaiTro ?? "", gioiThieu: hs?.gioiThieu ?? "",
     theManh: hs?.theManh ?? [], namKinhNghiem: hs?.namKinhNghiem?.toString() ?? "", namMDRT: hs?.namMDRT?.toString() ?? "", chungChi: hs?.chungChi ?? [],
     hanhTrinh: (hs?.hanhTrinh ?? []) as Moc[],
     hienPhan: hs?.hienPhan ?? { hanhTrinh: true, linhVuc: true, google: false },
@@ -104,7 +104,7 @@ export default function Page() {
     actions.update("advisors", (l) => l.map((a) => a.ma !== tvv.ma ? a : {
       ...a, hoTen: form.hoTen.trim(), avatar: form.avatar || undefined, mauProfile: form.mauProfile || undefined, chucDanh: form.chucDanh, soDienThoai: form.soDienThoai, zalo: form.zalo || undefined, email: form.email, vanPhong: form.vanPhong,
       hoSoNangLuc: {
-        ...a.hoSoNangLuc, gioiThieu: form.gioiThieu, theManh: form.theManh, chungChi: form.chungChi, vaiTro: form.vaiTro || undefined, loiNhan: form.loiNhan || undefined,
+        ...a.hoSoNangLuc, gioiThieu: form.gioiThieu, theManh: form.theManh, chungChi: form.chungChi, vaiTro: form.vaiTro || undefined,
         namKinhNghiem: form.namKinhNghiem ? Number(form.namKinhNghiem) : undefined, namMDRT: form.namMDRT ? Number(form.namMDRT) : undefined,
         noiBat: [form.namKinhNghiem && `${form.namKinhNghiem} năm kinh nghiệm`, form.namMDRT && `${form.namMDRT} năm liên tiếp MDRT`, form.chungChi[0]].filter(Boolean) as string[],
         hanhTrinh: form.hanhTrinh.filter((m) => m.nam || m.tieuDe),
@@ -198,9 +198,6 @@ export default function Page() {
             <div className="space-y-2.5 mb-6">{VAI_TRO.map((v) => <Radio key={v} name="vaiTro" label={v} checked={form.vaiTro === v} onChange={() => set("vaiTro", v)} />)}</div>
             <Field label="Giới thiệu ngắn về bạn" count={`${form.gioiThieu.length}/${MAX_GIOI_THIEU}`} error={loi.gioiThieu}>
               <Textarea value={form.gioiThieu} onChange={(e) => set("gioiThieu", e.target.value)} placeholder="Viết 2–3 câu về cách bạn đồng hành với khách hàng…" />
-            </Field>
-            <Field label="Một điều tôi muốn nhắn người mới vào nghề" hint="Hiện trong khối Hành trình nghề nghiệp trên danh thiếp công khai — để trống nếu không dùng" className="mt-5">
-              <Textarea value={form.loiNhan} onChange={(e) => set("loiNhan", e.target.value)} placeholder="Một câu nhắn gửi ngắn…" />
             </Field>
           </Step>
 
