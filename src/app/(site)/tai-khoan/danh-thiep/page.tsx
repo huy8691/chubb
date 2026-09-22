@@ -23,23 +23,24 @@ type Moc = { nam: string; tieuDe: string; moTa: string };
 
 /** Thẻ xem trước danh thiếp — component ổn định ở module scope (không tạo lại mỗi lần Page render)
  * nên state zoom/offset của khung ảnh chân dung giữ nguyên và kéo ảnh không bị đứt giữa chừng. */
-function TheCard({ mau, form, ma, danhHieu, url, flash }: {
+function TheCard({ mau, form, ma, danhHieu, url, flash, onZoom, onOffset }: {
   mau?: StudioTemplate; form: Form; ma: string; danhHieu?: string; url: string; flash: (m: string) => void;
+  onZoom: (z: number) => void; onOffset: (x: number, y: number) => void;
 }) {
-  const [zoom, setZoom] = useState(1);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const zoom = form.avatarZoom;
+  const offset = { x: form.avatarX, y: form.avatarY };
   const noiBat = [form.namKinhNghiem && `${form.namKinhNghiem} năm kinh nghiệm`, form.namMDRT && `${form.namMDRT} năm liên tiếp MDRT`].filter(Boolean) as string[];
   return (
     <div className="bg-white border border-vien rounded-sm p-4 sm:p-6">
       {mau ? (
         <div className="mb-3 max-w-[300px] mx-auto">
-          <StudioPreview template={mau} portrait={form.avatar || undefined} zoom={zoom} offsetX={offset.x} offsetY={offset.y} onOffsetChange={(x, y) => setOffset({ x, y })} />
+          <StudioPreview template={mau} portrait={form.avatar || undefined} zoom={zoom} offsetX={offset.x} offsetY={offset.y} onOffsetChange={onOffset} />
           {form.avatar && (
             <>
-              <label className="mt-3 flex items-center gap-3 text-[12px] text-ink2">Thu phóng<input type="range" min={1} max={2} step={0.05} value={zoom} onChange={(e) => setZoom(Number(e.target.value))} className="flex-1 accent-blue" /><span className="w-9 text-right">{Math.round(zoom * 100)}%</span></label>
+              <label className="mt-3 flex items-center gap-3 text-[12px] text-ink2">Thu phóng<input type="range" min={1} max={2} step={0.05} value={zoom} onChange={(e) => onZoom(Number(e.target.value))} className="flex-1 accent-blue" /><span className="w-9 text-right">{Math.round(zoom * 100)}%</span></label>
               <div className="mt-1 flex items-center justify-between text-[11px] text-ink2">
                 <span>{zoom > 1 ? "Kéo ảnh trong khung để dời vị trí" : "Phóng to rồi kéo ảnh để dời vị trí"}</span>
-                {(offset.x !== 0 || offset.y !== 0) && <button type="button" className="text-blue font-bold hover:underline" onClick={() => setOffset({ x: 0, y: 0 })}>Đặt lại</button>}
+                {(offset.x !== 0 || offset.y !== 0) && <button type="button" className="text-blue font-bold hover:underline" onClick={() => onOffset(0, 0)}>Đặt lại</button>}
               </div>
             </>
           )}
@@ -65,7 +66,7 @@ function TheCard({ mau, form, ma, danhHieu, url, flash }: {
 function formTu(a: Advisor) {
   const hs = a.hoSoNangLuc;
   return {
-    hoTen: a.hoTen, avatar: a.avatar ?? "", mauProfile: a.mauProfile ?? "", chucDanh: a.chucDanh, soDienThoai: a.soDienThoai, zalo: a.zalo ?? "", email: a.email, vanPhong: a.vanPhong,
+    hoTen: a.hoTen, avatar: a.avatar ?? "", mauProfile: a.mauProfile ?? "", avatarZoom: a.avatarZoom ?? 1, avatarX: a.avatarX ?? 0, avatarY: a.avatarY ?? 0, chucDanh: a.chucDanh, soDienThoai: a.soDienThoai, zalo: a.zalo ?? "", email: a.email, vanPhong: a.vanPhong,
     vaiTro: hs?.vaiTro ?? "", gioiThieu: hs?.gioiThieu ?? "",
     theManh: hs?.theManh ?? [], namKinhNghiem: hs?.namKinhNghiem?.toString() ?? "", namMDRT: hs?.namMDRT?.toString() ?? "", chungChi: hs?.chungChi ?? [],
     hanhTrinh: (hs?.hanhTrinh ?? []) as Moc[],
@@ -83,7 +84,7 @@ export default function Page() {
   const [loi, setLoi] = useState<Record<string, string>>({});
   if (!tvv) return null;
   const form = f ?? formTu(tvv);
-  const set = <K extends keyof Form>(k: K, v: Form[K]) => setF({ ...form, [k]: v });
+  const set = <K extends keyof Form>(k: K, v: Form[K]) => setF((p) => ({ ...(p ?? formTu(tvv)), [k]: v }));
 
   const bxh = [...data.ranking].filter((r) => data.advisors.find((a) => a.ma === r.advisorMa)?.hienTrenBXH).sort((a, b) => b.luotDuocTinh - a.luotDuocTinh);
   const hang = bxh.findIndex((r) => r.advisorMa === tvv.ma) + 1;
@@ -101,7 +102,7 @@ export default function Page() {
   const luu = () => {
     if (!kiemTra()) { flash("Còn ô chưa hợp lệ — kiểm tra lại các dòng đỏ"); return; }
     actions.update("advisors", (l) => l.map((a) => a.ma !== tvv.ma ? a : {
-      ...a, hoTen: form.hoTen.trim(), avatar: form.avatar || undefined, mauProfile: form.mauProfile || undefined, chucDanh: form.chucDanh, soDienThoai: form.soDienThoai, zalo: form.zalo || undefined, email: form.email, vanPhong: form.vanPhong,
+      ...a, hoTen: form.hoTen.trim(), avatar: form.avatar || undefined, mauProfile: form.mauProfile || undefined, avatarZoom: form.avatarZoom, avatarX: form.avatarX, avatarY: form.avatarY, chucDanh: form.chucDanh, soDienThoai: form.soDienThoai, zalo: form.zalo || undefined, email: form.email, vanPhong: form.vanPhong,
       hoSoNangLuc: {
         ...a.hoSoNangLuc, gioiThieu: form.gioiThieu, theManh: form.theManh, chungChi: form.chungChi, vaiTro: form.vaiTro || undefined,
         namKinhNghiem: form.namKinhNghiem ? Number(form.namKinhNghiem) : undefined, namMDRT: form.namMDRT ? Number(form.namMDRT) : undefined,
@@ -115,7 +116,7 @@ export default function Page() {
   };
   const chipToggle = (list: string[], v: string, max?: number) => list.includes(v) ? list.filter((x) => x !== v) : max && list.length >= max ? list : [...list, v];
   const mauSel = data.profileTemplates.find((t) => t.id === form.mauProfile);
-  const theCard = <TheCard mau={mauSel} form={form} ma={tvv.ma} danhHieu={tvv.danhHieu[0]?.ten} url={url} flash={flash} />;
+  const theCard = <TheCard mau={mauSel} form={form} ma={tvv.ma} danhHieu={tvv.danhHieu[0]?.ten} url={url} flash={flash} onZoom={(z) => set("avatarZoom", z)} onOffset={(x, y) => setF((p) => ({ ...(p ?? formTu(tvv)), avatarX: x, avatarY: y }))} />;
 
   // Upload ảnh chân dung thật từ máy → đọc base64 (dataURL) để xem trước & lồng vào khung mẫu
   const chonAnh = (file: File) => {

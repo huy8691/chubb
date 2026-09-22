@@ -29,6 +29,10 @@ export interface Advisor {
   avatar?: string;
   /** Mẫu trang trí danh thiếp (E03) — id của profileTemplates, TVV chọn tĩnh ở E04; hiện trên E03 với ảnh/tên của TVV. Rỗng = không dùng mẫu */
   mauProfile?: string;
+  /** Thu phóng + vị trí ảnh chân dung trong ô mẫu (E04 chỉnh, E03 hiện lại đúng) */
+  avatarZoom?: number;
+  avatarX?: number;
+  avatarY?: number;
   /** Danh thiếp công khai (E03) đang hiện hay tạm ẩn */
   theCongKhai: boolean;
   /** Ai đã ẩn thẻ khi theCongKhai = false (H11 hiện "Ẩn (TVV tắt)" / "Ẩn (Quản trị)") */
