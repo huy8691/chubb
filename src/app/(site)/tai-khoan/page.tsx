@@ -7,9 +7,9 @@
 import Link from "next/link";
 import { R } from "@/lib/routes";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
-import { thangLabel } from "@/lib/seed";
+import { thangLabel, fmtDateTime } from "@/lib/seed";
 import type { DanhHieu } from "@/lib/types";
-import { Button, Card, H2, Stat, useFlash } from "@/components/ui";
+import { Button, Card, Chip, H2, Stat, useFlash } from "@/components/ui";
 
 export default function Page() {
   const { data } = useStore();
@@ -22,6 +22,7 @@ export default function Page() {
   const tuChoi = anhStudio.filter((a) => a.trangThai === "bi-tu-choi");
   const daLuu = data.savedItems.filter((s) => s.advisorMa === tvv.ma);
   const baiDaLuu = daLuu.filter((s) => s.loai === "bai-viet").length;
+  const laderGui = data.leaderSubmissions.find((s) => s.leaderMa === tvv.ma)?.guiLuc;
 
   /* Việc cần làm */
   const viec: { text: string; href?: string; onClick?: () => void; nut: string }[] = [];
@@ -65,6 +66,24 @@ export default function Page() {
           )}
         </Card>
       </section>
+
+      {tvv.isLeader && (
+        <section>
+          <div className="flex items-center gap-3 mb-4">
+            <H2>Vinh danh thành viên</H2>
+            <Chip tone="amber">CHỈ LEADER</Chip>
+          </div>
+          <Card>
+            <div className="px-4 py-4 sm:px-5 sm:py-5">
+              <p className="text-[15px] text-ink2">Nhập tay thành tích của các thành viên trong nhóm và gửi Chubb đối chiếu cho Bảng vinh danh.</p>
+              <div className="mt-4 flex flex-wrap items-center gap-4">
+                <Button href={R.G13}>Nhập thành tích</Button>
+                {laderGui && <span className="text-[14px] text-ink2">Lần gửi gần nhất: {fmtDateTime(laderGui)}</span>}
+              </div>
+            </div>
+          </Card>
+        </section>
+      )}
 
       <section id="danh-hieu" className="scroll-mt-24">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-4 mb-4">

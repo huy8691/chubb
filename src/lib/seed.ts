@@ -1,7 +1,7 @@
 import type {
   Advisor, Article, Candidate, ChuyenDe, CmsUser, ContactMessage, DocType, Document, FAQ,
   FinanceParams, HangMuc, HonorMonth, NguoiDat, Notification, QuizQuestion, QuizResultType,
-  RankingRow, SavedItem, StudioImage, StudioTemplate, Office } from "./types";
+  RankingRow, SavedItem, StudioImage, StudioTemplate, Office, LeaderSubmission } from "./types";
 
 /* ---------- Tư vấn viên ---------- */
 const HO_TEN = [
@@ -81,6 +81,8 @@ export const advisors: Advisor[] = HO_TEN.map((hoTen, i) => {
     moTuLinkThangNay: Math.max(0, 120 - i * 6),
     dangNhapGanNhat: `2026-09-0${1 + (i % 8)}T09:${String(10 + i).padStart(2, "0")}:00`,
     trangThaiTaiKhoan: "hoat-dong",
+    // Cờ Leader (ĐỀ XUẤT): TVV demo (i=0) + hai người khác để CMS "Vinh danh từ Leader" có nhiều lượt gửi
+    isLeader: i === 0 || i === 5 || i === 11,
   };
 });
 export const TVV_DEMO = advisors[0]; // Nguyễn Minh An · 0161363 — tài khoản TVV dùng để demo đăng nhập
@@ -486,3 +488,21 @@ export const thoiGianLabel = (m: HonorMonth) => {
   if (y1 === y2) return `${d1}/${m1}–${d2}/${m2}/${y1}`;
   return `${d1}/${m1}/${y1}–${d2}/${m2}/${y2}`;
 };
+
+/**
+ * Vinh danh từ Leader (ĐỀ XUẤT) — các lượt Leader nhập tay & gửi thành tích nhóm cho Chubb đối chiếu.
+ * G13 (Leader nhập/gửi) · H03f/H03f2 (admin xem gộp/nhóm) · H03g (chi tiết một lượt). Admin chỉ đối chiếu, không sửa.
+ */
+export const leaderSubmissions: LeaderSubmission[] = [
+  { id: "ls1", leaderMa: "0161363", leaderTen: "Nguyễn Minh An", bangLabel: "Tháng 9/2026", guiLuc: "2026-09-10T09:12:00", members: [
+    { hoTen: "Nguyễn Minh Anh", doanhSo: 2_450_000_000, hopDong: 12, khachHang: 9 },
+    { hoTen: "Trần Thảo Vy", doanhSo: 2_100_000_000, hopDong: 10, khachHang: 7 },
+  ] },
+  { id: "ls2", leaderMa: "0161548", leaderTen: "Lê Quốc Bảo", bangLabel: "Tháng 9/2026", guiLuc: "2026-09-09T16:40:00", members: [
+    { hoTen: "Phạm Thuý Nga", doanhSo: 1_800_000_000, hopDong: 8, khachHang: 6 },
+    { hoTen: "Vũ Thu Hà", doanhSo: 1_620_000_000, hopDong: 7, khachHang: 5 },
+  ] },
+  { id: "ls3", leaderMa: "0161770", leaderTen: "Đỗ Tuấn Kiệt", bangLabel: "Tháng 9/2026", guiLuc: "2026-09-08T11:05:00", members: [
+    { hoTen: "Nguyễn Minh Tâm", doanhSo: 1_380_000_000, hopDong: 6, khachHang: 4 },
+  ] },
+];

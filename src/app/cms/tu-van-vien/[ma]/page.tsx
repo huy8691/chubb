@@ -74,6 +74,7 @@ function ChiTiet({ ma }: { ma: string }) {
       <div className="flex flex-wrap gap-2 mb-6">
         <Chip tone={daGo ? "grey" : a.theCongKhai ? "blue" : "amber"}>THẺ: {nhanThe(a).toUpperCase()}</Chip>
         <Chip tone={daGo ? "red" : "green"}>TÀI KHOẢN: {daGo ? "ĐÃ GỠ" : "HOẠT ĐỘNG"}</Chip>
+        {a.isLeader && <Chip tone="grey">LEADER</Chip>}
         {dh.map((t) => <Chip key={t} tone="pink">{t.toUpperCase()}</Chip>)}
       </div>
 

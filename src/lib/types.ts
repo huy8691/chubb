@@ -63,6 +63,27 @@ export interface Advisor {
   moTuLinkThangNay: number;
   dangNhapGanNhat?: string;
   trangThaiTaiKhoan: "hoat-dong" | "da-go";
+  /** Cờ Leader (Trưởng nhóm) — thấy mục "Vinh danh thành viên" (G13) để nhập & gửi thành tích nhóm cho Chubb đối chiếu (H03f). ĐỀ XUẤT, chưa chốt. */
+  isLeader?: boolean;
+}
+
+/** Một dòng thành tích Leader nhập tay cho một thành viên (G13 · H03f · H03g). */
+export interface LeaderMember {
+  ma?: string; // mã TVV nếu khớp danh bạ
+  hoTen: string;
+  doanhSo: number; // phí năm đầu (VND)
+  hopDong: number;
+  khachHang: number;
+}
+
+/** Một lượt Leader gửi thành tích nhóm cho Chubb đối chiếu khi lập Bảng vinh danh. */
+export interface LeaderSubmission {
+  id: string;
+  leaderMa: string;
+  leaderTen: string;
+  bangLabel: string; // tên bảng vinh danh gửi cho (vd "Tháng 9/2026")
+  guiLuc: string; // ISO
+  members: LeaderMember[];
 }
 
 export interface DanhHieu {
