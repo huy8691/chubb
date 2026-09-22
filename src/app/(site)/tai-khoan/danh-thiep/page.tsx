@@ -133,7 +133,7 @@ export default function Page() {
           </Step>
 
           <Step title="Bước 2 — Mẫu danh thiếp">
-            <p className="text-[13px] text-ink2 mb-4">Chọn một mẫu Chubb thiết kế để hiển thị trên danh thiếp công khai — ảnh chân dung và tên của bạn tự điền vào mẫu; hoặc tải về máy. Không bắt buộc.</p>
+            <p className="text-[13px] text-ink2 mb-4">Chọn một khung ảnh chân dung Chubb thiết kế — ảnh của bạn tự lồng vào ô trong khung, hiển thị trên danh thiếp công khai; hoặc tải về máy. Không bắt buộc.</p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {data.profileTemplates.map((t) => {
                 const dung = form.mauProfile === t.id;

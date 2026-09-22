@@ -276,13 +276,6 @@ const FIELDS_DOC: FStudio = [
   { loai: "chucDanh", xPct: 50, yPct: 82, size: 2.6, mau: "#e6eaf5", canLe: "center", gioiHan: 30 },
   { loai: "soDienThoai", xPct: 50, yPct: 86.5, size: 2.8, mau: "#ffffff", canLe: "center", gioiHan: 15, dam: true },
 ];
-/** Field mặc định cho mẫu KHUNG (ảnh + slogan): Họ tên · Chức danh · SĐT đặt ở vùng trống dưới ô ảnh, căn giữa.
- * mau/mauPhu tuỳ nền sáng-tối (nền sáng → chữ đậm màu; nền tối → trắng). Admin kéo tinh chỉnh trong CMS. */
-const khungFields = (mau: string, mauPhu: string): FStudio => [
-  { loai: "hoTen", xPct: 50, yPct: 53, size: 4.4, mau, canLe: "center", gioiHan: 40, dam: true },
-  { loai: "chucDanh", xPct: 50, yPct: 59, size: 2.5, mau: mauPhu, canLe: "center", gioiHan: 30 },
-  { loai: "soDienThoai", xPct: 50, yPct: 65, size: 2.7, mau, canLe: "center", gioiHan: 15, dam: true },
-];
 /** Helper tạo một mẫu mô hình mới — PNG nền + field + ô chân dung, không tham số hoá */
 const mauStudio = (o: { id: string; ten: string; anhNen: string; anh?: string; tiLe?: StudioTemplate["tiLe"]; tyLe?: number; anhSauNen?: boolean; hole?: StudioTemplate["anhChanDung"]; fields?: FStudio; trangThai?: StudioTemplate["trangThai"]; soAnhDaTao?: number; capNhat: string }): StudioTemplate => ({
   id: o.id, ten: o.ten, anh: o.anh ?? o.anhNen, anhNen: o.anhNen, tiLe: o.tiLe ?? "4:5", tyLe: o.tyLe, anhSauNen: o.anhSauNen,
@@ -301,17 +294,18 @@ export const studioTemplates: StudioTemplate[] = [
   mauStudio({ id: "m-anphuc", ten: "Chubb – Tự Do An Phúc", anhNen: "/studio/tu-do-an-phuc.png", anh: "/studio/tu-do-an-phuc-mau.png", tiLe: "16:9", hole: O_ANPHUC, fields: FIELDS_ANPHUC, soAnhDaTao: 0, capNhat: "2026-09-21T09:00:00" }),
 ];
 
-/** Mẫu trang trí danh thiếp (dạng chân dung) — TVV chọn ở E04 (chọn tĩnh), hiện trên danh thiếp công khai E03 với ảnh & tên của TVV; hoặc tải. Chuyển từ Studio sang 22/09. */
+/** Mẫu ảnh chân dung danh thiếp — TVV chọn ở E04 (chọn tĩnh), hiện trên danh thiếp công khai E03 với ẢNH của TVV lồng vào ô trong suốt; hoặc tải. Chuyển từ Studio sang 22/09.
+ * Đây là KHUNG ẢNH CHÂN DUNG (slogan/logo nung trong PNG) — KHÔNG có field tên/chức danh/SĐT (chủ dự án 22/09: "dành cho profile avatar thì không cần tên, vị trí, số điện thoại"). */
 export const profileTemplates: StudioTemplate[] = [
-  mauStudio({ id: "m-antam", ten: "An tâm hôm nay — Vững vàng tương lai", anhNen: "/studio/khung-antam.png", tiLe: "9:16", tyLe: 1019 / 1543, anhSauNen: true, hole: { xPct: 49.8, yPct: 30.8, dPct: 45.9 }, fields: khungFields("#13235f", "#5b6270"), soAnhDaTao: 156, capNhat: "2026-09-21T10:00:00" }),
-  mauStudio({ id: "m-giaiphap", ten: "Giải pháp hôm nay cho cuộc sống tốt đẹp hơn", anhNen: "/studio/khung-giaiphap.png", tiLe: "9:16", tyLe: 466 / 767, anhSauNen: true, hole: { xPct: 56, yPct: 29.5, dPct: 52.2 }, fields: khungFields("#ffffff", "#e6eaf5"), soAnhDaTao: 92, capNhat: "2026-09-21T10:05:00" }),
-  mauStudio({ id: "m-baove", ten: "Bảo vệ điều quan trọng", anhNen: "/studio/khung-baove.png", tiLe: "9:16", tyLe: 1019 / 1543, anhSauNen: true, hole: { xPct: 49.9, yPct: 30, dPct: 52 }, fields: khungFields("#ffffff", "#ffe0f0"), soAnhDaTao: 74, capNhat: "2026-09-21T10:10:00" }),
-  mauStudio({ id: "m-songantam", ten: "Sống an tâm — Trọn vẹn hơn", anhNen: "/studio/khung-songantam.png", tiLe: "9:16", tyLe: 475 / 769, anhSauNen: true, hole: { xPct: 48.3, yPct: 29.6, dPct: 57.5 }, fields: khungFields("#215c3a", "#5a7a63"), soAnhDaTao: 51, capNhat: "2026-09-21T10:15:00" }),
-  mauStudio({ id: "m-gioi-thieu", ten: "Giới thiệu bản thân", anhNen: "/studio/mau-1.png", soAnhDaTao: 214, capNhat: "2026-09-18T09:00:00" }),
-  mauStudio({ id: "m-uu-dai", ten: "Ưu đãi tháng", anhNen: "/studio/mau-2.png", soAnhDaTao: 132, capNhat: "2026-09-16T09:00:00" }),
-  mauStudio({ id: "m-su-kien", ten: "Sự kiện & hội thảo", anhNen: "/studio/mau-3.png", soAnhDaTao: 88, capNhat: "2026-09-12T09:00:00" }),
-  mauStudio({ id: "m-cam-on", ten: "Cảm ơn khách hàng", anhNen: "/studio/mau-4.png", soAnhDaTao: 64, capNhat: "2026-09-10T09:00:00" }),
-  mauStudio({ id: "m-la-tvv", ten: "Tôi là Tư vấn viên Chubb Life", anhNen: "/studio/mau-1.png", soAnhDaTao: 0, capNhat: "2026-09-08T09:00:00" }),
+  mauStudio({ id: "m-antam", ten: "An tâm hôm nay — Vững vàng tương lai", anhNen: "/studio/khung-antam.png", tiLe: "9:16", tyLe: 1019 / 1543, anhSauNen: true, hole: { xPct: 49.8, yPct: 30.8, dPct: 45.9 }, fields: [], soAnhDaTao: 156, capNhat: "2026-09-21T10:00:00" }),
+  mauStudio({ id: "m-giaiphap", ten: "Giải pháp hôm nay cho cuộc sống tốt đẹp hơn", anhNen: "/studio/khung-giaiphap.png", tiLe: "9:16", tyLe: 466 / 767, anhSauNen: true, hole: { xPct: 56, yPct: 29.5, dPct: 52.2 }, fields: [], soAnhDaTao: 92, capNhat: "2026-09-21T10:05:00" }),
+  mauStudio({ id: "m-baove", ten: "Bảo vệ điều quan trọng", anhNen: "/studio/khung-baove.png", tiLe: "9:16", tyLe: 1019 / 1543, anhSauNen: true, hole: { xPct: 49.9, yPct: 30, dPct: 52 }, fields: [], soAnhDaTao: 74, capNhat: "2026-09-21T10:10:00" }),
+  mauStudio({ id: "m-songantam", ten: "Sống an tâm — Trọn vẹn hơn", anhNen: "/studio/khung-songantam.png", tiLe: "9:16", tyLe: 475 / 769, anhSauNen: true, hole: { xPct: 48.3, yPct: 29.6, dPct: 57.5 }, fields: [], soAnhDaTao: 51, capNhat: "2026-09-21T10:15:00" }),
+  mauStudio({ id: "m-gioi-thieu", ten: "Giới thiệu bản thân", anhNen: "/studio/mau-1.png", fields: [], soAnhDaTao: 214, capNhat: "2026-09-18T09:00:00" }),
+  mauStudio({ id: "m-uu-dai", ten: "Ưu đãi tháng", anhNen: "/studio/mau-2.png", fields: [], soAnhDaTao: 132, capNhat: "2026-09-16T09:00:00" }),
+  mauStudio({ id: "m-su-kien", ten: "Sự kiện & hội thảo", anhNen: "/studio/mau-3.png", fields: [], soAnhDaTao: 88, capNhat: "2026-09-12T09:00:00" }),
+  mauStudio({ id: "m-cam-on", ten: "Cảm ơn khách hàng", anhNen: "/studio/mau-4.png", fields: [], soAnhDaTao: 64, capNhat: "2026-09-10T09:00:00" }),
+  mauStudio({ id: "m-la-tvv", ten: "Tôi là Tư vấn viên Chubb Life", anhNen: "/studio/mau-1.png", fields: [], soAnhDaTao: 0, capNhat: "2026-09-08T09:00:00" }),
 ];
 
 export const studioImages: StudioImage[] = Array.from({ length: 41 }, (_, i) => ({
