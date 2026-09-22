@@ -68,8 +68,10 @@ function TheDayDu({ a }: { a: Advisor }) {
           <div className="flex items-center gap-5 sm:gap-8 min-w-0 flex-1">
             {mauProfile ? (
               <div className="w-[220px] sm:w-[280px] shrink-0 border border-vien rounded-sm overflow-hidden bg-white shadow-sm"><StudioPreview template={mauProfile} portrait={a.avatar} zoom={a.avatarZoom} offsetX={a.avatarX} offsetY={a.avatarY} hoTen={a.hoTen} chucDanh={a.chucDanh} soDienThoai={a.soDienThoai} /></div>
+            ) : a.avatar ? (
+              <img src={a.avatar} alt={a.hoTen} className="size-40 rounded-full object-cover shrink-0" />
             ) : (
-              <Avatar name={a.hoTen} size={160} src={a.avatar} />
+              <Avatar name={a.hoTen} size={160} />
             )}
             <div className="min-w-0">
               <h1 className="font-serif font-semibold text-[24px] leading-tight text-den uppercase">{a.hoTen}</h1>

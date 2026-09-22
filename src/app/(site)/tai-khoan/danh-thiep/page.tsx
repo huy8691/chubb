@@ -47,7 +47,7 @@ function TheCard({ mau, form, ma, danhHieu, url, flash, onZoom, onOffset }: {
           <Button kind="secondary" size="sm" className="mt-3 w-full" onClick={() => taiAnhStudio({ template: mau, portrait: form.avatar || undefined, zoom, offsetX: offset.x, offsetY: offset.y }).then(() => flash("Đã tải ảnh danh thiếp về máy"))}>Tải ảnh về máy</Button>
         </div>
       ) : (
-        <div className="mb-4 aspect-[4/3] bg-xam rounded-sm overflow-hidden flex items-center justify-center text-mut text-[12px]">{form.avatar ? <img src={form.avatar} alt="Ảnh chân dung" className="w-full h-full object-cover" /> : "Ảnh chân dung"}</div>
+        <div className="mb-4 flex justify-center">{form.avatar ? <img src={form.avatar} alt="Ảnh chân dung" className="size-40 rounded-full object-cover" /> : <div className="size-40 rounded-full bg-xam flex items-center justify-center text-mut text-[12px]">Ảnh chân dung</div>}</div>
       )}
       <div className="mt-4 font-serif font-semibold text-[22px] text-den uppercase leading-tight">{form.hoTen || "Họ và tên"}</div>
       <div className="text-[13px] text-ink2 mt-1">{[form.chucDanh, danhHieu, `Mã ${ma}`].filter(Boolean).join(" · ")}</div>
