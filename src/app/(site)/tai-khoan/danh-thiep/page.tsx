@@ -238,7 +238,7 @@ export default function Page() {
         </div>
 
         <aside className="lg:sticky lg:top-24 self-start">
-          <div className="text-[14px] font-bold text-den uppercase mb-3">Xem trước</div>
+          <div className="text-[14px] font-bold text-den uppercase mb-3">Xem nhanh</div>
           {theCard}
           <div className="text-[12.5px] text-ink2 mt-3">Cập nhật ngay khi bạn nhập</div>
         </aside>
