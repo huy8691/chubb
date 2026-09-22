@@ -7,22 +7,22 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CmsCard, CmsFormActions, CmsHeader } from "@/components/cms/CmsShell";
-import { Button, Checkbox, Field, Input, Select, useFlash } from "@/components/ui";
+import { Button, Field, Input, Select, useFlash } from "@/components/ui";
 import { R } from "@/lib/routes";
 import { useStore } from "@/lib/store";
 import type { Advisor } from "@/lib/types";
 
 const CHUC_DANH = ["Tư vấn tài chính", "Tư vấn tài chính cao cấp", "Trưởng nhóm kinh doanh", "Giám đốc kinh doanh khu vực"];
 
-type Form = { ma: string; hoTen: string; email: string; chucDanh: string; vanPhong: string; ngayBatDau: string; isLeader: boolean };
-const trong = (): Form => ({ ma: "", hoTen: "", email: "", chucDanh: CHUC_DANH[0], vanPhong: "", ngayBatDau: new Date().toISOString().slice(0, 10), isLeader: false });
+type Form = { ma: string; hoTen: string; email: string; chucDanh: string; vanPhong: string; ngayBatDau: string };
+const trong = (): Form => ({ ma: "", hoTen: "", email: "", chucDanh: CHUC_DANH[0], vanPhong: "", ngayBatDau: new Date().toISOString().slice(0, 10) });
 
 export function TvvForm({ ma }: { ma?: string }) {
   const router = useRouter();
   const { data, actions, ready } = useStore();
   const { flash, node } = useFlash();
   const goc = ma ? data.advisors.find((a) => a.ma === ma) : undefined;
-  const [f, setF] = useState<Form>(() => goc ? { ma: goc.ma, hoTen: goc.hoTen, email: goc.email, chucDanh: goc.chucDanh, vanPhong: goc.vanPhong, ngayBatDau: goc.ngayBatDau.slice(0, 10), isLeader: !!goc.isLeader } : trong());
+  const [f, setF] = useState<Form>(() => goc ? { ma: goc.ma, hoTen: goc.hoTen, email: goc.email, chucDanh: goc.chucDanh, vanPhong: goc.vanPhong, ngayBatDau: goc.ngayBatDau.slice(0, 10) } : trong());
   const [err, setErr] = useState<Partial<Record<keyof Form, string>>>({});
   const set = (k: keyof Form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => { setF({ ...f, [k]: e.target.value }); setErr({ ...err, [k]: undefined }); };
 
@@ -45,14 +45,14 @@ export function TvvForm({ ma }: { ma?: string }) {
     if (!kiem()) return;
     const doiEmail = goc && goc.email.toLowerCase() !== f.email.toLowerCase();
     if (goc) {
-      actions.update("advisors", (list) => list.map((a) => a.ma === goc.ma ? { ...a, hoTen: f.hoTen.trim(), email: f.email.trim(), chucDanh: f.chucDanh, vanPhong: f.vanPhong, ngayBatDau: f.ngayBatDau, isLeader: f.isLeader } : a));
+      actions.update("advisors", (list) => list.map((a) => a.ma === goc.ma ? { ...a, hoTen: f.hoTen.trim(), email: f.email.trim(), chucDanh: f.chucDanh, vanPhong: f.vanPhong, ngayBatDau: f.ngayBatDau } : a));
       router.push(`${R.H11a(goc.ma)}?da=${doiEmail ? "moi" : "sua"}`);
       return;
     }
     const moi: Advisor = {
       ma: f.ma, hoTen: f.hoTen.trim(), email: f.email.trim(), chucDanh: f.chucDanh, vanPhong: f.vanPhong, ngayBatDau: f.ngayBatDau,
       soDienThoai: "09" + String(Math.floor(10000000 + Math.random() * 89999999)), theCongKhai: true, hienTrenBXH: true, nhanThongBaoEmail: true,
-      danhHieu: [], luotChiaSeThangNay: 0, moTuLinkThangNay: 0, trangThaiTaiKhoan: "hoat-dong", isLeader: f.isLeader,
+      danhHieu: [], luotChiaSeThangNay: 0, moTuLinkThangNay: 0, trangThaiTaiKhoan: "hoat-dong",
     };
     moi.zalo = moi.soDienThoai;
     actions.update("advisors", (list) => [moi, ...list]);
@@ -86,10 +86,6 @@ export function TvvForm({ ma }: { ma?: string }) {
             <Field label="Ngày bắt đầu" error={err.ngayBatDau}>
               <Input type="date" value={f.ngayBatDau} onChange={set("ngayBatDau")} />
             </Field>
-          </div>
-          <div className="mt-6">
-            <div className="text-[13px] font-bold text-ink2 mb-2">VAI TRÒ</div>
-            <Checkbox checked={f.isLeader} onChange={(e) => setF({ ...f, isLeader: e.target.checked })} label={'Leader — thấy mục "Vinh danh thành viên" trên Trang cá nhân để nhập & gửi thành tích nhóm cho Chubb đối chiếu.'} />
           </div>
           <CmsFormActions>
             <Button type="submit">Lưu</Button>

@@ -22,9 +22,6 @@ export function AccountShell({ children }: { children: React.ReactNode }) {
 
   if (!ready || !tvv) return <div className="wrap py-12 sm:py-20 text-mut">Đang kiểm tra phiên đăng nhập…</div>;
 
-  // G13 · Vinh danh thành viên (Leader) — không nằm trong dải 5 tab; render gọn như wireframe (nav site + tiêu đề riêng)
-  if (pathname === R.G13) return <div className="wrap py-10">{children}</div>;
-
   const active = [...ACCOUNT_TABS].sort((a, b) => b.href.length - a.href.length).find((t) => pathname === t.href || (t.href !== R.G02a && pathname.startsWith(t.href)))?.code ?? "G02a";
 
   return (

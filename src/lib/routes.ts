@@ -48,7 +48,6 @@ export const R = {
   E04: "/tai-khoan/danh-thiep",
   G10: "/tai-khoan/tai-lieu",
   G06: "/tai-khoan/cai-dat",
-  G13: "/tai-khoan/vinh-danh-thanh-vien", // Leader nhập & gửi thành tích nhóm (ĐỀ XUẤT)
   // CMS
   H00: "/cms/dang-nhap",
   H01: "/cms",
@@ -65,8 +64,6 @@ export const R = {
   H03: "/cms/vinh-danh",
   H03b: (id: string) => `/cms/vinh-danh/${id}`,
   H03d: (id: string) => `/cms/vinh-danh/${id}/them-tu-excel`,
-  H03f: "/cms/vinh-danh/tu-leader", // Vinh danh từ Leader — đối chiếu (H03f gộp · H03f2 nhóm, cùng route, toggle) (ĐỀ XUẤT)
-  H03g: (id: string) => `/cms/vinh-danh/tu-leader/${id}`, // chi tiết một lượt gửi
   H09: "/cms/tai-lieu",
   H09a: (id: string) => `/cms/tai-lieu/${id}`,
   H09new: "/cms/tai-lieu/moi",

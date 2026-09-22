@@ -36,7 +36,7 @@ export default function Page() {
 
   return (
     <>
-      <CmsHeader title="Bảng vinh danh" desc="Mỗi bảng có tên do Chubb đặt (tháng, quý hay đợt riêng). Bảng đã công bố hiện trên trang Vinh danh; bảng cũ nằm trong mục lưu trữ." right={<><Button onClick={taoBangMoi}>+ Bảng mới</Button><Button href={R.H03f} kind="secondary">Vinh danh từ Leader</Button></>} />
+      <CmsHeader title="Bảng vinh danh" desc="Mỗi bảng có tên do Chubb đặt (tháng, quý hay đợt riêng). Bảng đã công bố hiện trên trang Vinh danh; bảng cũ nằm trong mục lưu trữ." right={<Button onClick={taoBangMoi}>+ Bảng mới</Button>} />
       <CmsCard>
         <FilterChips<Loc> value={loc} onChange={(v) => { setLoc(v); setPage(1); }} options={[
           { value: "tat-ca", label: "Tất cả", count: all.length },
