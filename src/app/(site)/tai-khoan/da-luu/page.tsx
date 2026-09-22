@@ -3,8 +3,7 @@
 /**
  * G02 · Trang cá nhân › Đã lưu — bài viết đã lưu + Ảnh Studio của tôi.
  * (Wireframe chỉ đặc tả luồng "Lưu bài" T6 → G02; lưu tài liệu/danh thiếp không có trong wireframe → đã gỡ 21/09.)
- * Mỗi mục: Mở · Bỏ lưu. Ảnh Studio: năm trạng thái (Riêng tư · Chờ duyệt · Đang công khai · Từ chối kèm lý do · Đã ngừng công khai); mọi thẻ Mở · Tải ảnh · Xoá (xác nhận: mất cả hai nơi);
- * Riêng tư có "Hiển thị công khai" (gửi MỘT lần), Đang công khai có "Ngừng hiển thị công khai" (ảnh giữ lại, không gửi lại). 09/09: khớp wireframe G02.
+ * Mỗi mục: Mở · Bỏ lưu. Ảnh Studio: chỉ RIÊNG TƯ (Mở · Tải ảnh · Xoá) — luồng công khai/duyệt đã bỏ 22/09; TVV tự tải & đăng.
  */
 import Link from "next/link";
 import { useState } from "react";
@@ -75,14 +74,11 @@ export default function Page() {
                   <div>
                     <div className="font-bold text-[13.5px] text-den">{tenMau(a.templateId)}</div>
                     <div className="text-[11.5px] text-ink2 mt-0.5">Từ mẫu v{a.phienBanMau ?? 1} · lưu {fmtDate(a.tao).slice(0, 5)}</div>
-                    {a.trangThai === "bi-tu-choi" && a.lyDoTuChoi && <div className="mt-2 text-[12.5px] text-red-fg bg-red-bg rounded-sm px-2.5 py-1.5">Lý do từ chối: {a.lyDoTuChoi}</div>}
                   </div>
                   <div className="flex flex-wrap gap-x-4 gap-y-1 text-[12px] font-bold mt-auto">
                     <Link href={`${R.D02}?mau=${a.templateId}`} className="text-blue">Mở</Link>
                     <button type="button" className="text-blue" onClick={() => flash(`Đã tải ảnh "${tenMau(a.templateId)}" về máy`)}>Tải ảnh</button>
                     <button type="button" className="text-ink2 hover:text-red-fg" onClick={() => setXoa(a)}>Xoá</button>
-                    {a.trangThai === "rieng-tu" && <button type="button" className="text-blue basis-full text-left" onClick={() => { actions.update("studioImages", (l) => l.map((x) => x.id === a.id ? { ...x, trangThai: "cho-duyet", dongYCongKhai: true } : x)); flash("Đã gửi Chubb duyệt — ảnh hiển thị công khai sau khi duyệt"); }}>Hiển thị công khai</button>}
-                    {a.trangThai === "da-duyet" && <button type="button" className="text-blue basis-full text-left" onClick={() => { actions.update("studioImages", (l) => l.map((x) => x.id === a.id ? { ...x, trangThai: "da-ngung" } : x)); flash("Đã ngừng hiển thị công khai — ảnh vẫn còn trong Ảnh Studio của tôi"); }}>Ngừng hiển thị công khai</button>}
                   </div>
                 </Card>
               ))}
@@ -93,7 +89,7 @@ export default function Page() {
 
       <Modal open={!!xoa} onClose={() => setXoa(null)} title={`Xoá ảnh "${xoa ? tenMau(xoa.templateId) : ""}"?`} width={520}
         footer={<><Button kind="secondary" onClick={() => setXoa(null)}>Huỷ</Button><Button onClick={() => { if (xoa) actions.update("studioImages", (l) => l.filter((x) => x.id !== xoa.id)); setXoa(null); flash("Đã xoá ảnh"); }}>Xoá</Button></>}>
-        <p className="text-[14px] text-ink2">Ảnh sẽ bị xoá khỏi Ảnh Studio của tôi. Nếu ảnh đang hiển thị công khai, ảnh cũng bị gỡ khỏi Ảnh thực tế từ Tư vấn viên. Không khôi phục được.</p>
+        <p className="text-[14px] text-ink2">Ảnh sẽ bị xoá khỏi Ảnh Studio của tôi. Không khôi phục được.</p>
       </Modal>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 /** D08 · Mẫu Studio (archive, công khai) — 09/09: Chubb có nhiều mẫu nên tách trang danh sách; D01 → D08 → D02 (chọn mẫu rồi tạo ảnh).
- *  Lọc theo tỉ lệ · sắp xếp · đếm · lưới 4×2 · phân trang · sidebar tìm / dùng nhiều nhất / Ảnh thực tế từ Tư vấn viên / đăng nhập. "Dùng mẫu này" → D02?mau= (khách → G01). */
+ *  Lọc theo tỉ lệ · sắp xếp · đếm · lưới 4×2 · phân trang · sidebar tìm / dùng nhiều nhất / đăng nhập. "Dùng mẫu này" → D02?mau= (khách → G01). */
 import { useMemo, useState } from "react";
 import { R } from "@/lib/routes";
 import { useStore } from "@/lib/store";
@@ -34,7 +34,7 @@ export default function Page() {
         <div className="wrap py-10">
           <Breadcrumb items={[{ label: "Trang chủ", href: R.A01 }, { label: "Toàn Tâm Phát Triển", href: R.D01 }, { label: "Mẫu Studio" }]} />
           <H1 className="mt-3">Mẫu Studio</H1>
-          <Muted className="mt-3 text-[16px]"><b>Khung mẫu Chubb thiết kế</b> — chọn một mẫu để tạo ảnh của bạn. Muốn xem ảnh thật đồng nghiệp đã làm? Vào <a href={R.D07} className="text-blue font-bold hover:underline">Ảnh thực tế từ Tư vấn viên</a>. ({tatCa.length} mẫu)</Muted>
+          <Muted className="mt-3 text-[16px]"><b>Khung mẫu Chubb thiết kế</b> — chọn một mẫu để tạo ảnh của bạn. ({tatCa.length} mẫu)</Muted>
         </div>
       </section>
 
@@ -63,11 +63,6 @@ export default function Page() {
           <Card className="p-4 sm:p-5">
             <H3>Dùng nhiều nhất</H3>
             <ol className="mt-3 space-y-2 text-[13px] text-ink2">{dungNhieu.map((m, i) => <li key={m.id}>{i + 1}. {m.ten} · {fmtNum(m.soAnhDaTao)} ảnh</li>)}</ol>
-          </Card>
-          <Card className="p-4 sm:p-5">
-            <H3>Ảnh thực tế từ Tư vấn viên</H3>
-            <Muted className="mt-1 text-[13px]">Ảnh <b>đã hoàn thành</b> của đồng nghiệp, tạo từ các mẫu này — xem để lấy cảm hứng.</Muted>
-            <Button className="mt-4" kind="secondary" href={R.D07}>Xem ảnh thực tế</Button>
           </Card>
           {!daDangNhap && (
             <Card className="p-4 sm:p-5">

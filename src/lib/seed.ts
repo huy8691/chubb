@@ -311,13 +311,10 @@ export const studioTemplates: StudioTemplate[] = [
 export const studioImages: StudioImage[] = Array.from({ length: 41 }, (_, i) => ({
   id: `as${i + 1}`,
   templateId: studioTemplates[i % 2].id,
-  advisorMa: i === 30 || i === 31 ? advisors[0].ma : advisors[i % advisors.length].ma, // TVV demo có đủ năm trạng thái
+  advisorMa: i < 3 ? advisors[0].ma : advisors[i % advisors.length].ma, // TVV demo (0161363) có 3 ảnh riêng tư
   anh: `/img/aw-${(i % 8) + 1}.png`,
   tao: `2026-08-${String(1 + (i % 28)).padStart(2, "0")}T10:00:00`,
-  trangThai: i < 6 ? "cho-duyet" : i < 30 ? "da-duyet" : i === 30 ? "bi-tu-choi" : i === 31 || i === 32 ? "da-ngung" : "rieng-tu",
-  lyDoTuChoi: i === 30 ? "Ảnh mờ, không thấy rõ logo Chubb Life." : undefined,
-  dongYCongKhai: i < 33,
-  ngayDuyet: i >= 6 && i < 30 ? `2026-08-${String(2 + (i % 26)).padStart(2, "0")}T15:00:00` : undefined,
+  trangThai: "rieng-tu", // luồng công khai/duyệt đã bỏ 22/09 — mọi ảnh Studio là riêng tư
   phienBanMau: i % 2 === 0 ? 3 : 2,
 }));
 
@@ -359,7 +356,7 @@ export const faqs: FAQ[] = [
   { id: "f8", trang: "lien-he", doiTuong: "ung-vien", cauHoi: "Tôi muốn bắt đầu nghề Tư vấn viên thì làm gì?", traLoi: "Gửi thông tin ở Toàn Tâm Tuyển Dụng, đội Tuyển dụng sẽ liên hệ.", thuTu: 3, trangThai: "da-xuat-ban", capNhat: "2026-08-15" },
   { id: "f9", trang: "lien-he", doiTuong: "tu-van-vien", cauHoi: "Không nhận được mã đăng nhập?", traLoi: "Kiểm tra thư rác; sau 3 lần sai hệ thống khoá 15 phút. Bấm Gửi lại mã hoặc gọi hotline TVV.", thuTu: 4, trangThai: "da-xuat-ban", capNhat: "2026-08-15" },
   { id: "f10", trang: "lien-he", doiTuong: "tu-van-vien", cauHoi: "Thứ hạng chia sẻ được tính thế nào?", traLoi: "1 lượt = 1 lần bấm một nút trong popup Chia sẻ trên danh thiếp của bạn, dù người bấm là bạn hay khách. Bảng xếp hạng chốt theo tháng.", thuTu: 5, trangThai: "da-xuat-ban", capNhat: "2026-08-15" },
-  { id: "f11", trang: "lien-he", doiTuong: "tu-van-vien", cauHoi: "Ảnh Studio của tôi bao lâu được duyệt để hiển thị công khai?", traLoi: "Quản trị duyệt trong 2 ngày làm việc; ảnh vào mục Ảnh thực tế từ Tư vấn viên, kết quả báo qua email.", thuTu: 6, trangThai: "da-xuat-ban", capNhat: "2026-08-15" },
+  { id: "f11", trang: "lien-he", doiTuong: "tu-van-vien", cauHoi: "Tôi tạo ảnh trong Studio xong thì lưu ở đâu?", traLoi: "Ảnh lưu vào Ảnh Studio của tôi (Trang cá nhân › Đã lưu); bạn tải về máy và tự đăng lên kênh của mình.", thuTu: 6, trangThai: "da-xuat-ban", capNhat: "2026-08-15" },
 ];
 
 /* ---------- Ứng viên · Liên hệ ---------- */

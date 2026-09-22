@@ -1,6 +1,6 @@
 "use client";
 /* eslint-disable react-hooks/set-state-in-effect -- đọc sessionStorage / tham số URL sau mount là chủ ý (tránh lệch hydration) */
-/** D02 · Studio (cần đăng nhập TVV) — 3 bước: chọn Mẫu Studio → tải ảnh chân dung → thông tin hiển thị; xem trước; Tải ảnh / Lưu vào Ảnh Studio của tôi (không duyệt) / Hiển thị công khai trong Ảnh thực tế từ Tư vấn viên (Chubb duyệt, gửi một lần); khối cuối Tham khảo mẫu khác. (Danh sách "Ảnh Studio của tôi" ở G02, không ở D02 — bám Figma D02.) */
+/** D02 · Studio (cần đăng nhập TVV) — 3 bước: chọn Mẫu Studio → tải ảnh chân dung → thông tin hiển thị; xem trước; Tải ảnh / Lưu vào Ảnh Studio của tôi (riêng tư); khối cuối Tham khảo mẫu khác. Luồng công khai/duyệt đã bỏ 22/09 — ảnh chỉ riêng tư, TVV tự tải & đăng. (Danh sách "Ảnh Studio của tôi" ở G02.) */
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
@@ -9,7 +9,7 @@ import { useCurrentAdvisor, useStore } from "@/lib/store";
 import { fmtDate } from "@/lib/seed";
 import type { StudioImage } from "@/lib/types";
 import { RequireTVV } from "@/components/site/AccountShell";
-import { Button, Card, Checkbox, Eyebrow, Field, H1, H2, ImageBox, Input, MoreLink, Muted, cx, useFlash } from "@/components/ui";
+import { Button, Card, Eyebrow, Field, H1, H2, ImageBox, Input, MoreLink, Muted, cx, useFlash } from "@/components/ui";
 import { StudioPreview, taiAnhStudio } from "@/components/cong-cu/StudioPreview";
 import { MauStudioCard } from "@/components/cong-cu/MauStudioCard";
 
@@ -51,7 +51,6 @@ function Studio() {
   const [hoTen, setHoTen] = useState(tvv.hoTen);
   const [chucDanh, setChucDanh] = useState(tvv.chucDanh);
   const [sdt, setSdt] = useState(tvv.soDienThoai);
-  const [dongY, setDongY] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
 
@@ -61,9 +60,8 @@ function Studio() {
     if (f.size > 5 * 1024 * 1024) { setLoiAnh("Ảnh vượt 5MB — chọn ảnh nhỏ hơn."); return; }
     setLoiAnh(""); setAnh(await docAnhThuNho(f)); setZoom(1); setOffset({ x: 0, y: 0 });
   };
-  const taoAnh = (trangThai: StudioImage["trangThai"]): StudioImage => ({ id: `as${Date.now()}`, templateId: m.id, advisorMa: tvv.ma, anh: anh ?? m.anh, tao: new Date().toISOString(), trangThai, dongYCongKhai: trangThai === "cho-duyet", phienBanMau: m.phienBan });
-  const luu = () => { actions.update("studioImages", (l) => [taoAnh("rieng-tu"), ...l]); flash("Đã lưu vào Ảnh Studio của tôi"); };
-  const gui = () => { actions.update("studioImages", (l) => [taoAnh("cho-duyet"), ...l]); flash("Đã gửi Chubb duyệt — ảnh hiển thị công khai sau khi duyệt"); setDongY(false); };
+  const taoAnh = (): StudioImage => ({ id: `as${Date.now()}`, templateId: m.id, advisorMa: tvv.ma, anh: anh ?? m.anh, tao: new Date().toISOString(), trangThai: "rieng-tu", phienBanMau: m.phienBan });
+  const luu = () => { actions.update("studioImages", (l) => [taoAnh(), ...l]); flash("Đã lưu vào Ảnh Studio của tôi"); };
   const dungMau = (id: string) => { setMauId(id); topRef.current?.scrollIntoView({ behavior: "smooth" }); };
 
   const mauKhac = mau.filter((x) => x.id !== m.id).sort((a, b) => b.soAnhDaTao - a.soAnhDaTao).slice(0, 6); // 09/09: khối cuối là mẫu khác để tham khảo, không phải ảnh TVV (D07 đi từ D08)
@@ -134,13 +132,7 @@ function Studio() {
               <Button size="sm" onClick={() => taiAnhStudio({ template: m, portrait: anh, zoom, offsetX: offset.x, offsetY: offset.y, hoTen, chucDanh, soDienThoai: sdt }).then(() => flash("Đã tải ảnh về máy"))}>Tải ảnh</Button>
               <Button size="sm" kind="secondary" onClick={luu}>Lưu vào Ảnh Studio của tôi</Button>
             </div>
-            <Muted className="mt-2 text-[12px]">Chỉ bạn thấy. Ảnh nằm ở Trang cá nhân › Đã lưu › Ảnh Studio của tôi.</Muted>
-          </div>
-          <div className="mt-5 pt-5 border-t border-vien2">
-            <div className="text-[11.5px] font-bold tracking-wider text-mut">HIỂN THỊ CÔNG KHAI</div>
-            <div className="mt-2"><Checkbox checked={dongY} onChange={(e) => setDongY(e.target.checked)} label={<span className="text-[13px]">Tôi đồng ý cho ảnh này hiển thị công khai trong <b>Ảnh thực tế từ Tư vấn viên</b>, kèm tên của tôi</span>} /></div>
-            <Button className="mt-3" kind="secondary" disabled={!dongY} onClick={gui}>Lưu và hiển thị công khai</Button>
-            <Muted className="mt-2 text-[12px]">Ảnh được lưu vào Ảnh Studio của tôi và gửi Chubb duyệt. Chỉ hiện sau khi duyệt, mỗi ảnh gửi một lần.</Muted>
+            <Muted className="mt-2 text-[12px]">Chỉ bạn thấy. Ảnh nằm ở Trang cá nhân › Đã lưu › Ảnh Studio của tôi. Bạn tải về máy và tự đăng lên kênh của mình.</Muted>
           </div>
         </Card>
       </section>

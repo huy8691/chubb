@@ -23,7 +23,6 @@ export default function Page() {
   const [tt, setTt] = useState<Loc>("tat-ca");
   const [page, setPage] = useState(1);
 
-  const choDuyet = data.studioImages.filter((a) => a.trangThai === "cho-duyet").length;
   const count = (s: Loc) => data.studioTemplates.filter((m) => s === "tat-ca" || m.trangThai === s).length;
   const soAnh = (id: string) => data.studioImages.filter((a) => a.templateId === id).length;
 
@@ -42,10 +41,7 @@ export default function Page() {
 
   return (
     <>
-      <CmsHeader title="Mẫu Studio" desc="Mẫu do Chubb thiết kế để Tư vấn viên tạo ảnh trong Studio. Chỉ mẫu Đã xuất bản mới hiện cho Tư vấn viên." right={<>
-        <Button href={R.H02a("moi")}>+ Tạo mẫu mới</Button>
-        <Button kind="secondary" href={`${R.H07}?tt=cho-duyet`}>Ảnh Studio chờ duyệt ({choDuyet})</Button>
-      </>} />
+      <CmsHeader title="Mẫu Studio" desc="Mẫu do Chubb thiết kế để Tư vấn viên tạo ảnh trong Studio. Chỉ mẫu Đã xuất bản mới hiện cho Tư vấn viên." right={<Button href={R.H02a("moi")}>+ Tạo mẫu mới</Button>} />
       <CmsCard>
         <div className="flex flex-wrap items-center gap-3 mb-4">
           <SearchBox value={q} onChange={(v) => { setQ(v); setPage(1); }} placeholder="Tìm mẫu…" className="w-[300px]" />

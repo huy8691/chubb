@@ -18,17 +18,11 @@ export default function Page() {
   if (!tvv) return null;
 
   const anhStudio = data.studioImages.filter((a) => a.advisorMa === tvv.ma);
-  const choDuyet = anhStudio.filter((a) => a.trangThai === "cho-duyet").length;
-  const tuChoi = anhStudio.filter((a) => a.trangThai === "bi-tu-choi");
   const daLuu = data.savedItems.filter((s) => s.advisorMa === tvv.ma);
   const baiDaLuu = daLuu.filter((s) => s.loai === "bai-viet").length;
 
   /* Việc cần làm */
   const viec: { text: string; href?: string; onClick?: () => void; nut: string }[] = [];
-  tuChoi.forEach((a) => {
-    const mau = data.studioTemplates.find((m) => m.id === a.templateId)?.ten ?? "Ảnh Studio";
-    viec.push({ text: `Ảnh "${mau}" bị từ chối — xem lý do`, href: R.G02, nut: "Xem" });
-  });
   if (!tvv.avatar) viec.push({ text: "Danh thiếp chưa có ảnh chân dung", href: R.E04, nut: "Sửa" });
   if (!tvv.hoSoNangLuc) viec.push({ text: "Hồ sơ năng lực chưa điền — khách chỉ thấy thông tin liên hệ", href: R.E04, nut: "Điền" });
 
@@ -46,7 +40,7 @@ export default function Page() {
           <div className="font-serif font-semibold text-[34px] text-blue leading-none">{data.ranking.find((r) => r.advisorMa === tvv.ma)?.luotDuocTinh ?? tvv.luotChiaSeThangNay}</div>
           <div className="mt-2 text-[14px] text-ink2">lượt chia sẻ tháng này</div>
         </div>
-        <Stat value={anhStudio.length} label={`Ảnh Studio · ${choDuyet} chờ duyệt · ${tuChoi.length} từ chối`} href={R.G02} />
+        <Stat value={anhStudio.length} label="Ảnh Studio" href={R.G02} />
         <Stat value={baiDaLuu} label="bài viết đã lưu" href={R.G02} />
       </div>
 

@@ -45,7 +45,6 @@ function ChiTiet({ ma }: { ma: string }) {
 
   const rank = data.ranking.find((r) => r.advisorMa === a.ma);
   const anh = data.studioImages.filter((s) => s.advisorMa === a.ma);
-  const anhCho = anh.filter((s) => s.trangThai === "cho-duyet").length;
   const dh = a.danhHieu.map((d) => d.ten);
   const daGo = a.trangThaiTaiKhoan === "da-go";
   const duongDan = `${SITE_HOST}/${a.ma}`;
@@ -91,7 +90,7 @@ function ChiTiet({ ma }: { ma: string }) {
           <Row l="Thẻ công khai" v={daGo ? "Đã gỡ" : a.theCongKhai ? "Bật — Tư vấn viên tự tắt được" : a.theAnBoi === "quan-tri" ? "Tắt — Quản trị đã ẩn" : "Tắt — Tư vấn viên đã tắt"} />
           <Row l="Đường dẫn thẻ" v={<Link href={R.E03(a.ma)} target="_blank" className="font-bold text-blue hover:underline">{duongDan}</Link>} />
           <Row l="Hồ sơ năng lực" v={a.hoSoNangLuc ? `Đã điền${a.hoSoNangLuc.capNhat ? ` · cập nhật ${fmtDate(a.hoSoNangLuc.capNhat)}` : ""}` : "Chưa có"} />
-          <Row l="Ảnh Studio" v={<Link href={`${R.H07}?tvv=${a.ma}`} className="font-bold text-blue hover:underline">{anh.length} ảnh{anhCho ? ` · ${anhCho} chờ duyệt` : ""}</Link>} />
+          <Row l="Ảnh Studio" v={`${anh.length} ảnh (riêng tư)`} />
           <Row l={`Lượt chia sẻ tháng ${THANG_BXH}`} v={rank ? `${fmtNum(rank.luotDuocTinh)} lượt chia sẻ` : "Chưa có lượt"} />
           <Row l="Vinh danh" v={dh.length ? dh.join(" · ") : "Chưa có"} />
         </CmsCard>

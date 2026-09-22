@@ -53,11 +53,6 @@ export default function Page() {
             {!daDangNhap && <div className="mt-4"><Chip tone="amber">Cần đăng nhập để mở tệp</Chip></div>}
             <div className="mt-5"><Button href={R.G04} kind="secondary">Xem tài liệu</Button></div>
           </Card>
-          <Card className="p-4 sm:p-6 flex flex-col">
-            <H3>Ảnh thực tế từ Tư vấn viên</H3>
-            <Muted className="mt-2 flex-1">Ảnh đồng nghiệp đã tạo trong Studio và công khai — xem để lấy cảm hứng.</Muted>
-            <div className="mt-5"><Button href={R.D07} kind="secondary">Xem ảnh thực tế</Button></div>
-          </Card>
         </div>
       </section>
 

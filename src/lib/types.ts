@@ -159,12 +159,8 @@ export interface StudioImage {
   advisorMa: string;
   anh: string;
   tao: string;
-  /** Vòng đời một ảnh (09/09): Riêng tư → (Hiển thị công khai, gửi MỘT lần) → Chờ duyệt → Đang công khai | Từ chối → Đã ngừng công khai (TVV hoặc admin ngừng; không gửi lại). Xoá = mất cả Ảnh Studio của tôi và mục công khai Ảnh thực tế từ Tư vấn viên. */
-  trangThai: "rieng-tu" | "cho-duyet" | "da-duyet" | "bi-tu-choi" | "da-ngung";
-  lyDoTuChoi?: string;
-  /** Thêm cho D02/D07/H07 (cụm Công cụ) */
-  dongYCongKhai?: boolean; // TVV tick khi bấm Hiển thị công khai
-  ngayDuyet?: string;
+  /** Ảnh Studio TVV tạo — chỉ RIÊNG TƯ (lưu cho mình + tải về). Luồng công khai/duyệt (Ảnh thực tế từ Tư vấn viên) đã bỏ 22/09. */
+  trangThai: "rieng-tu";
   phienBanMau?: number;
 }
 
