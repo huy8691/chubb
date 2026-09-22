@@ -11,7 +11,7 @@ import { R } from "@/lib/routes";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
 import type { Advisor, StudioTemplate } from "@/lib/types";
 import { Button, Card, Checkbox, Chip, Field, Input, Modal, Radio, Select, Textarea, cx, useFlash } from "@/components/ui";
-import { StudioPreview } from "@/components/cong-cu/StudioPreview";
+import { StudioPreview, taiAnhStudio } from "@/components/cong-cu/StudioPreview";
 
 const VAI_TRO = ["Chuyên gia hoạch định tài chính", "Người đồng hành cùng gia đình trẻ", "Chuyên gia bảo vệ thu nhập", "Người bạn của khách hàng lâu năm"];
 const LINH_VUC = ["Bảo vệ gia đình", "Kế hoạch cho con", "Hoạch định tài chính", "Chuẩn bị hưu trí", "Doanh nghiệp", "Sức khoẻ"];
@@ -43,6 +43,7 @@ function TheCard({ mau, form, danhHieu, url, flash }: {
               </div>
             </>
           )}
+          <Button kind="secondary" size="sm" className="mt-3 w-full" onClick={() => taiAnhStudio({ template: mau, portrait: form.avatar || undefined, zoom, offsetX: offset.x, offsetY: offset.y }).then(() => flash("Đã tải ảnh danh thiếp về máy"))}>Tải ảnh về máy</Button>
         </div>
       ) : (
         <div className="mb-4 aspect-[4/3] bg-xam rounded-sm overflow-hidden flex items-center justify-center text-mut text-[12px]">{form.avatar ? <img src={form.avatar} alt="Ảnh chân dung" className="w-full h-full object-cover" /> : "Ảnh chân dung"}</div>
