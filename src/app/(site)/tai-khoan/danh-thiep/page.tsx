@@ -10,7 +10,7 @@ import { useState } from "react";
 import { R } from "@/lib/routes";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
 import type { Advisor, StudioTemplate } from "@/lib/types";
-import { Button, Card, Checkbox, Chip, Field, Input, Modal, Radio, Select, Textarea, cx, useFlash } from "@/components/ui";
+import { Button, Chip, Field, Input, Modal, Radio, Select, Textarea, cx, useFlash } from "@/components/ui";
 import { StudioPreview, taiAnhStudio } from "@/components/cong-cu/StudioPreview";
 
 const VAI_TRO = ["Chuyên gia hoạch định tài chính", "Người đồng hành cùng gia đình trẻ", "Chuyên gia bảo vệ thu nhập", "Người bạn của khách hàng lâu năm"];
@@ -228,15 +228,6 @@ export default function Page() {
                 </div>
                 {form.hanhTrinh.length < 4 && <Button kind="secondary" size="sm" className="mt-3" onClick={() => set("hanhTrinh", [...form.hanhTrinh, { nam: "", tieuDe: "", moTa: "" }])}>+ Thêm mốc</Button>}
               </div>
-
-              <Card className="p-4 sm:p-5">
-                <div className="font-bold text-[14px] text-den mb-3">Hiện từng phần trên trang công khai</div>
-                <div className="space-y-3">
-                  <Checkbox label="Hành trình nghề nghiệp" checked={form.hienPhan.hanhTrinh} onChange={(e) => set("hienPhan", { ...form.hienPhan, hanhTrinh: e.target.checked })} />
-                  <Checkbox label="Lĩnh vực chuyên môn" checked={form.hienPhan.linhVuc} onChange={(e) => set("hienPhan", { ...form.hienPhan, linhVuc: e.target.checked })} />
-                  <Checkbox label="Cho phép trang xuất hiện trên Google (mặc định tắt)" checked={form.hienPhan.google} onChange={(e) => set("hienPhan", { ...form.hienPhan, google: e.target.checked })} />
-                </div>
-              </Card>
             </div>
           </Step>
 

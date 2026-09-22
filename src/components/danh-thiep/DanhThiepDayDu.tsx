@@ -98,7 +98,7 @@ function TheDayDu({ a }: { a: Advisor }) {
           </section>
         )}
 
-        {hs && hs.theManh.length > 0 && (hs.hienPhan?.linhVuc ?? true) && (
+        {hs && hs.theManh.length > 0 && (
           <section>
             <H2 className="text-[22px]">Lĩnh vực chuyên môn</H2>
             <div className="mt-5 flex flex-wrap gap-3">{hs.theManh.map((t) => <Chip key={t} tone="blue" className="h-9 px-4 text-[14px] font-normal">{t}</Chip>)}</div>
@@ -112,7 +112,7 @@ function TheDayDu({ a }: { a: Advisor }) {
           </section>
         )}
 
-        {hs?.hanhTrinh && hs.hanhTrinh.length > 0 && (hs.hienPhan?.hanhTrinh ?? true) && (
+        {hs?.hanhTrinh && hs.hanhTrinh.length > 0 && (
           <section>
             <H2 className="text-[22px]">Hành trình nghề nghiệp</H2>
             <p className="mt-4 font-bold text-[17px] text-den">Hành trình {hs.noiBat?.[0] ?? ""} — từ những ngày đầu đến hôm nay</p>
