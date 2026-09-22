@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { R } from "@/lib/routes";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
-import type { Advisor } from "@/lib/types";
+import type { Advisor, StudioTemplate } from "@/lib/types";
 import { Button, Card, Checkbox, Chip, Field, Input, Modal, Radio, Select, Textarea, cx, useFlash } from "@/components/ui";
 import { StudioPreview } from "@/components/cong-cu/StudioPreview";
 
@@ -20,6 +20,45 @@ const VAN_PHONG = ["TP. Hồ Chí Minh — Q.1", "Hà Nội — Cầu Giấy", "
 const MAX_GIOI_THIEU = 280;
 
 type Moc = { nam: string; tieuDe: string; moTa: string };
+
+/** Thẻ xem trước danh thiếp — component ổn định ở module scope (không tạo lại mỗi lần Page render)
+ * nên state zoom/offset của khung ảnh chân dung giữ nguyên và kéo ảnh không bị đứt giữa chừng. */
+function TheCard({ mau, form, danhHieu, url, flash }: {
+  mau?: StudioTemplate; form: Form; danhHieu?: string; url: string; flash: (m: string) => void;
+}) {
+  const [zoom, setZoom] = useState(1);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const noiBat = [form.namKinhNghiem && `${form.namKinhNghiem} năm kinh nghiệm`, form.namMDRT && `${form.namMDRT} năm liên tiếp MDRT`].filter(Boolean) as string[];
+  return (
+    <div className="bg-white border border-vien rounded-sm p-4 sm:p-6">
+      {mau ? (
+        <div className="mb-3 max-w-[300px] mx-auto">
+          <StudioPreview template={mau} portrait={form.avatar || undefined} zoom={zoom} offsetX={offset.x} offsetY={offset.y} onOffsetChange={(x, y) => setOffset({ x, y })} />
+          {form.avatar && (
+            <>
+              <label className="mt-3 flex items-center gap-3 text-[12px] text-ink2">Thu phóng<input type="range" min={1} max={2} step={0.05} value={zoom} onChange={(e) => setZoom(Number(e.target.value))} className="flex-1 accent-blue" /><span className="w-9 text-right">{Math.round(zoom * 100)}%</span></label>
+              <div className="mt-1 flex items-center justify-between text-[11px] text-ink2">
+                <span>{zoom > 1 ? "Kéo ảnh trong khung để dời vị trí" : "Phóng to rồi kéo ảnh để dời vị trí"}</span>
+                {(offset.x !== 0 || offset.y !== 0) && <button type="button" className="text-blue font-bold hover:underline" onClick={() => setOffset({ x: 0, y: 0 })}>Đặt lại</button>}
+              </div>
+            </>
+          )}
+        </div>
+      ) : (
+        <div className="mb-4 aspect-[4/3] bg-xam rounded-sm overflow-hidden flex items-center justify-center text-mut text-[12px]">{form.avatar ? <img src={form.avatar} alt="Ảnh chân dung" className="w-full h-full object-cover" /> : "Ảnh chân dung"}</div>
+      )}
+      <div className="mt-4 font-serif font-semibold text-[22px] text-den uppercase leading-tight">{form.hoTen || "Họ và tên"}</div>
+      <div className="text-[13px] text-ink2 mt-1">{form.chucDanh}{danhHieu ? ` · ${danhHieu}` : ""}</div>
+      <div className="mt-4 space-y-1.5 text-[13px] text-den"><div>{form.soDienThoai}</div><div>{form.email}</div><div>VP Chubb Life · {form.vanPhong}</div></div>
+      {noiBat.length > 0 && <div className="mt-4 flex flex-wrap gap-2">{noiBat.map((n) => <Chip key={n} tone="blue">{n}</Chip>)}</div>}
+      <div className="mt-5 flex gap-3"><Button size="sm" onClick={() => flash("Đã mở Zalo")}>Kết nối Zalo</Button><Button kind="secondary" size="sm" onClick={() => flash(`Đang gọi ${form.soDienThoai}`)}>Gọi điện</Button></div>
+      <div className="mt-5 flex items-center gap-3 text-[12px] text-ink2">
+        <div className="size-14 shrink-0 border border-vien rounded-sm flex items-center justify-center text-[10px] font-bold text-mut">QR</div>
+        <div>Danh thiếp công khai tại {url}<br /><button type="button" className="text-blue font-bold" onClick={() => { try { navigator.clipboard?.writeText(`https://${url}`); } catch {} flash("Đã sao chép link danh thiếp"); }}>Sao chép link</button></div>
+      </div>
+    </div>
+  );
+}
 
 function formTu(a: Advisor) {
   const hs = a.hoSoNangLuc;
@@ -74,24 +113,16 @@ export default function Page() {
     flash("Đã lưu — thay đổi hiện ngay trên danh thiếp công khai");
   };
   const chipToggle = (list: string[], v: string, max?: number) => list.includes(v) ? list.filter((x) => x !== v) : max && list.length >= max ? list : [...list, v];
-  const noiBat = [form.namKinhNghiem && `${form.namKinhNghiem} năm kinh nghiệm`, form.namMDRT && `${form.namMDRT} năm liên tiếp MDRT`].filter(Boolean) as string[];
   const mauSel = data.profileTemplates.find((t) => t.id === form.mauProfile);
+  const theCard = <TheCard mau={mauSel} form={form} danhHieu={tvv.danhHieu[0]?.ten} url={url} flash={flash} />;
 
-  const The = () => (
-    <div className="bg-white border border-vien rounded-sm p-4 sm:p-6">
-      {mauSel ? <div className="mb-4 max-w-[300px] mx-auto"><StudioPreview template={mauSel} portrait={form.avatar || undefined} hoTen={form.hoTen} chucDanh={form.chucDanh} soDienThoai={form.soDienThoai} /></div>
-        : <div className="aspect-[4/3] bg-xam rounded-sm overflow-hidden flex items-center justify-center text-mut text-[12px]">{form.avatar ? <img src={form.avatar} alt="Ảnh chân dung" className="w-full h-full object-cover" /> : "Ảnh chân dung"}</div>}
-      <div className="mt-5 font-serif font-semibold text-[22px] text-den uppercase leading-tight">{form.hoTen || "Họ và tên"}</div>
-      <div className="text-[13px] text-ink2 mt-1">{form.chucDanh}{tvv.danhHieu[0] ? ` · ${tvv.danhHieu[0]!.ten}` : ""}</div>
-      <div className="mt-4 space-y-1.5 text-[13px] text-den"><div>{form.soDienThoai}</div><div>{form.email}</div><div>VP Chubb Life · {form.vanPhong}</div></div>
-      {noiBat.length > 0 && <div className="mt-4 flex flex-wrap gap-2">{noiBat.map((n) => <Chip key={n} tone="blue">{n}</Chip>)}</div>}
-      <div className="mt-5 flex gap-3"><Button size="sm" onClick={() => flash("Đã mở Zalo")}>Kết nối Zalo</Button><Button kind="secondary" size="sm" onClick={() => flash(`Đang gọi ${form.soDienThoai}`)}>Gọi điện</Button></div>
-      <div className="mt-5 flex items-center gap-3 text-[12px] text-ink2">
-        <div className="size-14 shrink-0 border border-vien rounded-sm flex items-center justify-center text-[10px] font-bold text-mut">QR</div>
-        <div>Danh thiếp công khai tại {url}<br /><button type="button" className="text-blue font-bold" onClick={() => { try { navigator.clipboard?.writeText(`https://${url}`); } catch {} flash("Đã sao chép link danh thiếp"); }}>Sao chép link</button></div>
-      </div>
-    </div>
-  );
+  // Upload ảnh chân dung thật từ máy → đọc base64 (dataURL) để xem trước & lồng vào khung mẫu
+  const chonAnh = (file: File) => {
+    if (!file.type.startsWith("image/")) { flash("Chỉ nhận tệp ảnh JPG/PNG"); return; }
+    const r = new FileReader();
+    r.onload = () => { set("avatar", String(r.result)); flash("Đã tải ảnh lên"); };
+    r.readAsDataURL(file);
+  };
 
   const Step = ({ title, children }: { title: string; children: React.ReactNode }) => <section><h2 className="font-serif font-semibold text-[18px] text-den uppercase mb-5">{title}</h2>{children}</section>;
 
@@ -113,13 +144,16 @@ export default function Page() {
               <Field label="Họ và tên" error={loi.hoTen}><Input value={form.hoTen} onChange={(e) => set("hoTen", e.target.value)} /></Field>
               <Field label="Mã số Tư vấn viên" hint="Do Chubb cấp — không sửa được"><Input value={tvv.ma} disabled /></Field>
               <Field label="Ảnh chân dung" className="md:col-span-2">
-                <div className="border border-dashed border-vien rounded-sm p-4 sm:p-5 flex items-center justify-between gap-4">
+                <div className="border border-dashed border-vien rounded-sm p-4 sm:p-5 flex items-center justify-between gap-4" onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files?.[0]; if (f) chonAnh(f); }}>
                   <div className="flex items-center gap-4">
                     <div className="size-16 rounded-sm bg-xam overflow-hidden flex items-center justify-center text-[11px] text-mut">{form.avatar ? <img src={form.avatar} alt="" className="w-full h-full object-cover" /> : "Ảnh"}</div>
                     <span className="text-[12.5px] text-ink2">Kéo thả ảnh vào đây · JPG/PNG · tỉ lệ 4:3</span>
                   </div>
                   <div className="flex gap-2">
-                    <Button kind="secondary" size="sm" onClick={() => { set("avatar", `/img/tvv-av-${1 + (Number(tvv.ma) % 6)}.png`); flash("Đã tải ảnh lên"); }}>Tải file lên</Button>
+                    <label className="inline-flex items-center h-9 px-3.5 rounded-sm bg-white text-blue border border-blue text-[13px] font-bold cursor-pointer hover:bg-blue-soft">
+                      Tải file lên
+                      <input type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) chonAnh(f); e.target.value = ""; }} />
+                    </label>
                     {form.avatar && <Button kind="ghost" size="sm" onClick={() => set("avatar", "")}>Bỏ ảnh</Button>}
                   </div>
                 </div>
@@ -216,13 +250,13 @@ export default function Page() {
 
         <aside className="lg:sticky lg:top-24 self-start">
           <div className="text-[14px] font-bold text-den uppercase mb-3">Xem trước</div>
-          <The />
+          {theCard}
           <div className="text-[12.5px] text-ink2 mt-3">Cập nhật ngay khi bạn nhập</div>
         </aside>
       </div>
 
       <Modal open={xemTruoc} onClose={() => setXemTruoc(false)} title="Xem trước danh thiếp" width={480} footer={<><Button kind="secondary" onClick={() => setXemTruoc(false)}>Đóng</Button><Button onClick={() => window.open(R.E03(tvv.ma), "_blank")}>Xem đầy đủ</Button></>}>
-        <The />
+        {theCard}
       </Modal>
     </div>
   );
