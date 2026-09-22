@@ -23,7 +23,7 @@ type Moc = { nam: string; tieuDe: string; moTa: string };
 function formTu(a: Advisor) {
   const hs = a.hoSoNangLuc;
   return {
-    hoTen: a.hoTen, avatar: a.avatar ?? "", chucDanh: a.chucDanh, soDienThoai: a.soDienThoai, zalo: a.zalo ?? "", email: a.email, vanPhong: a.vanPhong,
+    hoTen: a.hoTen, avatar: a.avatar ?? "", anhBia: a.anhBia ?? "", chucDanh: a.chucDanh, soDienThoai: a.soDienThoai, zalo: a.zalo ?? "", email: a.email, vanPhong: a.vanPhong,
     vaiTro: hs?.vaiTro ?? "", gioiThieu: hs?.gioiThieu ?? "",
     theManh: hs?.theManh ?? [], namKinhNghiem: hs?.namKinhNghiem?.toString() ?? "", namMDRT: hs?.namMDRT?.toString() ?? "", chungChi: hs?.chungChi ?? [],
     hanhTrinh: (hs?.hanhTrinh ?? []) as Moc[],
@@ -60,7 +60,7 @@ export default function Page() {
   const luu = () => {
     if (!kiemTra()) { flash("Còn ô chưa hợp lệ — kiểm tra lại các dòng đỏ"); return; }
     actions.update("advisors", (l) => l.map((a) => a.ma !== tvv.ma ? a : {
-      ...a, hoTen: form.hoTen.trim(), avatar: form.avatar || undefined, chucDanh: form.chucDanh, soDienThoai: form.soDienThoai, zalo: form.zalo || undefined, email: form.email, vanPhong: form.vanPhong,
+      ...a, hoTen: form.hoTen.trim(), avatar: form.avatar || undefined, anhBia: form.anhBia || undefined, chucDanh: form.chucDanh, soDienThoai: form.soDienThoai, zalo: form.zalo || undefined, email: form.email, vanPhong: form.vanPhong,
       hoSoNangLuc: {
         ...a.hoSoNangLuc, gioiThieu: form.gioiThieu, theManh: form.theManh, chungChi: form.chungChi, vaiTro: form.vaiTro || undefined,
         namKinhNghiem: form.namKinhNghiem ? Number(form.namKinhNghiem) : undefined, namMDRT: form.namMDRT ? Number(form.namMDRT) : undefined,
@@ -77,6 +77,7 @@ export default function Page() {
 
   const The = () => (
     <div className="bg-white border border-vien rounded-sm p-4 sm:p-6">
+      {form.anhBia && <div className="-mx-4 -mt-4 sm:-mx-6 sm:-mt-6 mb-4 overflow-hidden rounded-t-sm"><img src={form.anhBia} alt="Ảnh bìa" className="w-full aspect-[1440/340] object-cover" /></div>}
       <div className="aspect-[4/3] bg-xam rounded-sm overflow-hidden flex items-center justify-center text-mut text-[12px]">{form.avatar ? <img src={form.avatar} alt="Ảnh chân dung" className="w-full h-full object-cover" /> : "Ảnh chân dung"}</div>
       <div className="mt-5 font-serif font-semibold text-[22px] text-den uppercase leading-tight">{form.hoTen || "Họ và tên"}</div>
       <div className="text-[13px] text-ink2 mt-1">{form.chucDanh}{tvv.danhHieu[0] ? ` · ${tvv.danhHieu[0]!.ten}` : ""}</div>
@@ -129,7 +130,29 @@ export default function Page() {
             </div>
           </Step>
 
-          <Step title="Bước 2 — Tạo dấu ấn của tôi">
+          <Step title="Bước 2 — Ảnh bìa danh thiếp">
+            <p className="text-[13px] text-ink2 mb-4">Chọn một mẫu bìa Chubb thiết kế để hiển thị đầu trang danh thiếp công khai của bạn — hoặc tải về máy dùng ngoài. Không bắt buộc.</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {data.coverTemplates.map((cv) => {
+                const dung = form.anhBia === cv.anh;
+                return (
+                  <div key={cv.id} className={cx("border rounded-sm overflow-hidden", dung ? "border-blue ring-1 ring-blue" : "border-vien")}>
+                    <img src={cv.anh} alt={cv.ten} className="w-full aspect-[1440/340] object-cover" />
+                    <div className="flex items-center justify-between gap-2 px-3 py-2.5">
+                      <span className="text-[13px] font-bold text-den">{cv.ten}</span>
+                      <div className="flex items-center gap-3 text-[12.5px] font-bold shrink-0">
+                        {dung ? <Chip tone="green">Đang dùng</Chip> : <button type="button" className="text-blue hover:underline" onClick={() => set("anhBia", cv.anh)}>Dùng mẫu này</button>}
+                        <button type="button" className="text-ink2 hover:text-blue" onClick={() => flash(`Đã tải ảnh bìa "${cv.ten}" về máy`)}>Tải</button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {form.anhBia && <button type="button" className="mt-3 text-[13px] font-bold text-ink2 hover:text-red-fg" onClick={() => set("anhBia", "")}>Không dùng bìa</button>}
+          </Step>
+
+          <Step title="Bước 3 — Tạo dấu ấn của tôi">
             <div className="font-bold text-[16px] text-den mb-3">Tôi muốn được nhớ đến với vai trò gì?</div>
             <div className="space-y-2.5 mb-6">{VAI_TRO.map((v) => <Radio key={v} name="vaiTro" label={v} checked={form.vaiTro === v} onChange={() => set("vaiTro", v)} />)}</div>
             <Field label="Giới thiệu ngắn về bạn" count={`${form.gioiThieu.length}/${MAX_GIOI_THIEU}`} error={loi.gioiThieu}>
@@ -137,7 +160,7 @@ export default function Page() {
             </Field>
           </Step>
 
-          <Step title="Bước 3 — Hồ sơ năng lực">
+          <Step title="Bước 4 — Hồ sơ năng lực">
             <div className="space-y-7">
               <div>
                 <div className="text-[12.5px] text-ink2 mb-2">Lĩnh vực chuyên môn · chọn tối đa 4 từ danh mục Chubb</div>

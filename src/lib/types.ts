@@ -27,6 +27,8 @@ export interface Advisor {
   soDienThoai: string;
   zalo?: string;
   avatar?: string;
+  /** Ảnh bìa/banner danh thiếp (E03) — TVV chọn từ mẫu Chubb cấp (coverTemplates) ở E04; rỗng = không dùng bìa */
+  anhBia?: string;
   /** Danh thiếp công khai (E03) đang hiện hay tạm ẩn */
   theCongKhai: boolean;
   /** Ai đã ẩn thẻ khi theCongKhai = false (H11 hiện "Ẩn (TVV tắt)" / "Ẩn (Quản trị)") */

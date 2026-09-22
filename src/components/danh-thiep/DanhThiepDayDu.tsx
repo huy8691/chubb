@@ -62,6 +62,7 @@ function TheDayDu({ a }: { a: Advisor }) {
     <>
       {/* Thẻ chính */}
       <section className="bg-xam">
+        {a.anhBia && <div className="w-full overflow-hidden border-b border-vien2"><img src={a.anhBia} alt="Ảnh bìa danh thiếp" className="w-full aspect-[1440/340] object-cover" /></div>}
         <div className="wrap py-10 flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-8">
           <div className="flex items-center gap-5 sm:gap-8 min-w-0 flex-1">
             <Avatar name={a.hoTen} size={120} src={a.avatar} />

@@ -33,6 +33,7 @@ export interface DemoData {
   financeParams: typeof seed.financeParams;
   notifications: typeof seed.notifications;
   savedItems: typeof seed.savedItems;
+  coverTemplates: typeof seed.coverTemplates;
 }
 
 const initialData = (): DemoData => ({
@@ -56,6 +57,7 @@ const initialData = (): DemoData => ({
   financeParams: seed.financeParams,
   notifications: seed.notifications,
   savedItems: seed.savedItems,
+  coverTemplates: seed.coverTemplates,
 });
 
 type Updater<K extends keyof DemoData> = (cur: DemoData[K]) => DemoData[K];
@@ -82,7 +84,7 @@ interface StoreValue {
 
 const Ctx = createContext<StoreValue | null>(null);
 /** Đổi số này mỗi lần sửa seed để phiên cũ trong sessionStorage không che dữ liệu mới */
-const SEED_VERSION = "2026-09-22d";
+const SEED_VERSION = "2026-09-22e";
 const KEY_DATA = `ecard2-demo-data-${SEED_VERSION}`;
 const KEY_SESSION = "ecard2-demo-session";
 const GUEST: Session = { role: "guest" };

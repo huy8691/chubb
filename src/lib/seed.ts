@@ -103,6 +103,15 @@ advisors[0].hoSoNangLuc = {
   hienPhan: { hanhTrinh: true, linhVuc: true, google: false },
   capNhat: "2026-09-04T10:00:00",
 };
+advisors[0].anhBia = "/cover/cover-4.png"; // TVV demo đã chọn một mẫu bìa
+
+/** Mẫu ảnh bìa/banner danh thiếp (Chubb cấp) — TVV chọn ở E04, hiện trên E03; hoặc tải về. */
+export const coverTemplates = [
+  { id: "cv1", ten: "Toàn Tâm — Xanh", anh: "/cover/cover-1.png" },
+  { id: "cv2", ten: "Bảo vệ — Hồng", anh: "/cover/cover-2.png" },
+  { id: "cv3", ten: "Đồng hành — Teal", anh: "/cover/cover-3.png" },
+  { id: "cv4", ten: "Vững vàng — Gradient", anh: "/cover/cover-4.png" },
+];
 
 /* ---------- Vinh danh ---------- */
 export const hangMuc: HangMuc[] = [
