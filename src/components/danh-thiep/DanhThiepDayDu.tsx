@@ -9,6 +9,7 @@ import { Avatar, Button, Chip, H1, H2, Muted, useFlash } from "@/components/ui";
 import { R } from "@/lib/routes";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
 import type { Advisor } from "@/lib/types";
+import { StudioPreview } from "@/components/cong-cu/StudioPreview";
 import { QrBox } from "./QrBox";
 import { SharePopup, useChiaSe } from "./SharePopup";
 import { danhHieuCongKhai, fmtPhone, linkDanhThiep, taiVCard, theXemDuoc } from "./lib";
@@ -39,7 +40,7 @@ export function KhongXemDuoc() {
 function TheDayDu({ a }: { a: Advisor }) {
   const sp = useSearchParams();
   const ref = sp.get("ref");
-  const { actions } = useStore();
+  const { data, actions } = useStore();
   const tvv = useCurrentAdvisor();
   const { flash, node } = useFlash();
   const { chiaSe, flashNode } = useChiaSe(a);
@@ -55,6 +56,7 @@ function TheDayDu({ a }: { a: Advisor }) {
 
   const dh = danhHieuCongKhai(a);
   const hs = a.hoSoNangLuc;
+  const mauProfile = a.mauProfile ? data.profileTemplates.find((t) => t.id === a.mauProfile) : undefined;
   const zaloHref = `https://zalo.me/${a.zalo ?? a.soDienThoai}`;
   const btnA = "inline-flex items-center justify-center h-11 px-5 rounded-sm font-bold text-[14px] whitespace-nowrap";
 
@@ -62,10 +64,13 @@ function TheDayDu({ a }: { a: Advisor }) {
     <>
       {/* Thẻ chính */}
       <section className="bg-xam">
-        {a.anhBia && <div className="w-full overflow-hidden border-b border-vien2"><img src={a.anhBia} alt="Ảnh bìa danh thiếp" className="w-full aspect-[1440/340] object-cover" /></div>}
         <div className="wrap py-10 flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-8">
           <div className="flex items-center gap-5 sm:gap-8 min-w-0 flex-1">
-            <Avatar name={a.hoTen} size={120} src={a.avatar} />
+            {mauProfile ? (
+              <div className="w-[180px] shrink-0 border border-vien rounded-sm overflow-hidden bg-white"><StudioPreview template={mauProfile} portrait={a.avatar} hoTen={a.hoTen} chucDanh={a.chucDanh} soDienThoai={a.soDienThoai} /></div>
+            ) : (
+              <Avatar name={a.hoTen} size={120} src={a.avatar} />
+            )}
             <div className="min-w-0">
               <h1 className="font-serif font-semibold text-[24px] leading-tight text-den uppercase">{a.hoTen}</h1>
               <p className="text-[14px] text-ink2 mt-2">{[a.chucDanh, ...dh, `Mã ${a.ma}`].join(" · ")}</p>

@@ -103,15 +103,7 @@ advisors[0].hoSoNangLuc = {
   hienPhan: { hanhTrinh: true, linhVuc: true, google: false },
   capNhat: "2026-09-04T10:00:00",
 };
-advisors[0].anhBia = "/cover/cover-4.png"; // TVV demo đã chọn một mẫu bìa
-
-/** Mẫu ảnh bìa/banner danh thiếp (Chubb cấp) — TVV chọn ở E04, hiện trên E03; hoặc tải về. */
-export const coverTemplates = [
-  { id: "cv1", ten: "Toàn Tâm — Xanh", anh: "/cover/cover-1.png" },
-  { id: "cv2", ten: "Bảo vệ — Hồng", anh: "/cover/cover-2.png" },
-  { id: "cv3", ten: "Đồng hành — Teal", anh: "/cover/cover-3.png" },
-  { id: "cv4", ten: "Vững vàng — Gradient", anh: "/cover/cover-4.png" },
-];
+advisors[0].mauProfile = "m-songantam"; // TVV demo đã chọn một mẫu trang trí danh thiếp
 
 /* ---------- Vinh danh ---------- */
 export const hangMuc: HangMuc[] = [
@@ -303,9 +295,14 @@ const FIELDS_CHUANMOI: FStudio = [
   { loai: "chucDanh", xPct: 76, yPct: 75, size: 2.1, mau: "#13235f", canLe: "center", gioiHan: 30 },
   { loai: "soDienThoai", xPct: 76, yPct: 80, size: 2.5, mau: "#13235f", canLe: "center", gioiHan: 15, dam: true, icon: true },
 ];
+// Studio (D02/D08) chỉ còn 2 mẫu BANNER NGANG (22/09: mẫu chân dung chuyển sang profileTemplates)
 export const studioTemplates: StudioTemplate[] = [
   mauStudio({ id: "m-chuan-moi", ten: "Chuẩn Mới — Mở Lối", anhNen: "/studio/mau-chuan-moi.png", tiLe: "16:9", tyLe: 1735 / 906, anhSauNen: true, hole: { xPct: 76, yPct: 39, dPct: 25.1 }, fields: FIELDS_CHUANMOI, soAnhDaTao: 0, capNhat: "2026-09-22T09:44:00" }),
   mauStudio({ id: "m-anphuc", ten: "Chubb – Tự Do An Phúc", anhNen: "/studio/tu-do-an-phuc.png", anh: "/studio/tu-do-an-phuc-mau.png", tiLe: "16:9", hole: O_ANPHUC, fields: FIELDS_ANPHUC, soAnhDaTao: 0, capNhat: "2026-09-21T09:00:00" }),
+];
+
+/** Mẫu trang trí danh thiếp (dạng chân dung) — TVV chọn ở E04 (chọn tĩnh), hiện trên danh thiếp công khai E03 với ảnh & tên của TVV; hoặc tải. Chuyển từ Studio sang 22/09. */
+export const profileTemplates: StudioTemplate[] = [
   mauStudio({ id: "m-antam", ten: "An tâm hôm nay — Vững vàng tương lai", anhNen: "/studio/khung-antam.png", tiLe: "9:16", tyLe: 1019 / 1543, anhSauNen: true, hole: { xPct: 49.8, yPct: 30.8, dPct: 45.9 }, fields: khungFields("#13235f", "#5b6270"), soAnhDaTao: 156, capNhat: "2026-09-21T10:00:00" }),
   mauStudio({ id: "m-giaiphap", ten: "Giải pháp hôm nay cho cuộc sống tốt đẹp hơn", anhNen: "/studio/khung-giaiphap.png", tiLe: "9:16", tyLe: 466 / 767, anhSauNen: true, hole: { xPct: 56, yPct: 29.5, dPct: 52.2 }, fields: khungFields("#ffffff", "#e6eaf5"), soAnhDaTao: 92, capNhat: "2026-09-21T10:05:00" }),
   mauStudio({ id: "m-baove", ten: "Bảo vệ điều quan trọng", anhNen: "/studio/khung-baove.png", tiLe: "9:16", tyLe: 1019 / 1543, anhSauNen: true, hole: { xPct: 49.9, yPct: 30, dPct: 52 }, fields: khungFields("#ffffff", "#ffe0f0"), soAnhDaTao: 74, capNhat: "2026-09-21T10:10:00" }),
@@ -314,7 +311,7 @@ export const studioTemplates: StudioTemplate[] = [
   mauStudio({ id: "m-uu-dai", ten: "Ưu đãi tháng", anhNen: "/studio/mau-2.png", soAnhDaTao: 132, capNhat: "2026-09-16T09:00:00" }),
   mauStudio({ id: "m-su-kien", ten: "Sự kiện & hội thảo", anhNen: "/studio/mau-3.png", soAnhDaTao: 88, capNhat: "2026-09-12T09:00:00" }),
   mauStudio({ id: "m-cam-on", ten: "Cảm ơn khách hàng", anhNen: "/studio/mau-4.png", soAnhDaTao: 64, capNhat: "2026-09-10T09:00:00" }),
-  mauStudio({ id: "m-la-tvv", ten: "Tôi là Tư vấn viên Chubb Life", anhNen: "/studio/mau-1.png", trangThai: "nhap", soAnhDaTao: 0, capNhat: "2026-09-08T09:00:00" }),
+  mauStudio({ id: "m-la-tvv", ten: "Tôi là Tư vấn viên Chubb Life", anhNen: "/studio/mau-1.png", soAnhDaTao: 0, capNhat: "2026-09-08T09:00:00" }),
 ];
 
 export const studioImages: StudioImage[] = Array.from({ length: 41 }, (_, i) => ({
