@@ -290,7 +290,7 @@ const FIELDS_CHUANMOI: FStudio = [
 ];
 // Studio (D02/D08) chỉ còn 2 mẫu BANNER NGANG (22/09: mẫu chân dung chuyển sang profileTemplates)
 export const studioTemplates: StudioTemplate[] = [
-  mauStudio({ id: "m-chuan-moi", ten: "Chuẩn Mới — Mở Lối", anhNen: "/studio/mau-chuan-moi.png", tiLe: "16:9", tyLe: 1735 / 906, anhSauNen: true, hole: { xPct: 76, yPct: 39, dPct: 25.1 }, fields: FIELDS_CHUANMOI, soAnhDaTao: 0, capNhat: "2026-09-22T09:44:00" }),
+  mauStudio({ id: "m-chuan-moi", ten: "Chuẩn Mới — Mở Lối", anhNen: "/studio/mau-chuan-moi.png", tiLe: "16:9", tyLe: 1735 / 906, anhSauNen: true, hole: { xPct: 76, yPct: 39, dPct: 25.1 }, fields: FIELDS_CHUANMOI, trangThai: "luu-tru", soAnhDaTao: 0, capNhat: "2026-09-22T09:44:00" }), // ẩn khỏi gallery Studio D08 (Lưu trữ) — vẫn giữ trong CMS H02, phục hồi bằng "Xuất bản"
   mauStudio({ id: "m-anphuc", ten: "Chubb – Tự Do An Phúc", anhNen: "/studio/tu-do-an-phuc.png", anh: "/studio/tu-do-an-phuc-mau.png", tiLe: "16:9", hole: O_ANPHUC, fields: FIELDS_ANPHUC, soAnhDaTao: 0, capNhat: "2026-09-21T09:00:00" }),
 ];
 
@@ -301,6 +301,7 @@ export const profileTemplates: StudioTemplate[] = [
   mauStudio({ id: "m-giaiphap", ten: "Giải pháp hôm nay cho cuộc sống tốt đẹp hơn", anhNen: "/studio/khung-giaiphap.png", tiLe: "9:16", tyLe: 466 / 767, anhSauNen: true, hole: { xPct: 56, yPct: 29.5, dPct: 52.2 }, fields: [], soAnhDaTao: 92, capNhat: "2026-09-21T10:05:00" }),
   mauStudio({ id: "m-baove", ten: "Bảo vệ điều quan trọng", anhNen: "/studio/khung-baove.png", tiLe: "9:16", tyLe: 1019 / 1543, anhSauNen: true, hole: { xPct: 49.9, yPct: 30, dPct: 52 }, fields: [], soAnhDaTao: 74, capNhat: "2026-09-21T10:10:00" }),
   mauStudio({ id: "m-songantam", ten: "Sống an tâm — Trọn vẹn hơn", anhNen: "/studio/khung-songantam.png", tiLe: "9:16", tyLe: 475 / 769, anhSauNen: true, hole: { xPct: 48.3, yPct: 29.6, dPct: 57.5 }, fields: [], soAnhDaTao: 51, capNhat: "2026-09-21T10:15:00" }),
+  mauStudio({ id: "m-chuanmoi", ten: "Chuẩn Mới — Mở Lối", anhNen: "/studio/khung-chuanmoi.png", tiLe: "9:16", tyLe: 1021 / 1540, anhSauNen: true, hole: { xPct: 49.7, yPct: 63.5, dPct: 50 }, fields: [], soAnhDaTao: 0, capNhat: "2026-09-23T11:00:00" }),
 ];
 
 export const studioImages: StudioImage[] = Array.from({ length: 41 }, (_, i) => ({

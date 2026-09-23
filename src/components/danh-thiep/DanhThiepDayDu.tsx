@@ -5,7 +5,7 @@
  */
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { Avatar, Button, Chip, H1, H2, Muted, useFlash } from "@/components/ui";
+import { Button, Chip, H1, H2, Muted, useFlash } from "@/components/ui";
 import { R } from "@/lib/routes";
 import { useCurrentAdvisor, useStore } from "@/lib/store";
 import type { Advisor } from "@/lib/types";
@@ -72,7 +72,7 @@ function TheDayDu({ a }: { a: Advisor }) {
             ) : a.avatar ? (
               <img src={a.avatar} alt={a.hoTen} className="w-[180px] sm:w-[220px] aspect-[3/4] object-cover rounded-sm border border-vien shadow-sm shrink-0" />
             ) : (
-              <Avatar name={a.hoTen} size={160} />
+              <div aria-label={a.hoTen} className="w-[180px] sm:w-[220px] aspect-[3/4] rounded-sm border border-vien shadow-sm shrink-0 bg-blue-soft text-blue font-bold text-[44px] flex items-center justify-center">{a.hoTen.split(" ").slice(-2).map((s) => s[0]).join("")}</div>
             )}
             <div className="min-w-0">
               <h1 className="font-serif font-semibold text-[24px] leading-tight text-den uppercase">{a.hoTen}</h1>
