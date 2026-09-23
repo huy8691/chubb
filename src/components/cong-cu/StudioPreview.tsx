@@ -216,7 +216,11 @@ export async function taiAnhStudio(opts: {
   template?: Pick<StudioTemplate, "tiLe" | "tyLe" | "anhSauNen" | "anhNen" | "fields" | "anhChanDung" | "mauNen" | "khungAnh" | "tiLeKhung" | "disclaimer" | "hoaTiet" | "nhan" | "mauNhan" | "boCuc">;
   portrait?: string; zoom?: number; offsetX?: number; offsetY?: number; hoTen?: string; chucDanh?: string; soDienThoai?: string; gioiThieu?: string;
 }) {
-  const { template, portrait, zoom = 1, offsetX = 0, offsetY = 0, hoTen, chucDanh, soDienThoai, gioiThieu } = opts;
+  const { template, portrait, zoom = 1, hoTen, chucDanh, soDienThoai, gioiThieu } = opts;
+  // Kẹp offset theo zoom GIỐNG HỆT bản xem trước (StudioPreview dùng lim=(zoom-1)*50). Nếu không kẹp, khi TVV kéo ảnh ở zoom cao rồi GIẢM zoom, offset lưu lại vượt giới hạn mới: xem trước kẹp lại nhưng ảnh tải về vẫn dùng offset thô → lệch vị trí (và lòi nền khi ảnh không phủ hết ô).
+  const _limDl = Math.max(0, (zoom - 1) * 50);
+  const offsetX = Math.max(-_limDl, Math.min(_limDl, opts.offsetX ?? 0));
+  const offsetY = Math.max(-_limDl, Math.min(_limDl, opts.offsetY ?? 0));
 
   // Mẫu nền-ảnh-thật (mô hình PNG + field): vẽ ảnh nền + overlay ảnh chân dung + các field theo dữ liệu mẫu
   if (template?.anhNen) {
